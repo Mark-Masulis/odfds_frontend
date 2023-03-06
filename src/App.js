@@ -5,6 +5,10 @@ import {
   RouterProvider,
   Route
 } from "react-router-dom"
+import Restaurant from './Restaurant/Restaurant'
+import Customer from './Customer/Customer'
+import Driver from './Driver/Driver'
+import LandingPage from './LandingPage/LandingPage'
 
 
 export default function App() {
@@ -15,8 +19,10 @@ export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        <Route path="/" element={<p>Landing Page Component Goes Here!</p>}/>
-        <Route path="/some_other_path" element={<p>Some other page's component goes here</p>}/>
+        <Route path="/" element={<LandingPage/>}/>
+        <Route path="/restaurant" element={<Restaurant/>}/>
+        <Route path="/customer" element={<Customer/>}/>
+        <Route path="/driver" element={<Driver/>}/>
       </Route>
     )
   );
