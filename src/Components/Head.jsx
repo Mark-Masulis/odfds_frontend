@@ -6,10 +6,9 @@ const Head = () => {
             <section className='head'>
                 <div className='container flexSB'>
                     <div className='logo'>
-                        <h1>
-                            <img src="icons8-transportation-delivery-logistics-cargo-parcel-bus-service-27-64.png" alt="ODFDS" />
+                        <h1> 
+                        ON DEMAND FOOD <img src="logoHeader.png" alt="ODFDS" /> DELIVERY
                         </h1>
-                        <span>ON DEMAND FOOD DELIVERY</span>
                     </div>
 
                     <div className='social'>

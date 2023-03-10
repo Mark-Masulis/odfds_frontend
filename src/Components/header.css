@@ -1,24 +1,27 @@
+/* head style*/
 .head {
     margin: 10px;
     padding: 20px 0;
     color: #000;
 }
 .logo h1 {
-    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    font-size: 40px;
+    color: #093833;
+    margin: 0px;
   }
-  .logo img {
-    max-width: 200%;
-    height: auto;
-  }
-.logo span {  
-    font-size: 25px; 
-    color: #181717; /* Set font color */
-  }
-  
-.head .icon {
-    margin-left: 15px;
+.logo img {
+    width: 20%;
 }
-
+.social {
+    display: flex;
+    align-items: flex-end;
+}  
+.head .icon {
+    margin-left: 10px;
+}
+/* header style*/
 header {
     background-color: #fffcfc;
     margin: 0 20px;

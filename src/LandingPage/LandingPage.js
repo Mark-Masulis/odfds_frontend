@@ -52,6 +52,7 @@ const Title = styled.h1`
 font-size: 1.8rem;
 text-align: center;
 max-width: 500px;
+color: #093833;
 `;
 
 const Text = styled.p`
@@ -72,6 +73,11 @@ border-radius: 5px;
 text-decoration: none;
 `;
 
+const Footer = styled.footer`
+  text-align: center;
+  font-size: 14px;
+  margin-top: 2px;
+`;
 
 function Box(props) {
   const { className, image, text, title, buttonText } = props;
@@ -85,10 +91,6 @@ function Box(props) {
   );
 }
 
-const Footer = styled.footer`
-  text-align: center;
-  margin-top: 2rem;
-`;
 
 function LandingPage(props) {
   return (
