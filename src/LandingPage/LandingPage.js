@@ -131,7 +131,7 @@ function LandingPage(props) {
         <OverlayContainer>
           <OverlayImage src="logoRBG.png" alt="Background Image" />
           <Overlay>
-            <Box image="logoRestaurant.png"  title="Are you a restaurant that needs food delivery service? " text="Click on restaurant to get started." buttonText="Restaurant" className="restaurant">
+            <Box image="logoR.png"  title="Are you a restaurant that needs food delivery service? " text="Click on restaurant to get started." buttonText="Restaurant" className="restaurant">
             </Box>
           </Overlay>
         </OverlayContainer>
