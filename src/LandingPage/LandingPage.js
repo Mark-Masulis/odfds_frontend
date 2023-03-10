@@ -22,6 +22,38 @@ height: 80vh;
   height: auto; 
 }
 `;
+const OverlayContainer = styled.div`
+  position: relative;
+  width: 50%;
+  height: 50%; 
+  top: -150px;
+`;
+
+const OverlayImage = styled.img`
+  width: 40%;
+  height: 40%;
+  object-fit: cover;
+  margin-left: 150px;
+  opacity: 0.3;
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: color: #fff;
+`;
+
+const Content = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+`;
 
 const BoxContainer = styled.div`
   margin: 10px;
@@ -37,7 +69,7 @@ const BoxImage = styled.img`
   /* Add custom styles based on the className prop */
   &.restaurant {
     /* Styles for the restaurant image */ 
-    width: 50%;
+    width: 40%;
     padding: 10px;
   }
 
@@ -96,8 +128,15 @@ function LandingPage(props) {
   return (
     <>
       <Container>
-        <Box image="logoRestaurant.png"  title="Are you a restaurant that needs food delivery service? " text="Click on restaurant to get started." buttonText="Restaurant" className="restaurant"/>
-        <Box image="logoDriver.png" title="Do you want a side gig delivering food to customers?" text="Click on Driver to get started." buttonText="Driver" className="driver" />
+        <OverlayContainer>
+          <OverlayImage src="logoRBG.png" alt="Background Image" />
+          <Overlay>
+            <Box image="logoRestaurant.png"  title="Are you a restaurant that needs food delivery service? " text="Click on restaurant to get started." buttonText="Restaurant" className="restaurant">
+            </Box>
+          </Overlay>
+        </OverlayContainer>
+      
+          <Box image="logoDriver.png" title="Do you want a side gig delivering food to customers?" text="Click on Driver to get started." buttonText="Driver" className="driver" />
       </Container>
       <Footer>
         <p>&copy; 2023 Online Delivery Application. All rights reserved.</p>
