@@ -5,6 +5,7 @@ import {
   RouterProvider,
   Route
 } from "react-router-dom"
+import Header from './Components/Header'
 import Restaurant from './Restaurant/Restaurant'
 import Customer from './Customer/Customer'
 import Driver from './Driver/Driver'
@@ -32,6 +33,10 @@ export default function App() {
 
   //If some components will be present throughout the site, like a navigation bar, then this RouterProvider can be passed as a prop or surrounded by the component.
   return (
-    <RouterProvider router={router} />
+    <div>
+      <Header />
+      <RouterProvider router={router} />
+    </div>
+    
   )
 }

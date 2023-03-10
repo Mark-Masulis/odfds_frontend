@@ -1,0 +1,41 @@
+.head {
+    margin: 10px;
+    padding: 20px 0;
+    color: #000;
+}
+.logo h1 {
+    font-size: 2rem;
+  }
+  .logo img {
+    max-width: 200%;
+    height: auto;
+  }
+.logo span {  
+    font-size: 25px; 
+    color: #181717; /* Set font color */
+  }
+  
+.head .icon {
+    margin-left: 15px;
+}
+
+header {
+    background-color: #fffcfc;
+    margin: 0 20px;
+}
+header ul {
+    padding: 5px 30px;
+    list-style: none;   
+}
+header li {
+    margin-left: 40px;
+}
+header ul li a {
+    color: #1eb2a6;
+    font-weight: 500;
+    transition: 0.5s;
+    
+}
+header ul li a:hover {
+    color: #131515;
+}
