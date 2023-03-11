@@ -54,3 +54,8 @@ a {
   text-decoration: none;
   
 }
+.Button:hover {
+  cursor: pointer;
+  background-color: #1eb2a6;
+  color: #fff;
+}

@@ -116,6 +116,10 @@ background-color: #1eb2a6;
 color: #fff;
 border-radius: 5px;
 text-decoration: none;
+
+&:hover {
+  background-color: #0c7a72;
+}
 `;
 
 
