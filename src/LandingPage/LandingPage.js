@@ -4,7 +4,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route
+  Route,
+  Link
 } from "react-router-dom"
 
 const Container = styled.div`
@@ -125,31 +126,64 @@ text-decoration: none;
 
 
 function Box(props) {
-  const { className, image, text, title, buttonText } = props;
+  const { className, image, text, title, buttonText, link } = props;
   return (
     <BoxContainer>
       <BoxImage src={image} alt="Box Image" className={className} />
       <Title>{title}</Title>
       <Text>{text}</Text>     
-      <Button href="#">{buttonText}</Button>
-    </BoxContainer>
+      {className === 'restaurant' && (
+        <RestaurantButton href={link.restaurantLink}>Restaurant</RestaurantButton>
+      )}
+      {className === 'driver' && (
+        <DriverButton href={link.driverLink}>Driver</DriverButton>
+      )}
+      </BoxContainer>
   );
 }
 
+const RestaurantButton = ({ href, children }) => (
+  <Button href={href} className="Button" >
+    {children}
+  </Button>
+);
+
+const DriverButton = ({ href, children }) => (
+  <Button href={href} className="Button" >
+    {children}
+  </Button>
+);
 
 function LandingPage(props) {
+  const links = {
+    restaurantLink: '/Restaurant',
+    driverLink: '/Driver',
+  };
   return (
     <>
       <Container>
         <OverlayContainer>
           <OverlayImage src="logoRBG.png" alt="Background Image" />
           <Overlay>
-            <Box image="logoR.png"  title="Are you a restaurant that needs food delivery service? " text="Click on restaurant to get started." buttonText="Restaurant" className="restaurant">
-            </Box>
+          <Box
+              image="logoR.png"
+              title="Are you a restaurant that needs food delivery service? "
+              text="Click on restaurant to get started."
+             /*  buttonText="Restaurant" */
+              className="restaurant"
+              link={links}
+            />
           </Overlay>
         </OverlayContainer>
       
-          <Box image="logoDriver.png" title="Do you want a side gig delivering food to customers?" text="Click on Driver to get started." buttonText="Driver" className="driver" />
+        <Box
+          image="logoDriver.png"
+          title="Do you want a side gig delivering food to customers?"
+          text="Click on Driver to get started."
+          /* buttonText="Driver" */
+          className="driver"
+          link={links}
+        />
       </Container>
     </>
   );
