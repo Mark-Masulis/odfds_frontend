@@ -12,28 +12,37 @@ background-color: #fffcfc;
 margin: 20px;
 display: flex;
 flex-direction: column;
-justify-content: space-between;
+justify-content: center;
 align-items: center;
-height: 80vh;
+height: 100vh;
 
 @media (min-width: 768px) {
   flex-direction: row;
-  justify-content: space-between;
-  height: auto; 
+  justify-content: space-around;
+  height: auto;
 }
 `;
 const OverlayContainer = styled.div`
   position: relative;
-  width: 50%;
-  height: 50%; 
-  top: -150px;
+  width: 300px;
+  height: 10px;
+  background-color: #C7EBF0;
+  margin-top: -20px;
+  margin-left: 5px; 
+  margin-right: 20px;
+  box-shadow:
+  2.9px 4.7px 19.1px rgba(0, 0, 0, 0.101),
+  9.8px 15.9px 64.1px rgba(0, 0, 0, 0.149),
+  44px 71px 287px rgba(0, 0, 0, 0.25)
+;
 `;
 
 const OverlayImage = styled.img`
-  width: 40%;
-  height: 40%;
+  width: 200px;
+  height: 50%;
   object-fit: cover;
-  margin-left: 150px;
+  margin-left: 100px; 
+  margin-top: -200px;
   opacity: 0.3;
 `;
 
@@ -61,21 +70,25 @@ const BoxContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 500px; 
+  width: 400px;
+  height: 50%; 
   text-align: center; 
+  
 `;
 
 const BoxImage = styled.img` 
   /* Add custom styles based on the className prop */
   &.restaurant {
     /* Styles for the restaurant image */ 
-    width: 40%;
+    width: 200px;
     padding: 10px;
+    margin-top: 40px;
+    z-index: 1;
   }
 
   &.driver {
     /* Styles for the driver image */   
-    width: 50%;
+    width: 400px;
     padding: 10px;
   } 
 `; 
@@ -105,11 +118,7 @@ border-radius: 5px;
 text-decoration: none;
 `;
 
-const Footer = styled.footer`
-  text-align: center;
-  font-size: 14px;
-  margin-top: 2px;
-`;
+
 
 function Box(props) {
   const { className, image, text, title, buttonText } = props;
@@ -138,9 +147,6 @@ function LandingPage(props) {
       
           <Box image="logoDriver.png" title="Do you want a side gig delivering food to customers?" text="Click on Driver to get started." buttonText="Driver" className="driver" />
       </Container>
-      <Footer>
-        <p>&copy; 2023 Online Delivery Application. All rights reserved.</p>
-      </Footer>
     </>
   );
 }  

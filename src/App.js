@@ -11,6 +11,7 @@ import Customer from './Customer/Customer'
 import Driver from './Driver/Driver'
 import LandingPage from './LandingPage/LandingPage'
 import LoginPage from './LandingPage/LoginPage'
+import Footer from './Components/Footer'
 
 
 export default function App() {
@@ -35,7 +36,9 @@ export default function App() {
   return (
     <div>
       <Header />
+
       <RouterProvider router={router} />
+      <Footer />
     </div>
     
   )

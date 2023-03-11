@@ -22,7 +22,8 @@ code {
 }
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #E0F2F2;
+  background: rgb(156,217,228);
+  background: linear-gradient(90deg, rgba(156,217,228,1) 0%, rgba(195,246,247,1) 35%, rgba(214,238,244,1) 100%);
 } 
 .container{
   max-width: 85%;
@@ -30,7 +31,7 @@ body {
 }
 .flexSB {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   
 }
 .icon {
