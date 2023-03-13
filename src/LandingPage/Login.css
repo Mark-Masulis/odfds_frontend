@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+body{
+    background-color: #E0F2F2;
+    font-family: Inter;
+    color: #152339;
+}
+input{
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px black solid;
+    background-color: white;
+    width: 100%;
+}
+button{
+    margin: 0px auto;
+    background-color: #0C695D;
+    font-family: Inter;
+    color: white;
+    font-size: 20px;
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 50px;
+}
+a:visited{
+    color: #152339;
+}
+#name-in{
+    width:100%;
+}
+#img-in{
+    font-family: Inter;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+}
+/*
+#37AFA9 lighter teal
+#2D8E87 teal
+#0C695D darker teal
+#E0F2F2 vary light baby blue
+#152339 dark blue
+*/

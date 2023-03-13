@@ -21,7 +21,8 @@ export default function TabBar(props){
                     background: "none",
                     width: "200px",
                     marginRight: "20px",
-                    fontSize: 20
+                    fontFamily: "Inter",
+                    fontSize: "25px"
                 }}
                 onClick={()=>{
                     if (selectedTab !== item.label){
@@ -32,8 +33,9 @@ export default function TabBar(props){
             >
                 <p 
                     style={{
+                        color: "#152339",
                         textDecorationLine: selectedTab === item.label?"underline":"none",
-                        textDecorationThickness: "0.25em"
+                        textDecorationThickness: "0.15em"
                     }}
                 >
                     {item.label}

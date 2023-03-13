@@ -5,9 +5,9 @@ import {
     Routes,
     Route
   } from "react-router-dom"
-import TabBar from "./../Components/TabBar"
-import RestaurantLogin from "./RestaurantLogin"
-import DriverLogin from "./DriverLogin"
+import TabBar from "../Components/TabBar"
+import RestaurantCreateAcct from "./RestaurantCreateAcct"
+import DriverCreateAcct from "./DriverCreateAcct"
 
 export default function LoginPage(props){
     const [userType, setUserType] = useState("restaurant")
@@ -27,9 +27,9 @@ export default function LoginPage(props){
                         (()=>{
                             switch(userType){
                                 case "restaurant":
-                                    return <RestaurantLogin/>
+                                    return <RestaurantCreateAcct/>
                                 case "driver":
-                                    return <DriverLogin/>
+                                    return <DriverCreateAcct/>
                             }
                         })()}
                 />

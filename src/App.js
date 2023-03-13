@@ -11,6 +11,7 @@ import Customer from './Customer/Customer'
 import Driver from './Driver/Driver'
 import LandingPage from './LandingPage/LandingPage'
 import LoginPage from './LandingPage/LoginPage'
+import CreateAcctPage from "./LandingPage/CreateAccountPage"
 import Footer from './Components/Footer'
 
 
@@ -27,7 +28,7 @@ export default function App() {
         <Route path="/customer/*" element={<Customer/>}/>
         <Route path="/driver/*" element={<Driver/>}/>
         <Route path="/login/*" element={<LoginPage/>}/>
-        <Route path="/signup/*" element={<p>Signup component goes here</p>}/>
+        <Route path="/signup/*" element={<CreateAcctPage/>}/>
       </Route>
     )
   );

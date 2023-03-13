@@ -55,10 +55,10 @@ export default function RestaurantLogin(props){
         <div
         style={{
             margin: "0 auto",
-            width: "fit-content",
+            width: "50%",
             padding: "25px"
-        }}
-        >
+        }}>
+            <h2>Restaurant Sign-in</h2>
             <section
                 style={{
                     padding: "10px"

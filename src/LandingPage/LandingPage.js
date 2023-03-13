@@ -156,8 +156,8 @@ const DriverButton = ({ href, children }) => (
 
 function LandingPage(props) {
   const links = {
-    restaurantLink: '/Restaurant',
-    driverLink: '/Driver',
+    restaurantLink: '/login',
+    driverLink: '/login',
   };
   return (
     <>
