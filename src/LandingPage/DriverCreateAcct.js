@@ -1,3 +1,4 @@
+import { getValue } from '@testing-library/user-event/dist/utils'
 import React, {
     useState
   } from 'react'
@@ -5,8 +6,62 @@ import React, {
     useNavigate
   } from 'react-router-dom'
   import "./Login.css"
-  
+
   export default function DriverLogin(props){
+    const navigate = useNavigate()
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPass, setConfirmPass] = useState("")
+    const [name, setName] = useState("")
+    const [phoneNum, setPhone] = useState("")
+    const [licenseNum, setLiscenseNum] = useState("")
+    const [acctNum, setAcctNum] = useState("")
+    const [routingNum, setRoutingNum] = useState("")
+    const [loading, setLoading] = useState(false)
+
+    const validEmail = (text) =>{
+        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+        return emailRegex.test(text)
+    }
+
+    const makeLoginRequest = () => {
+        if (email === "" || password === "" || confirmPass === "" || name === "" || phoneNum === "" || licenseNum === "" || acctNum === "" || routingNum === ""){
+            alert("Missing field")
+        } else if(!validEmail(email)){
+            alert("Invalid Email")
+        } else {
+            setLoading(true)
+            fetch(process.env.REACT_APP_API + '/restaurant/token', 
+            {
+                //get restaurant/emailCode
+                method: "GET",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    
+                })
+            }).then(
+                (response) => response.json()
+            ).then(
+                (data) => {
+                    switch(data.code){
+                        case 200: //good things are happening :)
+                            const token = data.data
+                            //navigate(`/verify`)
+                            break;
+                        default: //bad things are happening :(
+                            alert(data.data.message)
+                            break; //TODO: make error message appear describing error to user
+
+                    }
+                    setLoading(false)
+                }
+            )
+
+        }
+    }
+
     return(
         <div
         style={{
@@ -25,11 +80,11 @@ import React, {
                 <input
                     id="name-in" 
                     type="text"
-                    //disabled={loading}
+                    disabled={loading}
                     onChange={(event) => {
-                        //set name
+                        setName(event.target.value)
                     }}
-                    //value={name}
+                    value={name}
                 />
             </section>
             <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
@@ -38,11 +93,11 @@ import React, {
                     <input style={{width:"95%"}}
                         id="email-in" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set email
+                            setEmail(event.target.value)
                         }}
-                        //value={email}
+                        value={email}
                     />
                 </div>
                 <div style={{width:"100%"}}>
@@ -52,11 +107,11 @@ import React, {
                     <input
                         id="phone-in" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set phone Number
+                            setPhone(event.target.value)
                         }}
-                        //value={phoneNum}
+                        value={phoneNum}
                     />
                 </div>
             </section>
@@ -69,11 +124,11 @@ import React, {
                     <input style={{width:"95%"}}
                         id="password" 
                         type="password"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set password
+                            setPassword(event.target.value)
                         }}
-                        //value={password}
+                        value={password}
                     />
                 </div>
                 <div style={{width:"100%"}}>
@@ -83,11 +138,11 @@ import React, {
                     <input
                         id="confirmPass" 
                         type="password"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set confrimPass
+                            setConfirmPass(event.target.value)
                         }}
-                        //value={password}
+                        value={confirmPass}
                     />
                 </div>
             </section>
@@ -100,11 +155,11 @@ import React, {
                     <input style={{width: "95%"}}
                         id="licenseNum" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set licenseNum
+                            setLiscenseNum(event.target.value)
                         }}
-                        //value={licenseNum}
+                        value={licenseNum}
                     />
                 </div>
                 <div style={{width:"100%"}}>
@@ -124,11 +179,11 @@ import React, {
                     <input style={{width: "95%"}}
                         id="acctNum" 
                         type="number"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set acctNum
+                            setAcctNum(event.target.value)
                         }}
-                        //value={acctNum}
+                        value={acctNum}
                     />
                 </div>
                 <div style={{width: "100%"}}>
@@ -138,11 +193,11 @@ import React, {
                     <input
                         id="routingNum" 
                         type="number"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set routingNum
+                            setRoutingNum(event.target.value)
                         }}
-                        //value={routingNum}
+                        value={routingNum}
                     />
                 </div>
             </section>
@@ -151,8 +206,8 @@ import React, {
                     margin: "0 auto",
                     display: "flex"
                 }}
-                //disabled={loading}
-                //onClick={makeLoginRequest}
+                disabled={loading}
+                onClick={makeLoginRequest}
             >
                 Create Account
             </button>

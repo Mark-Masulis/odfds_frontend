@@ -5,8 +5,67 @@ import {
     useNavigate
 } from 'react-router-dom'
 import "./Login.css"
-  
 export default function RestauranCreateAcct(props){
+    const navigate = useNavigate()
+    const states = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
+                    "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPass, setConfirmPass] = useState("")
+    const [name, setName] = useState("")
+    const [phoneNum, setPhone] = useState("")
+    const [address, setAddress] = useState("")
+    const [city, setCity] = useState("")
+    const [state, setState] = useState("")
+    const [zipcode, setZipcode] = useState("")
+    const [loading, setLoading] = useState(false)
+
+    const validEmail = (text) =>{
+        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+        return emailRegex.test(text)
+    }
+    
+    const makeCreateAcctRequest = () => {
+        if (password == "" || confirmPass == "" || name == "" || phoneNum == "" || address == "" || city == "" || state == "" || zipcode == ""){
+            alert("Missing a field")
+        } else if(!validEmail(email)){
+            alert("Invalid email is invalid")
+        } else if (password != confirmPass){
+            alert("Passwords must match")
+        } else if (!states.includes(state)){
+            alert("Invalid state")
+        } else {
+            setLoading(true)
+            fetch(process.env.REACT_APP_API + '/restaurant/token', 
+            {
+                //get restaurant/emailCode
+                method: "GET",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    
+                })
+            }).then(
+                (response) => response.json()
+            ).then(
+                (data) => {
+                    switch(data.code){
+                        case 200: //good things are happening :)
+                            const token = data.data
+                            //navigate(`/verify`)
+                            break;
+                        default: //bad things are happening :(
+                            alert(data.data.message)
+                            break; //TODO: make error message appear describing error to user
+
+                    }
+                    setLoading(false)
+                }
+            )
+        }
+    }
+
     return(
         <div
         style={{
@@ -22,11 +81,11 @@ export default function RestauranCreateAcct(props){
                 <input
                     id="name-in" 
                     type="text"
-                    //disabled={loading}
+                    disabled={loading}
                     onChange={(event) => {
-                        //set name
+                        setName(event.target.value)
                     }}
-                    //value={name}
+                    value={name}
                 />
             </section>
             <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
@@ -37,11 +96,11 @@ export default function RestauranCreateAcct(props){
                     <input style={{width: "95%"}}
                         id="email-in" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set email
+                            setEmail(event.target.value)
                         }}
-                        //value={email}
+                        value={email}
                     />
                 </div>
                 <div style={{width:"100%"}}>
@@ -51,11 +110,11 @@ export default function RestauranCreateAcct(props){
                     <input
                         id="phone-in" 
                         type="tel"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set phone Number
+                            setPhone(event.target.value)
                         }}
-                        //value={phoneNum}
+                        value={phoneNum}
                     />
                 </div>
             </section>
@@ -68,11 +127,11 @@ export default function RestauranCreateAcct(props){
                     <input id="password-in" 
                         style={{width:"95%"}}
                         type="password"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set password
+                            setPassword(event.target.value)
                         }}
-                        //value={password}
+                        value={password}
                     />
                 </div>
                 <div style={{width:"100%"}}>
@@ -81,11 +140,11 @@ export default function RestauranCreateAcct(props){
                     </label>
                     <input id="confirmPass-in" 
                         type="password"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set confrimPass
+                            setConfirmPass(event.target.value)
                         }}
-                        //value={password}
+                        value={confirmPass}
                     />
                 </div>
             </section>
@@ -98,11 +157,11 @@ export default function RestauranCreateAcct(props){
                     <input style={{width:"95%"}}
                         id="address" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set address
+                            setAddress(event.target.value)
                         }}
-                        //value={address}
+                        value={address}
                     />
                 </div>
                 <div style={{width:"30%"}}>
@@ -112,11 +171,11 @@ export default function RestauranCreateAcct(props){
                     <input style={{width:"95%"}}
                         id="city" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set city
+                            setCity(event.target.value)
                         }}
-                        //value={city}
+                        value={city}
                     />
                 </div>
                 <div style={{width:"10%"}}>
@@ -126,11 +185,11 @@ export default function RestauranCreateAcct(props){
                     <input style={{width:"90%"}}
                         id="state" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set state
+                            setState(event.target.value)
                         }}
-                        //value={state}
+                        value={state}
                     />
                 </div>
                 <div style={{width:"20%"}}>
@@ -140,11 +199,11 @@ export default function RestauranCreateAcct(props){
                     <input
                         id="zipcode" 
                         type="text"
-                        //disabled={loading}
+                        disabled={loading}
                         onChange={(event) => {
-                            //set zipcode
+                            setZipcode(event.target.value)
                         }}
-                        //value={zipcode}
+                        value={zipcode}
                     />
                 </div>
             </section>
@@ -153,8 +212,7 @@ export default function RestauranCreateAcct(props){
                     margin: "10px auto",
                     display: "flex"
                 }}
-                //disabled={loading}
-                //onClick={makeLoginRequest}
+                onClick={makeCreateAcctRequest}
             >
                 Create Account
             </button>
