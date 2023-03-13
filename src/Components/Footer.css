@@ -1,0 +1,34 @@
+.footer {
+    text-align: center; 
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  
+  .contact a {
+    font-size: 20px;
+    color: #f3660f;
+    text-decoration: none;
+  }
+  
+  .social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .social a {
+    margin: 0 10px;
+    font-size: 24px;
+    color: #f4750e;
+    text-decoration: none;
+  }
+  
+  .social a:hover {
+    color: #32f5e8;
+  }
+  
+  .social i {
+    margin-right: 10px;
+  }
+  

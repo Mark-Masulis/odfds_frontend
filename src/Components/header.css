@@ -1,45 +1,23 @@
 /* head style*/
-.head {
-    margin: 10px;
-    padding: 20px 0;
-    color: #000;
-}
-
 .logo h1 {
     width: 1000px;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* font-size: 50px;
-    letter-spacing: 2px;
-    color: white;
-    text-shadow: 0px 0px 5px black; */
-
     font-size: 50px;
     color: #ff9800;
     letter-spacing: 2px;
-    text-shadow: 2px 2px #333;
-    text-transform: uppercase;
+    text-shadow: 3px 3px #333;
   }
 .logo img {
-    margin: 0;
-    padding: 0;
     width: 15%;
-}
-.social {
-    display: flex;
-    align-items: flex-end;
 }  
-.head .icon {
-    margin-left: 10px;
-}
+
 /* header style*/
 header {
     background-color: #fffcfc;
-    margin: 0 20px;
 }
-header ul {
-    padding: 5px 30px;
+header ul {  
     list-style: none;   
 }
 header li {
@@ -47,10 +25,27 @@ header li {
 }
 header ul li a {
     color: #1eb2a6;
-    font-weight: 500;
-    transition: 0.5s;
-    
+    font-size: 20px;
+    transition: 0.5s;  
 }
 header ul li a:hover {
-    color: #131515;
+    color: #f68606;
 }
+select {
+    font-size: 20px;
+    margin-left: 100px;
+    border: none;
+    background-color: white;
+    color: #1eb2a6;
+  }
+  
+  select:focus {
+    outline: none;
+  } 
+  
+  select option {
+    font-size: 16px;
+    background-color: white;
+    color: #f28407;
+  }
+  

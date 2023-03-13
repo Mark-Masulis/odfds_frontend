@@ -168,8 +168,7 @@ function LandingPage(props) {
           <Box
               image="logoR.png"
               title="Are you a restaurant that needs food delivery service? "
-              text="Click on restaurant to get started."
-             /*  buttonText="Restaurant" */
+              text="Click on restaurant to get started."             
               className="restaurant"
               link={links}
             />
@@ -180,7 +179,6 @@ function LandingPage(props) {
           image="logoDriver.png"
           title="Do you want a side gig delivering food to customers?"
           text="Click on Driver to get started."
-          /* buttonText="Driver" */
           className="driver"
           link={links}
         />
