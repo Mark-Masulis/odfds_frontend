@@ -12,7 +12,7 @@ import Driver from './Driver/Driver'
 import LandingPage from './LandingPage/LandingPage'
 import LoginPage from './LandingPage/LoginPage'
 import Footer from './Components/Footer'
-
+import Layout from './Components/Layout'
 
 export default function App() {
 
@@ -29,6 +29,7 @@ export default function App() {
         <Route path="/login/*" element={<LoginPage/>}/>
         <Route path="/signup/*" element={<p>Signup component goes here</p>}/>
       </Route>
+      
     )
   );
 
@@ -36,8 +37,9 @@ export default function App() {
   return (
     <div>
       <Header />
-
+      <Layout>
       <RouterProvider router={router} />
+      </Layout>
       <Footer />
     </div>
     

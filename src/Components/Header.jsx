@@ -29,7 +29,7 @@ const Header = () => {
           <option value="es">Español</option>
           <option value="zh">中文</option>
         </select>
-       </nav>
+       </nav>       
      </header>
     </>
   )

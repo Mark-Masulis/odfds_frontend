@@ -1,76 +1,61 @@
- .landingpage {
+.landingpage {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-top: 50px;
-  margin-bottom: 100px;
+  margin-top: 0px;
+  margin-bottom: 60px;
 } 
-  .landingpage h1 {   
-    /* font-family: 'Bradley Hand'; */
-    font-family: 'Poppins', sans-serif;
-    font-family: 'Tilt Neon', cursive;
-    letter-spacing: 3px;
-    font-size: 60px;
-    padding: 50px;
-    color: rgb(232, 141, 5);
-   
-  }
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  max-width: 1000px;
-  }
-  
-  .box {
-    flex: 1;
-    height: 200px;
-    margin: 0 60px;
-    position: relative;
-    height: 500px;
-    width: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .box img[src="https://venturaharbor.com/wp-content/uploads/2022/08/Ota-take-out-2-full-file-2048x1364.jpg"] {
-    width: 100%;
-  }
-  .box img[src="https://www.brookings.edu/wp-content/uploads/2022/05/Cover-photo-2-e1652220627267.jpeg"] {
-    width: 120%;
-  }
-    .container p {
-      color: rgb(0, 0, 0);
-      font-size: 30px;
-      font-weight: bolder;
-
-    }
-    
-    .container button {
-      margin-top: 10px;
-      display: inline-block;
-      padding: 10px 25px;
-      background-color: rgb(53, 165, 167);
-      color: #fafafa;
-      border: none;
-      text-decoration: none;
-      font-size: 20px;
-
-    }
-
-.container button:hover {
-  background-color: #2b6562;
-  cursor: pointer;
+.landingpage h1 {   
+  font-family: 'Tilt Neon', cursive;
+  letter-spacing: 3px;
+  font-size: 60px;
+  padding: 50px;
+  color: rgb(232, 141, 5);
 }
-  
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+} 
+.box {
+  flex: 1;
+  height: 200px;
+  margin: 0 60px;
+  position: relative;
+  height: 500px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.box img[src="https://venturaharbor.com/wp-content/uploads/2022/08/Ota-take-out-2-full-file-2048x1364.jpg"] {
+  width: 100%;
+}
+.box img[src="https://www.brookings.edu/wp-content/uploads/2022/05/Cover-photo-2-e1652220627267.jpeg"] {
+  width: 120%;
+}
+.container p {
+  padding: 30px;
+  color: rgb(0, 0, 0);
+  font-size: 30px;
+}
+.container button{
+  margin: auto;
+  background-color: #0C695D;
+  font-family: Inter;
+  color: white;
+  font-size: 20px;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px 50px;
+}
+.container button:hover {
+  background-color: #1ee0e0;
+  cursor: pointer;
+} 
    
-
-
-    /* border-radius: 20% 80% 70% 30% / 70% 25% 75% 30% */ 
-  
-  
-  
