@@ -9,7 +9,7 @@ import Header from './Components/Header'
 import Restaurant from './Restaurant/Restaurant'
 import Customer from './Customer/Customer'
 import Driver from './Driver/Driver'
-import LandingPage from './LandingPage/LandingPage'
+import LandingPage from './LandingPage/LandingPage.jsx'
 import LoginPage from './LandingPage/LoginPage'
 import CreateAcctPage from "./LandingPage/CreateAccountPage"
 import Footer from './Components/Footer'

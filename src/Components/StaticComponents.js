@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+/*
+These components should be reuseable throughout the project to keep a consistent look.
+*/
+
 const Container = styled.div`
 background-color: #fffcfc;
 margin: 20px;
