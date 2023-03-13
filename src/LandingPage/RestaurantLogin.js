@@ -114,7 +114,7 @@ export default function RestaurantLogin(props){
                     Create an account
                 </a>
                 <br/>
-                <a href="/login/reset">
+                <a href="/login/restaurant/reset">
                     Forgot your password?
                 </a>
             </section>

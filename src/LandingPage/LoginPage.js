@@ -3,29 +3,31 @@ import React, {
 } from 'react'
 import {
     Routes,
-    Route
+    Route,
+    useParams
   } from "react-router-dom"
 import TabBar from "./../Components/TabBar"
 import RestaurantLogin from "./RestaurantLogin"
 import DriverLogin from "./DriverLogin"
 
 export default function LoginPage(props){
-    const [userType, setUserType] = useState("restaurant")
-
+    const {userType} = useParams()
+    const [userTab, setUserTab] = useState(userType || "restaurant")
     return (
         <div>
             <TabBar 
                 tabs={[
-                    {label: "Restaurant", onSelect: ()=>{setUserType("restaurant")}},
-                    {label: "Driver", onSelect: ()=>{setUserType("driver")}}
+                    {label: "Restaurant", onSelect: ()=>{setUserTab("restaurant")}},
+                    {label: "Driver", onSelect: ()=>{setUserTab("driver")}}
                 ]}
+                defaultLabel={userType}
             />
             <Routes>
                 <Route 
                     exact path="/" 
                     element={
                         (()=>{
-                            switch(userType){
+                            switch(userTab){
                                 case "restaurant":
                                     return <RestaurantLogin/>
                                 case "driver":
@@ -34,10 +36,10 @@ export default function LoginPage(props){
                         })()}
                 />
                 <Route
-                    path="/reset"
+                    exact path="/reset"
                     element={
                         (()=>{
-                            switch(userType){
+                            switch(userTab){
                                 case "restaurant":
                                     return <p>Restaurant password reset component goes here</p>
                                 case "driver":

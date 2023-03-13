@@ -116,7 +116,7 @@ export default function DriverLogin(props){
                   Create an account
               </a>
               <br/>
-              <a href="/login/reset">
+              <a href="/login/driver/reset">
                   Forgot your password?
               </a>
           </section>

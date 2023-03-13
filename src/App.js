@@ -27,7 +27,7 @@ export default function App() {
         <Route path="/restaurant/*" element={<Restaurant/>}/>
         <Route path="/customer/*" element={<Customer/>}/>
         <Route path="/driver/*" element={<Driver/>}/>
-        <Route path="/login/*" element={<LoginPage/>}/>
+        <Route path="/login/:userType/*" element={<LoginPage/>}/>
         <Route path="/signup/*" element={<CreateAcctPage/>}/>
       </Route>
     )
