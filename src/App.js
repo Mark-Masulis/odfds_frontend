@@ -9,8 +9,9 @@ import Header from './Components/Header'
 import Restaurant from './Restaurant/Restaurant'
 import Customer from './Customer/Customer'
 import Driver from './Driver/Driver'
-import LandingPage from './LandingPage/LandingPage'
+import LandingPage from './LandingPage/LandingPage.jsx'
 import LoginPage from './LandingPage/LoginPage'
+import CreateAcctPage from "./LandingPage/CreateAccountPage"
 import Footer from './Components/Footer'
 import Layout from './Components/Layout'
 
@@ -26,8 +27,8 @@ export default function App() {
         <Route path="/restaurant/*" element={<Restaurant/>}/>
         <Route path="/customer/*" element={<Customer/>}/>
         <Route path="/driver/*" element={<Driver/>}/>
-        <Route path="/login/*" element={<LoginPage/>}/>
-        <Route path="/signup/*" element={<p>Signup component goes here</p>}/>
+        <Route path="/login/:userType/*" element={<LoginPage/>}/>
+        <Route path="/signup/*" element={<CreateAcctPage/>}/>
       </Route>
       
     )

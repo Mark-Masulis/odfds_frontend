@@ -3,43 +3,41 @@ import React, {
 } from 'react'
 import {
     Routes,
-    Route,
-    useParams
+    Route
   } from "react-router-dom"
-import TabBar from "./../Components/TabBar"
-import RestaurantLogin from "./RestaurantLogin"
-import DriverLogin from "./DriverLogin"
+import TabBar from "../Components/TabBar"
+import RestaurantCreateAcct from "./RestaurantCreateAcct"
+import DriverCreateAcct from "./DriverCreateAcct"
 
 export default function LoginPage(props){
-    const {userType} = useParams()
-    const [userTab, setUserTab] = useState(userType || "restaurant")
+    const [userType, setUserType] = useState("restaurant")
+
     return (
         <div>
             <TabBar 
                 tabs={[
-                    {label: "Restaurant", onSelect: ()=>{setUserTab("restaurant")}},
-                    {label: "Driver", onSelect: ()=>{setUserTab("driver")}}
+                    {label: "Restaurant", onSelect: ()=>{setUserType("restaurant")}},
+                    {label: "Driver", onSelect: ()=>{setUserType("driver")}}
                 ]}
-                defaultLabel={userType}
             />
             <Routes>
                 <Route 
                     exact path="/" 
                     element={
                         (()=>{
-                            switch(userTab){
+                            switch(userType){
                                 case "restaurant":
-                                    return <RestaurantLogin/>
+                                    return <RestaurantCreateAcct/>
                                 case "driver":
-                                    return <DriverLogin/>
+                                    return <DriverCreateAcct/>
                             }
                         })()}
                 />
                 <Route
-                    exact path="/reset"
+                    path="/reset"
                     element={
                         (()=>{
-                            switch(userTab){
+                            switch(userType){
                                 case "restaurant":
                                     return <p>Restaurant password reset component goes here</p>
                                 case "driver":
