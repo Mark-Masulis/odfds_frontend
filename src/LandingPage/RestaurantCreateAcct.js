@@ -18,22 +18,17 @@ export default function RestauranCreateAcct(props){
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
     const [zipcode, setZipcode] = useState("")
+    const [emailCode, setEmailCode] = useState("")
     const [loading, setLoading] = useState(false)
 
     const validEmail = (text) =>{
         const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
         return emailRegex.test(text)
     }
-    
-    const makeCreateAcctRequest = () => {
-        if (password == "" || confirmPass == "" || name == "" || phoneNum == "" || address == "" || city == "" || state == "" || zipcode == ""){
-            alert("Missing a field")
-        } else if(!validEmail(email)){
-            alert("Invalid email is invalid")
-        } else if (password != confirmPass){
-            alert("Passwords must match")
-        } else if (!states.includes(state)){
-            alert("Invalid state")
+
+    const verifyEmailRequest = () => {
+        if(!validEmail(email)){
+            alert("Invalid email ")
         } else {
             setLoading(true)
             fetch(process.env.REACT_APP_API + '/restaurant/token', 
@@ -44,21 +39,67 @@ export default function RestauranCreateAcct(props){
                     "content-type": "application/json"
                 },
                 body: JSON.stringify({
-                    
+                    "email":email
                 })
             }).then(
                 (response) => response.json()
             ).then(
                 (data) => {
                     switch(data.code){
-                        case 200: //good things are happening :)
+                        case 200:
                             const token = data.data
-                            //navigate(`/verify`)
+                            alert(token)
                             break;
-                        default: //bad things are happening :(
+                        default:
                             alert(data.data.message)
-                            break; //TODO: make error message appear describing error to user
+                            break;
 
+                    }
+                    setLoading(false)
+                }
+            )
+        }
+    }
+    
+    const driverCreateAcctRequest = () => {
+        if (password === "" || confirmPass === "" || name === "" || phoneNum === "" || address === "" || city === "" || state === "" || zipcode === ""){
+            alert("Missing a field")
+        } else if(!validEmail(email)){
+            alert("Invalid email")
+        } else if (password != confirmPass){
+            alert("Passwords must match")
+        } else if (!states.includes(state)){
+            alert("Invalid state")
+        } else {
+            setLoading(true)
+            fetch(process.env.REACT_APP_API + '/restaurant/', 
+            {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    code: emailCode,
+                    password :password,
+                    phone: phoneNum,
+                    street: address,
+                    city: city,
+                    zipcode: zipcode
+                })
+            }).then(
+                (response) => response.json()
+            ).then(
+                (data) => {
+                    switch(data.code){
+                        case 200:
+                            alert(data.data)
+                            //route to restaurant account page
+                            //navigate(`/restaurant/`)
+                            break;
+                        default:
+                            alert(data.data.message)
+                            break; 
                     }
                     setLoading(false)
                 }
@@ -89,11 +130,11 @@ export default function RestauranCreateAcct(props){
                 />
             </section>
             <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"100%"}}>
+                <div style={{width:"50%"}}>
                     <label for="email" style={{display: "block"}}>
                         Email
                     </label>
-                    <input style={{width: "95%"}}
+                    <input style={{width:"95%"}}
                         id="email-in" 
                         type="text"
                         disabled={loading}
@@ -103,11 +144,30 @@ export default function RestauranCreateAcct(props){
                         value={email}
                     />
                 </div>
-                <div style={{width:"100%"}}>
+                <div style={{width: "20%"}}>
+                    <button onClick={verifyEmailRequest}>Verify Email</button>
+                </div>
+                <div style={{width:"30%"}}>
+                    <label for="code" style={{display: "block"}}>
+                        Email Code
+                    </label>
+                    <input
+                        id="code-in" 
+                        type="text"
+                        disabled={loading}
+                        onChange={(event) => {
+                            setEmailCode(event.target.value)
+                        }}
+                        value={emailCode}
+                    />
+                </div>
+            </section>
+            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
+                <div style={{width:"50%"}}>
                     <label for="phoneNum" style={{display: "block"}}>
                         Phone Number
                     </label>
-                    <input
+                    <input style={{width:"95%"}}
                         id="phone-in" 
                         type="tel"
                         disabled={loading}
@@ -118,7 +178,6 @@ export default function RestauranCreateAcct(props){
                     />
                 </div>
             </section>
-            
             <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
                 <div style={{width:"100%"}}>
                     <label for="password" style={{display: "block"}}>
@@ -212,7 +271,7 @@ export default function RestauranCreateAcct(props){
                     margin: "10px auto",
                     display: "flex"
                 }}
-                onClick={makeCreateAcctRequest}
+                onClick={driverCreateAcctRequest}
             >
                 Create Account
             </button>

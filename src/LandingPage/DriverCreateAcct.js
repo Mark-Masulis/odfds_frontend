@@ -17,48 +17,108 @@ import React, {
     const [licenseNum, setLiscenseNum] = useState("")
     const [acctNum, setAcctNum] = useState("")
     const [routingNum, setRoutingNum] = useState("")
+    const [emailCode, setEmailCode] = useState("")
     const [loading, setLoading] = useState(false)
-
+    
     const validEmail = (text) =>{
         const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
         return emailRegex.test(text)
     }
 
-    const makeLoginRequest = () => {
-        if (email === "" || password === "" || confirmPass === "" || name === "" || phoneNum === "" || licenseNum === "" || acctNum === "" || routingNum === ""){
-            alert("Missing field")
-        } else if(!validEmail(email)){
-            alert("Invalid Email")
+    const validName = (name) =>{
+        var nameSplit = name.split(" ")
+        return nameSplit.length == 3 || nameSplit.length == 2
+    }
+
+    const verifyEmailRequest = () => {
+        if(!validEmail(email)){
+            alert("Invalid email ")
         } else {
             setLoading(true)
-            fetch(process.env.REACT_APP_API + '/restaurant/token', 
+            fetch(process.env.REACT_APP_API + '/driver/token', 
             {
-                //get restaurant/emailCode
+                //get driver/emailCode
                 method: "GET",
                 headers: {
                     "content-type": "application/json"
                 },
                 body: JSON.stringify({
-                    
+                    "email":email
                 })
             }).then(
                 (response) => response.json()
             ).then(
                 (data) => {
                     switch(data.code){
-                        case 200: //good things are happening :)
+                        case 200:
                             const token = data.data
-                            //navigate(`/verify`)
+                            alert(token)
                             break;
-                        default: //bad things are happening :(
+                        default:
                             alert(data.data.message)
-                            break; //TODO: make error message appear describing error to user
+                            break;
 
                     }
                     setLoading(false)
                 }
             )
+        }
+    }
 
+    const driverCreateAcctRequest = () => {
+        if (email === "" || password === "" || confirmPass === "" || name === "" || phoneNum === "" || licenseNum === "" || acctNum === "" || routingNum === ""){
+            alert("Missing field")
+        } else if(!validEmail(email)){
+            alert("Invalid Email")
+        } else if(!validName(name)){
+            alert("Invalid Name")
+        } else {
+            const nameSplit = name.split(" ")
+            const firstName = nameSplit[0]
+            var middleName = null
+            var lastName = nameSplit[1]
+            if(nameSplit.length > 2){
+                middleName = nameSplit[1]
+                lastName = nameSplit[2]
+            }
+            const img = ""
+            setLoading(true)
+            fetch(process.env.REACT_APP_API + '/driver/', 
+            {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    email:email,
+                    code:emailCode,
+                    password:password,
+                    phone: phoneNum,
+                    driverLicenseNumber: licenseNum,
+                    driverLicenseImage: img,
+                    firstName: firstName,
+                    lastName: lastName,
+                    middleName: middleName,
+                    bankAccountNumber: acctNum,
+                    bankRoutingNum: routingNum
+                })
+            }).then(
+                (response) => response.json()
+            ).then(
+                (data) => {
+                    switch(data.code){
+                        case 200:
+                            alert(data.data)
+                            //route to driver account page
+                            //navigate(`/driver/`)
+                            break;
+                        default: 
+                            alert(data.data.message)
+                            break;
+                    }
+                    setLoading(false)
+                }
+            )
         }
     }
 
@@ -207,7 +267,7 @@ import React, {
                     display: "flex"
                 }}
                 disabled={loading}
-                onClick={makeLoginRequest}
+                onClick={driverCreateAcctRequest}
             >
                 Create Account
             </button>
