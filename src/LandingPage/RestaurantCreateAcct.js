@@ -26,34 +26,25 @@ export default function RestauranCreateAcct(props){
         return emailRegex.test(text)
     }
 
-    const verifyEmailRequest = () => {
-        if(!validEmail(email)){
+    const sendEmailCode = () => {
+        if(email == ""){
+            alert("Please enter an email")
+        } else if(!validEmail(email)){
             alert("Invalid email ")
         } else {
             setLoading(true)
-            fetch(process.env.REACT_APP_API + '/restaurant/token', 
-            {
-                //get restaurant/emailCode
-                method: "GET",
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    "email":email
-                })
-            }).then(
+            fetch(process.env.REACT_APP_API + '/restaurant/emailCode?' + (new URLSearchParams({"email": email})).toString()
+            ).then(
                 (response) => response.json()
             ).then(
                 (data) => {
                     switch(data.code){
                         case 200:
-                            const token = data.data
-                            alert(token)
+                            alert(data.data)
                             break;
                         default:
                             alert(data.data.message)
                             break;
-
                     }
                     setLoading(false)
                 }
@@ -79,13 +70,15 @@ export default function RestauranCreateAcct(props){
                     "content-type": "application/json"
                 },
                 body: JSON.stringify({
+                    name: name,
                     email: email,
                     code: emailCode,
                     password :password,
                     phone: phoneNum,
                     street: address,
                     city: city,
-                    zipcode: zipcode
+                    state: state,
+                    zipCode: zipcode
                 })
             }).then(
                 (response) => response.json()
@@ -94,8 +87,8 @@ export default function RestauranCreateAcct(props){
                     switch(data.code){
                         case 200:
                             alert(data.data)
-                            //route to restaurant account page
-                            //navigate(`/restaurant/`)
+                            //route to login page
+                            //navigate(`/login/restaurant`)
                             break;
                         default:
                             alert(data.data.message)
@@ -145,7 +138,7 @@ export default function RestauranCreateAcct(props){
                     />
                 </div>
                 <div style={{width: "20%"}}>
-                    <button onClick={verifyEmailRequest}>Verify Email</button>
+                    <button class="code-btn" onClick={sendEmailCode}>Send Code</button>
                 </div>
                 <div style={{width:"30%"}}>
                     <label for="code" style={{display: "block"}}>

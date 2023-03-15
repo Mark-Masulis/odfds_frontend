@@ -18,6 +18,7 @@ import React, {
     const [acctNum, setAcctNum] = useState("")
     const [routingNum, setRoutingNum] = useState("")
     const [emailCode, setEmailCode] = useState("")
+    const [image, setImage] = useState("")
     const [loading, setLoading] = useState(false)
     
     const validEmail = (text) =>{
@@ -30,22 +31,13 @@ import React, {
         return nameSplit.length == 3 || nameSplit.length == 2
     }
 
-    const verifyEmailRequest = () => {
+    const sendEmailCode = () => {
         if(!validEmail(email)){
             alert("Invalid email ")
         } else {
             setLoading(true)
-            fetch(process.env.REACT_APP_API + '/driver/token', 
-            {
-                //get driver/emailCode
-                method: "GET",
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    "email":email
-                })
-            }).then(
+            fetch(process.env.REACT_APP_API + '/driver/emailCode?' + (new URLSearchParams({"email": email})).toString()
+            ).then(
                 (response) => response.json()
             ).then(
                 (data) => {
@@ -65,12 +57,58 @@ import React, {
         }
     }
 
-    const driverCreateAcctRequest = () => {
+    async function uploadImage(){
+        var file = document.getElementById('img-in').files[0]
+        if (!file) {
+            alert('please select a file');
+            return;
+        }
+        var data = new FormData()
+        data.append("image", file)
+        let res = await fetch(process.env.REACT_APP_API + "/common/upload/image",{
+            method: "POST",
+            body:data
+        })
+        if(res.status == 200){
+            let json = await res.json()
+            json.then(state => state).then(result =>{
+                return result.data
+            })
+        }
+        throw new Error(res.status)
+    }
+
+    async function driverCreateAcctRequest() {
+        setLoading(true)
+        
+        var file = document.getElementById('img-in').files[0]
+        if (!file) {
+            alert('please select a file');
+            return;
+        }
+        var data = new FormData()
+        data.append("image", file)
+        var url = ""
+        await fetch(process.env.REACT_APP_API + "/common/upload/image",{
+            method: "POST",
+            body:data
+        }).then(res => res.json()).then(resp => {
+            if (resp.code != 200) {
+                alert(resp.data.message);
+                return;
+            }
+            url = resp.data
+        }).catch(err => {
+            alert(err);
+            return;
+        });
+        setLoading(false)
+
         if (email === "" || password === "" || confirmPass === "" || name === "" || phoneNum === "" || licenseNum === "" || acctNum === "" || routingNum === ""){
             alert("Missing field")
         } else if(!validEmail(email)){
-            alert("Invalid Email")
-        } else if(!validName(name)){
+            alert("Invalid Email") }
+        else if(!validName(name)){
             alert("Invalid Name")
         } else {
             const nameSplit = name.split(" ")
@@ -81,8 +119,8 @@ import React, {
                 middleName = nameSplit[1]
                 lastName = nameSplit[2]
             }
-            const img = ""
             setLoading(true)
+            console.log(routingNum)
             fetch(process.env.REACT_APP_API + '/driver/', 
             {
                 method: "POST",
@@ -95,12 +133,12 @@ import React, {
                     password:password,
                     phone: phoneNum,
                     driverLicenseNumber: licenseNum,
-                    driverLicenseImage: img,
+                    driverLicenseImage: url,
                     firstName: firstName,
                     lastName: lastName,
                     middleName: middleName,
                     bankAccountNumber: acctNum,
-                    bankRoutingNum: routingNum
+                    bankRoutingNumber: routingNum
                 })
             }).then(
                 (response) => response.json()
@@ -109,8 +147,8 @@ import React, {
                     switch(data.code){
                         case 200:
                             alert(data.data)
-                            //route to driver account page
-                            //navigate(`/driver/`)
+                            //route to sign in page
+                            //navigate(`/login/driver`)
                             break;
                         default: 
                             alert(data.data.message)
@@ -120,6 +158,7 @@ import React, {
                 }
             )
         }
+        
     }
 
     return(
@@ -148,8 +187,10 @@ import React, {
                 />
             </section>
             <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"100%"}}>
-                    <label for="email" style={{display: "block"}}>Email</label>
+                <div style={{width:"50%"}}>
+                    <label for="email" style={{display: "block"}}>
+                        Email
+                    </label>
                     <input style={{width:"95%"}}
                         id="email-in" 
                         type="text"
@@ -160,13 +201,32 @@ import React, {
                         value={email}
                     />
                 </div>
-                <div style={{width:"100%"}}>
+                <div style={{width: "20%"}}>
+                    <button class="code-btn" onClick={sendEmailCode}>Send Code</button>
+                </div>
+                <div style={{width:"30%"}}>
+                    <label for="code" style={{display: "block"}}>
+                        Email Code
+                    </label>
+                    <input
+                        id="code-in" 
+                        type="text"
+                        disabled={loading}
+                        onChange={(event) => {
+                            setEmailCode(event.target.value)
+                        }}
+                        value={emailCode}
+                    />
+                </div>
+            </section>
+            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
+                <div style={{width:"50%"}}>
                     <label for="phoneNum" style={{display: "block"}}>
                         Phone Number
                     </label>
-                    <input
+                    <input style={{width:"95%"}}
                         id="phone-in" 
-                        type="text"
+                        type="tel"
                         disabled={loading}
                         onChange={(event) => {
                             setPhone(event.target.value)
@@ -175,14 +235,13 @@ import React, {
                     />
                 </div>
             </section>
-
             <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
                 <div style={{width:"100%"}}>
                     <label for="password" style={{display: "block"}}>
                         Password
                     </label>
-                    <input style={{width:"95%"}}
-                        id="password" 
+                    <input id="password-in" 
+                        style={{width:"95%"}}
                         type="password"
                         disabled={loading}
                         onChange={(event) => {
@@ -195,8 +254,7 @@ import React, {
                     <label for="confirmPass" style={{display: "block"}}>
                         Confirm Password
                     </label>
-                    <input
-                        id="confirmPass" 
+                    <input id="confirmPass-in" 
                         type="password"
                         disabled={loading}
                         onChange={(event) => {
@@ -206,7 +264,6 @@ import React, {
                     />
                 </div>
             </section>
-
             <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
                 <div style={{width: "100%"}}>
                     <label for="licenseNum" style={{display: "block"}} >
@@ -227,6 +284,9 @@ import React, {
                         Driver's License Image
                     </label>
                     <input type="file" id="img-in" name="img" accept="image/*"
+                        onChange={(event) =>{
+                            setImage(event.target.value)
+                        }}
                         Upload Image
                     />
                 </div>
