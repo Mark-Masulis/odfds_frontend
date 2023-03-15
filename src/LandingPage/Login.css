@@ -14,13 +14,16 @@ input{
 }
 button{
     margin: 0px auto;
-    background-color: #0C695D;
+    background-color: #2D8E87;
     font-family: Inter;
     color: white;
     font-size: 20px;
     border: 0;
     border-radius: 5px;
     padding: 10px 50px;
+}
+button:hover{
+    background-color: #0C695D;
 }
 a:visited{
     color: #152339;
@@ -34,6 +37,12 @@ a:visited{
     border: 0;
     border-radius: 0;
     background-color: transparent;
+}
+.code-btn{
+    margin-top: 10px;
+    font-size: 20px;
+    padding: 10px 20px;
+    width: 90%
 }
 /*
 #37AFA9 lighter teal
