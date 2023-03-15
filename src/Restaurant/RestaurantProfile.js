@@ -65,7 +65,10 @@ export default function CustomerProfile(props){
                             ? <EditPanel 
                                 data={data}
                                 onButtonClick={()=>{setEditting(false)}}
-                                onUpdateSuccess={()=>{}}
+                                onUpdateSuccess={()=>{
+                                    setEditting(false)
+                                    getProfileData()
+                                }}
                                 token={props.token}
                             />
                             : <ViewPanel 
@@ -142,7 +145,6 @@ function EditPanel(props){
 
     const updateRestaurantProfile = ()=>{
         setLoading(true)
-        alert("starting fetch")
         fetch(process.env.REACT_APP_API + '/restaurant/profile', {
             method: 'PATCH',
             headers: {
