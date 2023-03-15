@@ -8,13 +8,14 @@ body{
 input{
     padding: 5px 10px;
     border-radius: 10px;
-    border: 1px black solid;
+    border: 1px rgb(90, 88, 88) solid;
     background-color: white;
     width: 100%;
 }
 button{
-    margin: 0px auto;
-    background-color: #2D8E87;
+
+    margin: 0px auto; 
+    background-color: #0C695D;
     font-family: Inter;
     color: white;
     font-size: 20px;
