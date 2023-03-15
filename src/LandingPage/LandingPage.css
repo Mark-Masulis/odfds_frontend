@@ -13,7 +13,7 @@
   font-size: 60px;
   padding: 50px;
   color: rgb(232, 141, 5);
-}
+} 
 .container {
   display: flex;
   justify-content: center;
@@ -44,8 +44,18 @@
   color: rgb(0, 0, 0);
   font-size: 30px;
 }
-.container button{
-  margin: auto;
+ .container button{
+  margin-bottom: 80px;
+  background-color: #0C695D;
+  font-family: Inter;
+  color: white;
+  font-size: 20px;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px 50px;
+} 
+.container button {
+  margin-bottom: 80px;
   background-color: #0C695D;
   font-family: Inter;
   color: white;
@@ -54,8 +64,8 @@
   border-radius: 5px;
   padding: 10px 50px;
 }
-.container button:hover {
-  background-color: #1ee0e0;
+ .container button:hover {
+  background-color: #37AFA9;
   cursor: pointer;
-} 
+}  
    

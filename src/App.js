@@ -14,6 +14,7 @@ import LoginPage from './LandingPage/LoginPage'
 import CreateAcctPage from "./LandingPage/CreateAccountPage"
 import Footer from './Components/Footer'
 import Layout from './Components/Layout'
+import CssBaseline from '@mui/material/CssBaseline';
 
 export default function App() {
 
@@ -35,14 +36,16 @@ export default function App() {
   );
 
   //If some components will be present throughout the site, like a navigation bar, then this RouterProvider can be passed as a prop or surrounded by the component.
-  return (
+  return (    
     <div>
+      <CssBaseline />
       <Header />
       <Layout>
       <RouterProvider router={router} />
       </Layout>
       <Footer />
     </div>
+    
     
   )
 }

@@ -20,6 +20,7 @@ export default function TabBar(props){
                     border: "none",
                     background: "none",
                     width: "200px",
+                    margin: "20px 40px",
                     marginRight: "20px",
                     fontFamily: "Inter",
                     fontSize: "25px"
@@ -47,7 +48,7 @@ export default function TabBar(props){
     return (
         <table
             style={{
-                margin: "0 auto"
+                margin: "0 auto"                
             }}
         >
             <tr>
