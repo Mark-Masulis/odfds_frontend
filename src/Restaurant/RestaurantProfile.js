@@ -124,7 +124,7 @@ function ViewPanel(props){
 function EditPanel(props){
 
     const [email, setEmail] = useState(props.data.email)
-    const [emailValid, setEmailValid] = useState(true) //show error if email format is bad
+    //const [emailValid, setEmailValid] = useState(true) //show error if email format is bad
     const [phone, setPhone] = useState(props.data.phone)
     const [phoneValid, setPhoneValid] = useState(true) //show error if phone format is bad
     const [name, setName] = useState(props.data.name)
@@ -182,7 +182,7 @@ function EditPanel(props){
 
     return (
     <div style={{margin: '20px'}}>
-        {emailValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid email</Alert>}
+        {/*emailValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid email</Alert>*/}
         {phoneValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid phone number</Alert>}
         {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid restaurant name</Alert>}
         {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
@@ -197,7 +197,7 @@ function EditPanel(props){
             }}
         > 
             <div style={{gridColumnStart: '1'}}>
-                <label for="email">Email</label>
+                {/*<label for="email">Email</label>
                 <input
                     id="email" 
                     type="text"
@@ -209,7 +209,7 @@ function EditPanel(props){
                         setEmailValid(validateEmail(email))
                     }}
                     value={email}
-                />
+                />*/}
                 <label for="phone">Phone Number</label>
                 <input
                     id="phone" 
@@ -299,7 +299,7 @@ function EditPanel(props){
                     updateRestaurantProfile()
                 }
             }}
-            disabled={loading || !emailValid || !phoneValid || !nameValid || !cityValid || !zipValid}
+            disabled={loading || !phoneValid || !nameValid || !cityValid || !zipValid}
         >
             Confirm
         </button>}
