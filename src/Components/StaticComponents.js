@@ -119,6 +119,23 @@ text-decoration: none;
 }
 `;
 
+const Button = styled.button`
+  margin: 0px auto;
+  background-color: #0C695D;
+  font-family: Inter;
+  color: white;
+  font-size: 20px;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #3e8e41;
+  }
+`
+
 export {
     Container,
     OverlayContainer,
@@ -129,5 +146,6 @@ export {
     BoxImage,
     Title,
     Text,
-    LinkButton
+    LinkButton,
+    Button
 }

@@ -4,7 +4,8 @@ import {
   Route, 
   useNavigate, 
   useParams, 
-  useSearchParams 
+  useSearchParams,
+  useLocation 
 } from "react-router-dom";
 import TabBar from "./../Components/TabBar";
 import RestaurantHomePage
@@ -13,6 +14,8 @@ import RestaurantOrders from './RestaurantOrders'
 import RestaurantProfile from './RestaurantProfile'
 export default function Restaurant(props) {
   const { userType } = useParams();
+  const location = useLocation()
+  const pathParts = location.pathname.split('/');
   const [userTab, setUserTab] = useState(userType || "create");
   const [searchParams, setSearchParams] = useSearchParams()
   const token = searchParams.get("token")
@@ -32,7 +35,7 @@ export default function Restaurant(props) {
           { 
             label: "History",
             onSelect: () => {
-              setUserTab("order history");
+              setUserTab("history");
               navigate(`/restaurant/history?token=${token}`)
             }, 
           },
@@ -44,7 +47,7 @@ export default function Restaurant(props) {
             }
           }
         ]}
-        defaultLabel={userType}
+        defaultLabel={pathParts[pathParts.length - 1]}
       />
       <Routes>
         <Route path="/home" element={<RestaurantHomePage token={token}/>}/>
