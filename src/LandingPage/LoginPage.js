@@ -9,6 +9,8 @@ import {
 import TabBar from "./../Components/TabBar"
 import RestaurantLogin from "./RestaurantLogin"
 import DriverLogin from "./DriverLogin"
+import RestaurantForgotPassword from "./RestaurantForgotPassword"
+import DriverForgotPassword from './DriverForgotPassword'
 
 export default function LoginPage(props){
     const {userType} = useParams()
@@ -41,9 +43,9 @@ export default function LoginPage(props){
                         (()=>{
                             switch(userTab){
                                 case "restaurant":
-                                    return <p>Restaurant password reset component goes here</p>
+                                    return <RestaurantForgotPassword/>
                                 case "driver":
-                                    return <p>Driver password reset component goes here</p>
+                                    return <DriverForgotPassword/>
                             }
                         })()    
                     }

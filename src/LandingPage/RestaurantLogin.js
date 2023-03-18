@@ -105,15 +105,13 @@ export default function RestaurantLogin(props){
                     value={password}
                 />
             </section>
-            <section
-                style={{
-                    padding: "10px"
-                }}
-            >
+            <section style={{padding: "10px"}}>
+                
                 <a href="/signup">
                     Create an account
                 </a>
                 <br/>
+
                 <a href="/login/restaurant/reset">
                     Forgot your password?
                 </a>
