@@ -1,14 +1,13 @@
-import React, {
-    useState
-} from 'react'
-import {
-    useNavigate
-} from 'react-router-dom'
+import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import { validateEmail } from '../Utils/validation'
 import "./Login.css"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import StateSelector from '../Components/StateSelector'
+
 export default function RestauranCreateAcct(props){
     const navigate = useNavigate()
-    const states = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT",
-                    "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPass, setConfirmPass] = useState("")
@@ -21,15 +20,10 @@ export default function RestauranCreateAcct(props){
     const [emailCode, setEmailCode] = useState("")
     const [loading, setLoading] = useState(false)
 
-    const validEmail = (text) =>{
-        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        return emailRegex.test(text)
-    }
-
     const sendEmailCode = () => {
-        if(email == ""){
+        if(email === ""){
             alert("Please enter an email")
-        } else if(!validEmail(email)){
+        } else if(!validateEmail(email)){
             alert("Invalid email ")
         } else {
             setLoading(true)
@@ -52,15 +46,13 @@ export default function RestauranCreateAcct(props){
         }
     }
     
-    const driverCreateAcctRequest = () => {
-        if (password === "" || confirmPass === "" || name === "" || phoneNum === "" || address === "" || city === "" || state === "" || zipcode === ""){
+    const restaurantCreateAcctRequest = () => {
+        if (password === "" || confirmPass === "" || name === "" || phoneNum === "" || address === "" || city === "" || zipcode === ""){
             alert("Missing a field")
-        } else if(!validEmail(email)){
+        } else if(!validateEmail(email)){
             alert("Invalid email")
         } else if (password != confirmPass){
             alert("Passwords must match")
-        } else if (!states.includes(state)){
-            alert("Invalid state")
         } else {
             setLoading(true)
             fetch(process.env.REACT_APP_API + '/restaurant/', 
@@ -101,172 +93,56 @@ export default function RestauranCreateAcct(props){
     }
 
     return(
-        <div
-        style={{
-            margin: "0 auto",
-            width: "80%",
-            padding: "25px"
-        }}>
+        <div style={{margin: "0 auto",width: "80%",padding: "25px"}}>
             <h2>Create an Account - Restaurant</h2>
-            <section style={{padding: "10px",width: "100%"}}>
-                <label for="name"style={{display: "block"}}>
-                    Restaurant Name
-                </label>
-                <input
-                    id="name-in" 
-                    type="text"
-                    disabled={loading}
-                    onChange={(event) => {
-                        setName(event.target.value)
-                    }}
-                    value={name}
-                />
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"50%"}}>
-                    <label for="email" style={{display: "block"}}>
-                        Email
-                    </label>
-                    <input style={{width:"95%"}}
-                        id="email-in" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setEmail(event.target.value)
-                        }}
-                        value={email}
-                    />
-                </div>
-                <div style={{width: "20%"}}>
-                    <button class="code-btn" onClick={sendEmailCode}>Send Code</button>
-                </div>
-                <div style={{width:"30%"}}>
-                    <label for="code" style={{display: "block"}}>
-                        Email Code
-                    </label>
-                    <input
-                        id="code-in" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setEmailCode(event.target.value)
-                        }}
-                        value={emailCode}
-                    />
-                </div>
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"50%"}}>
-                    <label for="phoneNum" style={{display: "block"}}>
-                        Phone Number
-                    </label>
-                    <input style={{width:"95%"}}
-                        id="phone-in" 
-                        type="tel"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setPhone(event.target.value)
-                        }}
-                        value={phoneNum}
-                    />
-                </div>
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"100%"}}>
-                    <label for="password" style={{display: "block"}}>
-                        Password
-                    </label>
-                    <input id="password-in" 
-                        style={{width:"95%"}}
-                        type="password"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setPassword(event.target.value)
-                        }}
-                        value={password}
-                    />
-                </div>
-                <div style={{width:"100%"}}>
-                    <label for="confirmPass" style={{display: "block"}}>
-                        Confirm Password
-                    </label>
-                    <input id="confirmPass-in" 
-                        type="password"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setConfirmPass(event.target.value)
-                        }}
-                        value={confirmPass}
-                    />
-                </div>
-            </section>
+            <TextField id="nameIn" label="Restaurant Name" variant="outlined" fullWidth margin="normal" value={name} disabled={loading}
+                onChange={(event) => {
+                    setName(event.target.value)
+                }}/>
+            <TextField id="emailIn" label="Email" variant="outlined" fullWidth margin="normal" value={email} disabled={loading}
+                onChange={(event) => {
+                    setEmail(event.target.value)
+                }}/>
+            <div class="container">
+                <Button id="sendCodeBtn" variant="contained" size="medium" disabled={loading} onClick={sendEmailCode}>Send Code</Button>
+            </div>
+            <TextField id="codeIn" label="Email Code" variant="outlined" fullWidth margin="normal" value={emailCode} disabled={loading} 
+                onChange={(event) => {
+                    setEmailCode(event.target.value)
+                }}/>
+            <TextField id="phoneIn" label="Phone Number" type="tel" variant="outlined" fullWidth margin="normal" value={phoneNum} disabled={loading}
+                onChange={(event) => {
+                    setPhone(event.target.value)
+                }}/>
 
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width: "60%"}}>
-                    <label for="Address" style={{display: "block"}}>
-                        Address
-                    </label>
-                    <input style={{width:"95%"}}
-                        id="address" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setAddress(event.target.value)
-                        }}
-                        value={address}
-                    />
-                </div>
-                <div style={{width:"30%"}}>
-                    <label for="City" style={{display: "block"}}>
-                        City
-                    </label>
-                    <input style={{width:"95%"}}
-                        id="city" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setCity(event.target.value)
-                        }}
-                        value={city}
-                    />
-                </div>
-                <div style={{width:"10%"}}>
-                    <label for="state" style={{display: "block"}}>
-                        State
-                    </label>
-                    <input style={{width:"90%"}}
-                        id="state" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setState(event.target.value)
-                        }}
-                        value={state}
-                    />
-                </div>
-                <div style={{width:"20%"}}>
-                    <label for="zipcode" style={{display: "block"}}>
-                        Zip code
-                    </label>
-                    <input
-                        id="zipcode" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setZipcode(event.target.value)
-                        }}
-                        value={zipcode}
-                    />
-                </div>
-            </section>
-            <button
-                style={{
-                    margin: "10px auto",
-                    display: "flex"
-                }}
-                onClick={driverCreateAcctRequest}
-            >
-                Create Account
-            </button>
-        </div>)
+            <TextField id="passwordIn" label="Password" type="password" variant="outlined" fullWidth margin="normal" value={password} disabled={loading}
+                onChange={(event) => {
+                    setPassword(event.target.value)
+                }}/>
+            <TextField id="confrimPassIn" label="Confirm Password" type="password" variant="outlined" fullWidth margin="normal" value={confirmPass} disabled={loading}
+                onChange={(event) => {
+                    setConfirmPass(event.target.value)
+                }}/>
+
+            <TextField id="addressIn" label="Address" variant="outlined" fullWidth margin="normal" value={address} disabled={loading}
+                onChange={(event) => {
+                    setAddress(event.target.value)
+                }}/>
+            <TextField id="cityIn" label="City" variant="outlined" fullWidth margin="normal" value={city} disabled={loading}
+                onChange={(event) => {
+                    setCity(event.target.value)
+                }}/>
+            
+            <label for="stateSelect" style={{display: "block"}}>State</label>
+            <StateSelector id="stateSelect" value={state} onChange={(value)=>{setState(value)}}></StateSelector>
+            
+            <TextField id="zipCodeIn" label="Zipcode" type="number" variant="outlined" fullWidth margin="normal" value={zipcode} disabled={loading}
+                onChange={(event) => {
+                    setZipcode(event.target.value)
+                }}/>
+            <div class="container">
+                <Button id="createAcctBtn" variant="contained" size="medium" disabled={loading} onClick={restaurantCreateAcctRequest}>Create Account</Button>
+            </div>
+        </div>
+        )
     }

@@ -16,6 +16,25 @@ import {
     validateZipCode
 } from './../Utils/validation'
 
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import "../Components/ButtonStyle.css"
+
+const btnStyle = `
+    margin: 10px 0;
+    background-color: #0C695D;
+    font-family: Inter;
+    color: white;
+    font-size: 20px;
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 50px;
+
+    &:hover {
+    background-color: #37AFA9;
+    cursor: pointer;
+}`
+
 //props.token = the JWT used to identify the user whose profile is being rendered
 export default function CustomerProfile(props){
     const [loading, setLoading] = useState(true)
@@ -91,8 +110,7 @@ function ViewPanel(props){
             columnGap: '200px',
             alignItems: 'center',
             justifyItems: 'center'
-        }}
-    > 
+        }}> 
         <div style={{gridColumnStart: '1'}}>
             <p id="email">{data.email}</p>
             <p id="phone">{data.phone}</p>
@@ -108,15 +126,9 @@ function ViewPanel(props){
             </div>
         </div>
     </div>
-    <button 
-            style={{
-                margin: '20px auto',
-                display: 'block'
-            }} 
-            onClick={()=>{
-                props.onButtonClick()
-            }}
-        >Edit Profile</button>
+    <div class="styledBtnContainer">
+        <Button variant="contained" size="medium" onClick={()=>{props.onButtonClick()}}>Edit Profile</Button>
+    </div>
     </div>
     )
 }
@@ -187,6 +199,7 @@ function EditPanel(props){
         {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid restaurant name</Alert>}
         {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
         {zipValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid zip code</Alert>}
+        <h2 style={{margin: '0 auto'}}>Update Profile</h2>
         <div 
             style={{
                 display: 'grid',
@@ -194,53 +207,49 @@ function EditPanel(props){
                 columnGap: '75px',
                 alignItems: 'center',
                 justifyItems: 'center'
-            }}
-        > 
+            }}> 
+            
             <div style={{gridColumnStart: '1'}}>
-                <label for="email">Email</label>
-                <input
-                    id="email" 
-                    type="text"
+                <TextField id="email" label="Email" value={email} variant="outlined" fullWidth margin="normal"
                     onChange={(event)=>{
                         setEmail(event.target.value)
                         setDataChanged(true)
                     }}
                     onBlur={()=>{
                         setEmailValid(validateEmail(email))
-                    }}
-                    value={email}
-                />
-                <label for="phone">Phone Number</label>
-                <input
-                    id="phone" 
-                    type="tel"
-                    pattern="[0-9]{3} [0-9]{3} [0-9]{4}" 
-                    maxlength="12"
+                    }}/>
+                <TextField id="phone" label="Phone Number" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" maxlength="12" value={phone} variant="outlined" fullWidth margin="normal"
                     onChange={(event)=>{
                         setPhone(event.target.value)
                         setDataChanged(true)
                     }}
                     onBlur={()=>{
                         setPhoneValid(validatePhoneNumber(phone))
-                    }}
-                    value={phone}
-                />
-                <label for="name">Restaurant Name</label>
-                <input
-                    id="name" 
-                    type="text"
+                    }}/>
+                <TextField id="name" label="Restaurant Name" value={name} variant="outlined" fullWidth margin="normal"
                     onChange={(event)=>{
                         setName(event.target.value)
                         setDataChanged(true)
                     }}
                     onBlur={()=>{
                         setNameValid(name.trim().length > 0)
-                    }}
-                    value={name}
-                />
+                    }}/>
             </div>
             <div style={{gridColumnStart: '2'}}>
-                <label for="state">State</label>
+                <TextField id="street" label="Street Address" value={street} variant="outlined" fullWidth margin="normal"
+                    onChange={(event)=>{
+                        setStreet(event.target.value)
+                        setDataChanged(true)
+                    }}/>
+                <TextField id="city" label="City" value={city} variant="outlined" margin="normal"
+                    onChange={(event)=>{
+                        setCity(event.target.value)
+                        setDataChanged(true)
+                    }}
+                    onBlur={()=>{
+                        setCityValid(city.trim().length > 0)
+                    }}/>
+                <label for="state" style={{display:"block"}}>State</label>
                 <StateSelector 
                     id="state" 
                     style={{margin: "10px", display: "block"}}
@@ -250,71 +259,32 @@ function EditPanel(props){
                     }}
                     value={state}
                 />
-                <label for="city">City</label>
-                <input
-                    id="city" 
-                    type="text"
-                    onChange={(event)=>{
-                        setCity(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setCityValid(city.trim().length > 0)
-                    }}
-                    value={city}
-                />
-                <label for="street">Street Address</label>
-                <input
-                    id="street" 
-                    type="text"
-                    onChange={(event)=>{
-                        setStreet(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    value={street}
-                />
-                <label for="zip">Zip Code</label>
-                <input
-                    id="zip" 
-                    type="text"
+                <TextField id="zip" label="Zip Code" value={zip} variant="outlined" margin="normal"
                     onChange={(event)=>{
                         setZip(event.target.value)
                         setDataChanged(true)
                     }}
                     onBlur={()=>{
                         setZipValid(validateZipCode(zip))
-                    }}
-                    value={zip}
-                />
+                    }}/>
             </div>
         </div>
-        {dataChanged && <button 
-            style={{
-                margin: '20px auto',
-                display: 'block'
-            }} 
-            onClick={()=>{
-                if(dataChanged){
-                    //make API call to update DB
-                    updateRestaurantProfile()
-                }
-            }}
-            disabled={loading || !emailValid || !phoneValid || !nameValid || !cityValid || !zipValid}
-        >
-            Confirm
-        </button>}
-        <button 
-            style={{
-                margin: '20px auto',
-                display: 'block'
-            }} 
-            onClick={()=>{
-                props.onButtonClick()
-            }}
-            disabled={loading}
-        >
-            Cancel
-        </button>
+        
+        {dataChanged && 
+        <div class="styledBtnContainer">
+            <Button variant="contained" size="medium" disabled={loading || !emailValid || !phoneValid || !nameValid || !cityValid || !zipValid}
+                onClick={()=>{
+                    if(dataChanged){
+                        updateRestaurantProfile() //make API call to update DB
+                    }
+                }}>Confirm</Button>
+        </div>}
+        <div class="styledBtnContainer">
+            <Button variant="contained" size="medium" disabled={loading} 
+                onClick={()=>{
+                    props.onButtonClick()
+                }}>Cancel</Button>
+        </div>
     </div>
     )
 }
