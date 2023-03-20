@@ -20,21 +20,6 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import "../Components/ButtonStyle.css"
 
-const btnStyle = `
-    margin: 10px 0;
-    background-color: #0C695D;
-    font-family: Inter;
-    color: white;
-    font-size: 20px;
-    border: 0;
-    border-radius: 5px;
-    padding: 10px 50px;
-
-    &:hover {
-    background-color: #37AFA9;
-    cursor: pointer;
-}`
-
 //props.token = the JWT used to identify the user whose profile is being rendered
 export default function CustomerProfile(props){
     const [loading, setLoading] = useState(true)
@@ -200,74 +185,61 @@ function EditPanel(props){
         {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
         {zipValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid zip code</Alert>}
         <h2 style={{margin: '0 auto'}}>Update Profile</h2>
-        <div 
-            style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr, 1fr',
-                columnGap: '75px',
-                alignItems: 'center',
-                justifyItems: 'center'
-            }}> 
-            
-            <div style={{gridColumnStart: '1'}}>
-                <TextField id="email" label="Email" value={email} variant="outlined" fullWidth margin="normal"
-                    onChange={(event)=>{
-                        setEmail(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setEmailValid(validateEmail(email))
-                    }}/>
-                <TextField id="phone" label="Phone Number" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" maxlength="12" value={phone} variant="outlined" fullWidth margin="normal"
-                    onChange={(event)=>{
-                        setPhone(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setPhoneValid(validatePhoneNumber(phone))
-                    }}/>
-                <TextField id="name" label="Restaurant Name" value={name} variant="outlined" fullWidth margin="normal"
-                    onChange={(event)=>{
-                        setName(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setNameValid(name.trim().length > 0)
-                    }}/>
-            </div>
-            <div style={{gridColumnStart: '2'}}>
-                <TextField id="street" label="Street Address" value={street} variant="outlined" fullWidth margin="normal"
-                    onChange={(event)=>{
-                        setStreet(event.target.value)
-                        setDataChanged(true)
-                    }}/>
-                <TextField id="city" label="City" value={city} variant="outlined" margin="normal"
-                    onChange={(event)=>{
-                        setCity(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setCityValid(city.trim().length > 0)
-                    }}/>
-                <label for="state" style={{display:"block"}}>State</label>
-                <StateSelector 
-                    id="state" 
-                    style={{margin: "10px", display: "block"}}
-                    onChange={(value)=>{
-                        setState(value)
-                        setDataChanged(true)
-                    }}
-                    value={state}
-                />
-                <TextField id="zip" label="Zip Code" value={zip} variant="outlined" margin="normal"
-                    onChange={(event)=>{
-                        setZip(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setZipValid(validateZipCode(zip))
-                    }}/>
-            </div>
+        <div> 
+            <TextField id="email" label="Email" value={email} variant="outlined" fullWidth margin="normal"
+                onChange={(event)=>{
+                    setEmail(event.target.value)
+                    setDataChanged(true)
+                }}
+                onBlur={()=>{
+                    setEmailValid(validateEmail(email))
+                }}/>
+            <TextField id="phone" label="Phone Number" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" maxlength="12" value={phone} variant="outlined" fullWidth margin="normal"
+                onChange={(event)=>{
+                    setPhone(event.target.value)
+                    setDataChanged(true)
+                }}
+                onBlur={()=>{
+                    setPhoneValid(validatePhoneNumber(phone))
+                }}/>
+            <TextField id="name" label="Restaurant Name" value={name} variant="outlined" fullWidth margin="normal"
+                onChange={(event)=>{
+                    setName(event.target.value)
+                    setDataChanged(true)
+                }}
+                onBlur={()=>{
+                    setNameValid(name.trim().length > 0)
+                }}/>
+            <TextField id="street" label="Street Address" value={street} variant="outlined" fullWidth margin="normal"
+                onChange={(event)=>{
+                    setStreet(event.target.value)
+                    setDataChanged(true)
+                }}/>
+            <TextField id="city" label="City" value={city} variant="outlined" margin="normal"
+                onChange={(event)=>{
+                    setCity(event.target.value)
+                    setDataChanged(true)
+                }}
+                onBlur={()=>{
+                    setCityValid(city.trim().length > 0)
+                }}/>
+            <label for="state" style={{display:"block"}}>State</label>
+            <StateSelector 
+                id="state" 
+                style={{margin: "10px", display: "block"}}
+                onChange={(value)=>{
+                    setState(value)
+                    setDataChanged(true)
+                }}
+                value={state}/>
+            <TextField id="zip" label="Zip Code" value={zip} variant="outlined" margin="normal"
+                onChange={(event)=>{
+                    setZip(event.target.value)
+                    setDataChanged(true)
+                }}
+                onBlur={()=>{
+                    setZipValid(validateZipCode(zip))
+                }}/>
         </div>
         
         {dataChanged && 

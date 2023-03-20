@@ -4,6 +4,7 @@ import { validateEmail } from '../Utils/validation'
 import "./Login.css"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function DriverLogin(props){
     const navigate = useNavigate()
@@ -185,7 +186,7 @@ export default function DriverLogin(props){
                         setImage(event.target.value)
                     }}
                     />
-                <Button id="uploadBtn" size="medium" variant="contained" component="span" disabled={loading}>Upload Image</Button>
+                <Button id="uploadBtn" size="medium" variant="contained" component="span" disabled={loading}>Upload Image<CloudUploadIcon/></Button>
                 </label>
             </div>
 
