@@ -3,7 +3,9 @@ import { Routes, Route, useParams } from "react-router-dom";
 import TabBar from "./../Components/TabBar";
 import RestaurantHomePage
  from "./RestaurantHomePage";
-export default function Restaurant(props) {
+import RestaurantOrders from "./RestaurantOrders";
+
+ export default function Restaurant(props) {
   const { userType } = useParams();
   const [userTab, setUserTab] = useState(userType || "create");
   return (
@@ -18,7 +20,7 @@ export default function Restaurant(props) {
           },
           { label: "History",
           onSelect: () => {
-            setUserTab("order history");
+            setUserTab("order");
           }, },
         ]}
         defaultLabel={userType}
@@ -31,6 +33,8 @@ export default function Restaurant(props) {
             switch (userTab) {
               case "create":
                 return <RestaurantHomePage />;
+              case "order":
+                return <RestaurantOrders />;
             }
             
           })()}
