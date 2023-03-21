@@ -1,5 +1,6 @@
 /* head style*/
 .logo h1 {
+    margin: 10px;
     width: 1000px;
     display: flex;
     justify-content: center;
@@ -8,44 +9,51 @@
     color: #ff9800;
     letter-spacing: 2px;
     text-shadow: 3px 3px #333;
-  }
+}
+
 .logo img {
-    width: 15%;
+  width: 15%;
 }  
 
 /* header style*/
 header {
-    background-color: #fffcfc;
+  padding: 10px;
+  background-color: #f8fbfb;
 }
+
 header ul {  
-    list-style: none;   
+  list-style: none;   
 }
+
 header li {
-    margin-left: 40px;
+  margin-left: 40px;
 }
+
 header ul li a {
-    color: #1eb2a6;
-    font-size: 20px;
-    transition: 0.5s;  
+  color: #1eb2a6;
+  font-size: 20px;
+  transition: 0.5s;  
 }
+
 header ul li a:hover {
-    color: #f68606;
+  color: #f68606;
 }
+
 select {
-    font-size: 20px;
-    margin-left: 100px;
-    border: none;
-    background-color: white;
-    color: #1eb2a6;
-  }
+  font-size: 20px;
+  margin-left: 100px;
+  border: none;
+  background-color: white;
+  color: #1eb2a6;
+}
   
-  select:focus {
-    outline: none;
-  } 
+select:focus {
+  outline: none;
+} 
   
-  select option {
-    font-size: 16px;
-    background-color: white;
-    color: #f28407;
-  }
+select option {
+  font-size: 16px;
+  background-color: white;
+  color: #f28407;
+}
   
