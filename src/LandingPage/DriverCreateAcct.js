@@ -1,13 +1,12 @@
-import { getValue } from '@testing-library/user-event/dist/utils'
-import React, {
-    useState
-  } from 'react'
-  import {
-    useNavigate
-  } from 'react-router-dom'
-  import "./Login.css"
+import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import { validateEmail } from '../Utils/validation'
+import "./Login.css"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-  export default function DriverLogin(props){
+export default function DriverLogin(props){
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -21,10 +20,6 @@ import React, {
     const [image, setImage] = useState("")
     const [loading, setLoading] = useState(false)
     
-    const validEmail = (text) =>{
-        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        return emailRegex.test(text)
-    }
 
     const validName = (name) =>{
         var nameSplit = name.split(" ")
@@ -32,7 +27,7 @@ import React, {
     }
 
     const sendEmailCode = () => {
-        if(!validEmail(email)){
+        if(!validateEmail(email)){
             alert("Invalid email ")
         } else {
             setLoading(true)
@@ -43,13 +38,11 @@ import React, {
                 (data) => {
                     switch(data.code){
                         case 200:
-                            const token = data.data
-                            alert(token)
-                            break;
+                            alert(data.data)
+                            break
                         default:
                             alert(data.data.message)
-                            break;
-
+                            break
                     }
                     setLoading(false)
                 }
@@ -57,33 +50,12 @@ import React, {
         }
     }
 
-    async function uploadImage(){
-        var file = document.getElementById('img-in').files[0]
-        if (!file) {
-            alert('please select a file');
-            return;
-        }
-        var data = new FormData()
-        data.append("image", file)
-        let res = await fetch(process.env.REACT_APP_API + "/common/upload/image",{
-            method: "POST",
-            body:data
-        })
-        if(res.status == 200){
-            let json = await res.json()
-            json.then(state => state).then(result =>{
-                return result.data
-            })
-        }
-        throw new Error(res.status)
-    }
-
     async function driverCreateAcctRequest() {
         setLoading(true)
-        
-        var file = document.getElementById('img-in').files[0]
+        var file = document.getElementById('upload-image').files[0]
         if (!file) {
             alert('please select a file');
+            setLoading(false)
             return;
         }
         var data = new FormData()
@@ -95,18 +67,20 @@ import React, {
         }).then(res => res.json()).then(resp => {
             if (resp.code != 200) {
                 alert(resp.data.message);
+                setLoading(false)
                 return;
             }
             url = resp.data
         }).catch(err => {
             alert(err);
+            setLoading(false)
             return;
         });
         setLoading(false)
 
         if (email === "" || password === "" || confirmPass === "" || name === "" || phoneNum === "" || licenseNum === "" || acctNum === "" || routingNum === ""){
             alert("Missing field")
-        } else if(!validEmail(email)){
+        } else if(!validateEmail(email)){
             alert("Invalid Email") }
         else if(!validName(name)){
             alert("Invalid Name")
@@ -162,175 +136,73 @@ import React, {
     }
 
     return(
-        <div
-        style={{
-            margin: "0 auto",
-            width: "80%",
-            padding: "25px"
-        }}
-        >
+        <div style={{margin: "0 auto",width: "80%",padding: "25px"}}>
             <h2>Create an Account - Driver</h2>
-            <section style={{padding: "10px"}}>
-                <label 
-                    for="name"
-                    style={{display: "block"}}>
-                    Name
-                </label>
-                <input
-                    id="name-in" 
-                    type="text"
-                    disabled={loading}
-                    onChange={(event) => {
-                        setName(event.target.value)
+            <TextField id="nameIn" label="Name" variant="outlined" fullWidth margin="normal" value={name} disabled={loading}
+                onChange={(event) => {
+                    setName(event.target.value)
+                }}/>
+            <div width="60px">
+            <TextField id="emailIn" label="Email" variant="outlined" fullWidth margin="normal" value={email} disabled={loading}
+                onChange={(event) => {
+                    setEmail(event.target.value)
+                }}/>
+            </div>
+            <div class="container">
+                <Button id="sendCodeBtn" variant="contained" size="medium" disabled={loading} onClick={sendEmailCode}>Send Code</Button>
+            </div>
+            <TextField id="codeIn" label="Email Code" variant="outlined" fullWidth margin="normal" value={emailCode} disabled={loading} 
+                onChange={(event) => {
+                    setEmailCode(event.target.value)
+                }}/>
+            <TextField id="phoneIn" label="Phone Number" type="tel" variant="outlined" fullWidth margin="normal" value={phoneNum} disabled={loading}
+                onChange={(event) => {
+                    setPhone(event.target.value)
+                }}/>
+
+            <TextField id="passwordIn" label="Password" type="password" variant="outlined" fullWidth margin="normal" value={password} disabled={loading}
+                onChange={(event) => {
+                    setPassword(event.target.value)
+                }}/>
+            <TextField id="confrimPassIn" label="Confirm Password" type="password" variant="outlined" fullWidth margin="normal" value={confirmPass} disabled={loading}
+                onChange={(event) => {
+                    setConfirmPass(event.target.value)
+                }}/>
+            <TextField id="licenseNumIn" label="Driver's License Number" variant="outlined" fullWidth margin="normal" value={licenseNum} disabled={loading}
+                onChange={(event) => {
+                    setLiscenseNum(event.target.value)
+                }}/>
+            <label for="licenseNum" style={{display: "block"}} >
+                Driver's License Image
+            </label>
+            <div>
+                <label htmlFor="upload-image">
+                    <input
+                    style={{ display: 'none' }}
+                    accept="image/*"
+                    id="upload-image"
+                    type="file"
+                    onChange={(event) =>{
+                        setImage(event.target.value)
                     }}
-                    value={name}
-                />
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"50%"}}>
-                    <label for="email" style={{display: "block"}}>
-                        Email
-                    </label>
-                    <input style={{width:"95%"}}
-                        id="email-in" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setEmail(event.target.value)
-                        }}
-                        value={email}
                     />
-                </div>
-                <div style={{width: "20%"}}>
-                    <button class="code-btn" onClick={sendEmailCode}>Send Code</button>
-                </div>
-                <div style={{width:"30%"}}>
-                    <label for="code" style={{display: "block"}}>
-                        Email Code
-                    </label>
-                    <input
-                        id="code-in" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setEmailCode(event.target.value)
-                        }}
-                        value={emailCode}
-                    />
-                </div>
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"50%"}}>
-                    <label for="phoneNum" style={{display: "block"}}>
-                        Phone Number
-                    </label>
-                    <input style={{width:"95%"}}
-                        id="phone-in" 
-                        type="tel"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setPhone(event.target.value)
-                        }}
-                        value={phoneNum}
-                    />
-                </div>
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width:"100%"}}>
-                    <label for="password" style={{display: "block"}}>
-                        Password
-                    </label>
-                    <input id="password-in" 
-                        style={{width:"95%"}}
-                        type="password"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setPassword(event.target.value)
-                        }}
-                        value={password}
-                    />
-                </div>
-                <div style={{width:"100%"}}>
-                    <label for="confirmPass" style={{display: "block"}}>
-                        Confirm Password
-                    </label>
-                    <input id="confirmPass-in" 
-                        type="password"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setConfirmPass(event.target.value)
-                        }}
-                        value={confirmPass}
-                    />
-                </div>
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width: "100%"}}>
-                    <label for="licenseNum" style={{display: "block"}} >
-                        Driver's License Number
-                    </label>
-                    <input style={{width: "95%"}}
-                        id="licenseNum" 
-                        type="text"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setLiscenseNum(event.target.value)
-                        }}
-                        value={licenseNum}
-                    />
-                </div>
-                <div style={{width:"100%"}}>
-                    <label for="licenseNum" style={{display: "block"}} >
-                        Driver's License Image
-                    </label>
-                    <input type="file" id="img-in" name="img" accept="image/*"
-                        onChange={(event) =>{
-                            setImage(event.target.value)
-                        }}
-                        Upload Image
-                    />
-                </div>
-            </section>
-            <section style={{padding: "10px", display: "flex", justifyContent:"start"}}>
-                <div style={{width: "100%"}}>
-                    <label for="acctNum" style={{display: "block"}}>
-                        Bank Account Number
-                    </label>
-                    <input style={{width: "95%"}}
-                        id="acctNum" 
-                        type="number"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setAcctNum(event.target.value)
-                        }}
-                        value={acctNum}
-                    />
-                </div>
-                <div style={{width: "100%"}}>
-                    <label for="routingNum" style={{display: "block"}}>
-                        Bank Account Routing Number
-                    </label>
-                    <input
-                        id="routingNum" 
-                        type="number"
-                        disabled={loading}
-                        onChange={(event) => {
-                            setRoutingNum(event.target.value)
-                        }}
-                        value={routingNum}
-                    />
-                </div>
-            </section>
-            <button
-                style={{
-                    margin: "0 auto",
-                    display: "flex"
-                }}
-                disabled={loading}
-                onClick={driverCreateAcctRequest}
-            >
-                Create Account
-            </button>
+                <Button id="uploadBtn" size="medium" variant="contained" component="span" disabled={loading}>Upload Image<CloudUploadIcon/></Button>
+                </label>
+            </div>
+
+            <TextField id="bankAcctIn" label="Bank Account Number" type="number" variant="outlined" fullWidth margin="normal" value={acctNum} disabled={loading}
+                onChange={(event) => {
+                    setAcctNum(event.target.value)
+                }}/>
+            <TextField id="routingNumIn" label="Bank Account Routing Number" type="number" variant="outlined" fullWidth margin="normal" value={routingNum} disabled={loading}
+                onChange={(event) => {
+                    setRoutingNum(event.target.value)
+                }}/>
+            <div class="container">
+                <Button id="createAcctBtn" variant="contained" size="medium" disabled={loading} onClick={driverCreateAcctRequest}>Create Account</Button>
+            </div>
+            
+            
         </div>
         )
 }

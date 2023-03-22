@@ -16,6 +16,8 @@ import {
     validateZipCode
 } from './../Utils/validation'
 
+import "../Components/ButtonStyle.css"
+
 //props.token = the JWT used to identify the user whose profile is being rendered
 export default function CustomerProfile(props){
     const [loading, setLoading] = useState(true)
