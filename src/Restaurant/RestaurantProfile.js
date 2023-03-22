@@ -3,16 +3,16 @@ import React, {
     useEffect
 } from 'react'
 import {
-    Alert,
-    Modal
+    Alert
 } from '@mui/material'
 import {
-    Container
+    Container,
+    Button
 } from './../Components/StaticComponents'
 import StateSelector from './../Components/StateSelector'
 import {
+    getDigitsFromPhoneNumber,
     validatePhoneNumber,
-    validateEmail,
     validateZipCode
 } from './../Utils/validation'
 
@@ -84,31 +84,29 @@ function ViewPanel(props){
     const data = props.data
     return (
     <div>
-    <div 
-        style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr, 1fr',
-            columnGap: '200px',
-            alignItems: 'center',
-            justifyItems: 'center'
-        }}
-    > 
-        <div style={{gridColumnStart: '1'}}>
+        <section style={{margin: "10px"}}>
+            <label for="email"><h3>Email</h3></label>
             <p id="email">{data.email}</p>
+        </section>
+        <section style={{margin: "10px"}}>
+            <label for="phone"><h3>Phone Number</h3></label>
             <p id="phone">{data.phone}</p>
+        </section>
+        <section style={{margin: "10px"}}>
+            <label for="name"><h3>Restaurant Name</h3></label>
             <p id="name">{data.name}</p>
-        </div>
-        <div style={{gridColumnStart: '2'}}>
-            <div style={{width: "400px", height:"400px", border: "5px solid black"}}>
+        </section>
+        <section style={{margin: "10px"}}>
+            <label for="map"><h3>Restaurant Location</h3></label>
+            <div id="map" style={{width: "400px", height:"400px", border: "5px solid black" /*remove this border when map is added*/}}>
                 <h2>PLACEHOLDER FOR MAP</h2>
                 <p>{data.street}</p>
                 <p>{data.city}</p>
                 <p>{data.state}</p>
                 <p>{data.zipCode}</p>
             </div>
-        </div>
-    </div>
-    <button 
+        </section>
+    <Button 
             style={{
                 margin: '20px auto',
                 display: 'block'
@@ -116,15 +114,12 @@ function ViewPanel(props){
             onClick={()=>{
                 props.onButtonClick()
             }}
-        >Edit Profile</button>
+        >Edit Profile</Button>
     </div>
     )
 }
 
 function EditPanel(props){
-
-    const [email, setEmail] = useState(props.data.email)
-    const [emailValid, setEmailValid] = useState(true) //show error if email format is bad
     const [phone, setPhone] = useState(props.data.phone)
     const [phoneValid, setPhoneValid] = useState(true) //show error if phone format is bad
     const [name, setName] = useState(props.data.name)
@@ -138,10 +133,12 @@ function EditPanel(props){
 
     const [dataChanged, setDataChanged] = useState(false) //only make API call if data is changed
     const [loading, setLoading] = useState(false)
+    const [confirmDisabled, setConfirmDisabled] = useState(false)
 
-    const getDigitsFromPhoneNumber = (input) => {
-        return input.replace(/\D/g, "")
-    }
+    //determine if editted data can be submitted
+    useEffect(() => {
+        setConfirmDisabled(loading || !phoneValid || !nameValid || !cityValid || !zipValid)
+    }, [loading, phoneValid, nameValid, cityValid, zipValid])
 
     const updateRestaurantProfile = ()=>{
         setLoading(true)
@@ -182,116 +179,99 @@ function EditPanel(props){
 
     return (
     <div style={{margin: '20px'}}>
-        {emailValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid email</Alert>}
         {phoneValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid phone number</Alert>}
         {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid restaurant name</Alert>}
         {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
         {zipValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid zip code</Alert>}
-        <div 
-            style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr, 1fr',
-                columnGap: '75px',
-                alignItems: 'center',
-                justifyItems: 'center'
-            }}
-        > 
-            <div style={{gridColumnStart: '1'}}>
-                <label for="email">Email</label>
-                <input
-                    id="email" 
-                    type="text"
-                    onChange={(event)=>{
-                        setEmail(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setEmailValid(validateEmail(email))
-                    }}
-                    value={email}
+        <div>
+            <label for="phone">Phone Number</label>
+            <input
+                id="phone" 
+                type="tel"
+                pattern="[0-9]{3} [0-9]{3} [0-9]{4}" 
+                maxlength="12"
+                onChange={(event)=>{
+                    setPhone(event.target.value)
+                    setDataChanged(true)
+                }}
+                onBlur={()=>{
+                    setPhoneValid(validatePhoneNumber(phone))
+                }}
+                value={phone}
+            />
+            <label for="name">Restaurant Name</label>
+            <input
+                id="name" 
+                type="text"
+                onChange={(event)=>{
+                    setName(event.target.value)
+                    setDataChanged(true)
+                }}
+                onBlur={()=>{
+                    setNameValid(name.trim().length > 0)
+                }}
+                value={name}
+            />
+            <label for="street">Street Address</label>
+            <input
+                id="street" 
+                type="text"
+                onChange={(event)=>{
+                    setStreet(event.target.value)
+                    setDataChanged(true)
+                }}
+                value={street}
+            />
+            <div style={{display: "table"}}>
+                <div style={{display: "table-cell", paddingLeft: '10px'}}>
+                    <label for="state">State</label>
+                    <StateSelector 
+                        id="state" 
+                        style={{margin: "10px", display: "block"}}
+                        onChange={(value)=>{
+                            setState(value)
+                            setDataChanged(true)
+                        }}
+                        value={state}
+                    />
+                </div>
+                <div style={{display: "table-cell", paddingLeft: '10px'}}>
+                    <label for="city">City</label>
+                    <input
+                        id="city" 
+                        type="text"
+                        onChange={(event)=>{
+                            setCity(event.target.value)
+                            setDataChanged(true)
+                        }}
+                        onBlur={()=>{
+                            setCityValid(city.trim().length > 0)
+                        }}
+                        value={city}
                 />
-                <label for="phone">Phone Number</label>
-                <input
-                    id="phone" 
-                    type="tel"
-                    pattern="[0-9]{3} [0-9]{3} [0-9]{4}" 
-                    maxlength="12"
-                    onChange={(event)=>{
-                        setPhone(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setPhoneValid(validatePhoneNumber(phone))
-                    }}
-                    value={phone}
-                />
-                <label for="name">Restaurant Name</label>
-                <input
-                    id="name" 
-                    type="text"
-                    onChange={(event)=>{
-                        setName(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setNameValid(name.trim().length > 0)
-                    }}
-                    value={name}
-                />
-            </div>
-            <div style={{gridColumnStart: '2'}}>
-                <label for="state">State</label>
-                <StateSelector 
-                    id="state" 
-                    style={{margin: "10px", display: "block"}}
-                    onChange={(value)=>{
-                        setState(value)
-                        setDataChanged(true)
-                    }}
-                    value={state}
-                />
-                <label for="city">City</label>
-                <input
-                    id="city" 
-                    type="text"
-                    onChange={(event)=>{
-                        setCity(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setCityValid(city.trim().length > 0)
-                    }}
-                    value={city}
-                />
-                <label for="street">Street Address</label>
-                <input
-                    id="street" 
-                    type="text"
-                    onChange={(event)=>{
-                        setStreet(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    value={street}
-                />
-                <label for="zip">Zip Code</label>
-                <input
-                    id="zip" 
-                    type="text"
-                    onChange={(event)=>{
-                        setZip(event.target.value)
-                        setDataChanged(true)
-                    }}
-                    onBlur={()=>{
-                        setZipValid(validateZipCode(zip))
-                    }}
-                    value={zip}
-                />
+                </div>
+                <div style={{display: "table-cell", paddingLeft: '10px'}}>
+                    <label for="zip">Zip Code</label>
+                    <input
+                        id="zip" 
+                        type="text"
+                        onChange={(event)=>{
+                            setZip(event.target.value)
+                            setDataChanged(true)
+                        }}
+                        onBlur={()=>{
+                            setZipValid(validateZipCode(zip))
+                        }}
+                        value={zip}
+                    />
+                </div>
             </div>
         </div>
-        {dataChanged && <button 
+        {dataChanged && <Button 
             style={{
                 margin: '20px auto',
-                display: 'block'
+                display: 'block',
+                backgroundColor: confirmDisabled ? 'gray' : null
             }} 
             onClick={()=>{
                 if(dataChanged){
@@ -299,14 +279,15 @@ function EditPanel(props){
                     updateRestaurantProfile()
                 }
             }}
-            disabled={loading || !emailValid || !phoneValid || !nameValid || !cityValid || !zipValid}
+            disabled={confirmDisabled}
         >
             Confirm
-        </button>}
-        <button 
+        </Button>}
+        <Button 
             style={{
                 margin: '20px auto',
-                display: 'block'
+                display: 'block',
+                color: loading ? 'gray' : null
             }} 
             onClick={()=>{
                 props.onButtonClick()
@@ -314,7 +295,7 @@ function EditPanel(props){
             disabled={loading}
         >
             Cancel
-        </button>
+        </Button>
     </div>
     )
 }

@@ -3,6 +3,10 @@ export const validatePhoneNumber = (input) => {
     return phoneRegex.test(input)
 }
 
+export const getDigitsFromPhoneNumber = (input) => {
+    return input.replace(/\D/g, "")
+}
+
 export const validateEmail = (text) =>{
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
     return emailRegex.test(text)
