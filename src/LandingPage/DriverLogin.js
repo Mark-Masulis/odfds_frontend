@@ -58,7 +58,7 @@ export default function DriverLogin(props){
                 setPassword(event.target.value)
             }} />
         <section style={{padding: "10px"}}>
-            <a href="/signup">Create an account</a>
+            <a href="/signup/driver">Create an account</a>
             <br/>
             <a href="/login/driver/reset"> Forgot your password?</a>
         </section>
