@@ -25,7 +25,6 @@ code {
 body {
   font-family: 'Inter', sans-serif;
   background: #E0F2F2;
-  background: linear-gradient(90deg, rgba(156,217,228,1) 0%, rgba(195,246,247,1) 35%, rgba(214,238,244,1) 100%);
 } 
 .container{
   max-width: 100%;
@@ -33,11 +32,9 @@ body {
 }
 .flexSB {
   margin-top: 10px;
-  margin-right: 60px;
   display: flex;
   justify-content: space-between;
-  
-}
+} 
 a {
   text-decoration: none;
   

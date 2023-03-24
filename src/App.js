@@ -5,7 +5,6 @@ import {
   RouterProvider,
   Route
 } from "react-router-dom"
-import Header from './Components/Header'
 import Restaurant from './Restaurant/Restaurant'
 import Customer from './Customer/Customer'
 import Driver from './Driver/Driver'
@@ -16,11 +15,12 @@ import Footer from './Components/Footer'
 import Layout from './Components/Layout'
 import CssBaseline from '@mui/material/CssBaseline';
 
-export default function App() {
 
+export default function App() {
   //Every time you want to add a new page path (baseurl.com/my_path) do it here
   //If you want to make a subpage/subcomponent, (baseurl.com/my_path/subpath), add another router in whatever component /my_path routes to
-
+  /* const HeaderWithRouter = withRouter(Header);
+  const currentLocation = window.location.pathname; */
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
@@ -37,11 +37,11 @@ export default function App() {
 
   //If some components will be present throughout the site, like a navigation bar, then this RouterProvider can be passed as a prop or surrounded by the component.
   return (    
+    
     <div>
-      <CssBaseline />
-      <Header />
+      <CssBaseline />      
       <Layout>
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </Layout>
       <Footer />
     </div>
@@ -49,3 +49,5 @@ export default function App() {
     
   )
 }
+ 
+

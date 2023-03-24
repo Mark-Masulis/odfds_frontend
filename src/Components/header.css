@@ -1,19 +1,25 @@
-/* head style*/
-.logo h1 {
-    margin: 10px;
-    width: 1000px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 50px;
-    color: #ff9800;
-    letter-spacing: 2px;
-    text-shadow: 3px 3px #333;
+.logo h2 {
+  margin: 10px;
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  letter-spacing: 3px;
+  color: #0C695D;
 }
 
 .logo img {
-  width: 15%;
+width: 25%; /* reduce the width of the image to 30% */
+margin-left: 20px;
 }  
+
+.logo {
+display: flex;
+align-items: center;
+margin-left: 400px; 
+}
+
 
 /* header style*/
 header {
@@ -36,7 +42,7 @@ header ul li a {
 }
 
 header ul li a:hover {
-  color: #f68606;
+  color: #0C695D;
 }
 
 select {
@@ -45,15 +51,5 @@ select {
   border: none;
   background-color: white;
   color: #1eb2a6;
-}
-  
-select:focus {
-  outline: none;
-} 
-  
-select option {
-  font-size: 16px;
-  background-color: white;
-  color: #f28407;
 }
   

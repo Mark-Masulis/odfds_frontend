@@ -1,11 +1,12 @@
 .footer {
     text-align: center; 
-    font-size: 14px;
-    margin-top: 40px;
+    font-size: 10px;
+    padding: 20px;    
+    background: #E0F2F2;
   }
   
-  .contact a {
-    font-size: 20px;
+  .contact a {   
+    font-size: 16px;
     color: #040404;
     text-decoration: none;
   }

@@ -1,20 +1,20 @@
 import React, { useState } from 'react'
-import Head from './Head';
 import "./header.css"
-import { Link } from "react-router-dom"
+
 
 const Header = () => {
   const [click, setClick] = useState(false)
-  const [selectedLanguage, setSelectedLanguage] = useState('en'); // set default language to English
-
-  const handleLanguageSelect = (event) => {
-    setSelectedLanguage(event.target.value);
-    // handle language selection logic here (e.g. update language state in parent component)
-  };
 
   return (
     <>
-      <Head />
+      <section className='head'>
+        <div className='container flexSB'>
+          <div className="logo">
+            <h2>ODFDS</h2>
+            {/* <img src="logoHeader.png" /> */}
+          </div>               
+        </div>
+      </section>
       <header>
        <nav className='flexSB'>
           <ul className= {click ? "mobile-nav" : "flexSB"} onClick={() => setClick(false)}>
@@ -24,11 +24,6 @@ const Header = () => {
            <li><a href="/">Customer service</a></li>
          </ul>
 
-         <select value={selectedLanguage} onChange={handleLanguageSelect}>
-          <option value="en">EN</option>
-          <option value="es">Español</option>
-          <option value="zh">中文</option>
-        </select>
        </nav>       
      </header>
     </>
