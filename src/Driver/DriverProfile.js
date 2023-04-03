@@ -3,6 +3,9 @@ import React, {
     useEffect
 } from 'react'
 import {
+    useNavigate
+} from 'react-router-dom'
+import {
     Alert
 } from '@mui/material'
 import {
@@ -15,7 +18,7 @@ import {
 } from './../Utils/validation'
 
 //props.token = the JWT used to identify the user whose profile is being rendered
-export default function CustomerProfile(props){
+export default function DriverProfile(props){
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [data, setData] = useState()
@@ -79,7 +82,6 @@ export default function CustomerProfile(props){
 }
 
 function ViewPanel(props){
-    const [showBankInfo, setShowBankInfo] = useState(false)
 
     const data = props.data
     return (
@@ -108,40 +110,6 @@ function ViewPanel(props){
             <label for="status"><h3>Account Status</h3></label>
             <p id="status">{data.verification}</p>
         </section>
-        {showBankInfo || 
-            <a 
-                href=""
-                onClick={(event)=>{
-                    event.preventDefault()
-                    setShowBankInfo(true)
-                }}
-                style={{color: "blue", ':visited': {color: 'blue'}}}
-            >
-                Show bank information
-            </a>
-        }
-        {showBankInfo && 
-            <div>
-                <section style={{margin: "10px"}}>
-                    <label for="bankaccnum"><h3>Bank Account Number</h3></label>
-                    <p id="bankaccnum">{data.bankAccountNumber}</p>
-                </section>
-                <section style={{margin: "10px"}}>
-                    <label for="bankrtnum"><h3>Bank Routing Number</h3></label>
-                    <p id="bankrtnum">{data.bankRoutingNumber}</p>
-                </section>
-                <a 
-                href=""
-                onClick={(event)=>{
-                    event.preventDefault()
-                    setShowBankInfo(false)
-                }}
-                style={{color: "blue", ':visited': {color: 'blue'}}}
-                >
-                    Hide bank information
-                </a>
-            </div>
-        }
     <Button 
             style={{
                 margin: '20px auto',
@@ -164,20 +132,13 @@ function EditPanel(props){
     const [image, setImage] = useState()
     const [dlNumber, setDlNumber] = useState(props.data.driverLicenseNumber)
     const [dlNumValid, setDlNumValid] = useState(true) //show error if dl number is empty
-    const [bankAccNumber, setBankAccNumber] = useState(props.data.bankAccountNumber)
-    const [bankAccNumberValid, setBankAccNumberValid] = useState(true) //show error if bank account is blank
-    const [bankRtNumber, setBankRtNumber] = useState(props.data.bankRoutingNumber)
-    const [bankRtNumberValid, setBankRtNumberValid] = useState(true)
 
-    const [editBankInfo, setEditBankInfo] = useState(false)
+    const [stripeAccount, setStripeAccount] = useState()
     const [dataChanged, setDataChanged] = useState(false) //only make API call if data is changed
     const [loading, setLoading] = useState(false)
     const [confirmDisabled, setConfirmDisabled] = useState(false)
 
-    //determine if editted data can be submitted
-    useEffect(() => {
-        setConfirmDisabled(loading || !phoneValid || !dlNumValid || !bankAccNumberValid || !bankRtNumberValid)
-    }, [loading, phoneValid, dlNumValid, bankAccNumberValid, bankRtNumberValid])
+    const navigate = useNavigate()
 
     const uploadImage = async () => {
         var file = document.getElementById('licensepic').files[0]
@@ -204,15 +165,91 @@ function EditPanel(props){
         )
     }
 
+    const getStripeAccount = () => {
+        fetch(process.env.REACT_APP_API + '/payment/driver', {
+            method: 'GET',
+            headers: {
+                access_token: props.token
+            }
+        }).then(
+            (response) => response.json()
+        ).then(
+            (data) => {
+                switch(data.code){
+                    case 200:
+                        setStripeAccount(data.data)
+                    default:
+                        break;
+                }
+            }
+        ).catch(
+            (error) => {
+                alert(error)
+            }
+        )
+    }
+
+    const generateOnboardLink = () => {
+        fetch(process.env.REACT_APP_API + '/payment/driver/update', {
+            method: 'POST',
+            headers: {
+                "Content-Type" : "application/json",
+                access_token: props.token
+            },
+            body: JSON.stringify({
+                refreshUrl: `${window.location.protocol}//${window.location.hostname + (window.location.port ? ":" + window.location.port : "")}/driver/profile?token=${props.token}`,
+                returnUrl: `${window.location.protocol}//${window.location.hostname + (window.location.port ? ":" + window.location.port : "")}/driver/profile?token=${props.token}`
+            })
+        }).then(
+            (response) => response.json()
+        ).then(
+            (data) => {
+                switch(data.code){
+                    case 200:
+                        window.location.replace(data.data.url)
+                        break
+                    default:
+                        alert("Failed to start onboarding process. Please try again later.")
+                        break
+                }
+            }
+        )
+    }
+
+    const generateUpdateLink = () => {
+        fetch(process.env.REACT_APP_API + '/payment/driver/onboard', {
+            method: 'POST',
+            headers: {
+                "Content-Type" : "application/json",
+                access_token: props.token
+            },
+            body: JSON.stringify({
+                refreshUrl: `${window.location.protocol}//${window.location.hostname + (window.location.port ? ":" + window.location.port : "")}/driver/profile?token=${props.token}`,
+                returnUrl: `${window.location.protocol}//${window.location.hostname + (window.location.port ? ":" + window.location.port : "")}/driver/profile?token=${props.token}`
+            })
+        }).then(
+            (response) => response.json()
+        ).then(
+            (data) => {
+                switch(data.code){
+                    case 200:
+                        window.location.replace(data.data.url)
+                        break
+                    default:
+                        alert("Failed to start update process. Please try again later.")
+                        break
+                }
+            }
+        )
+    }
+
     const updateDriverProfile = ()=>{
         setLoading(true)
         uploadImage().then(
             (url) => {
                 var body = {
                     phone: getDigitsFromPhoneNumber(phone),
-                    driverLicenseNumber: dlNumber,
-                    bankAccountNumber: bankAccNumber,
-                    bankRoutingNumber: bankRtNumber
+                    driverLicenseNumber: dlNumber
                 }
                 if(url){
                     body.driverLicenseImage = url
@@ -232,11 +269,11 @@ function EditPanel(props){
                             case 200: //good things are happening :)
                                 setLoading(false)
                                 props.onUpdateSuccess() //return to view page and reload data
-                                break;
+                                break
                             default: //bad things are happening :(
                                 alert(data.data.message)
                                 props.onButtonClick()
-                                break;
+                                break
         
                         }
                     }
@@ -247,12 +284,18 @@ function EditPanel(props){
         )
     }
 
+    //determine if editted data can be submitted
+    useEffect(() => {
+        setConfirmDisabled(loading || !phoneValid || !dlNumValid)
+    }, [loading, phoneValid, dlNumValid])
+
+    //retreive stripe profile
+    useEffect(getStripeAccount, [])
+
     return (
     <div style={{margin: '20px'}}>
         {phoneValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid phone number</Alert>}
         {dlNumValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a Driver's License Number</Alert>}
-        {bankAccNumberValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a Bank Account Number</Alert>}
-        {bankRtNumberValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a Bank Account Routing Number</Alert>}
         <div>
             <label for="phone">Phone Number</label>
             <input
@@ -299,57 +342,25 @@ function EditPanel(props){
                 }}
                 value={dlNumber}
             />
-            {editBankInfo || 
-                <a 
+            {stripeAccount && stripeAccount.requirements.currently_due.length > 0 && stripeAccount.requirements.eventually_due.length > 0
+                ? <a
                     href=""
                     onClick={(event)=>{
                         event.preventDefault()
-                        setEditBankInfo(true)
+                        generateOnboardLink()
                     }}
-                    style={{color: "blue", ':visited': {color: 'blue'}}}
                 >
-                    Edit bank information
-                </a>
-            }
-            {editBankInfo && 
-                <div>
-                    <label for="bankaccnum" style={{display: "block"}}>Bank Account Number</label>
-                    <input
-                        id="bankaccnum" 
-                        type="text"
-                        onChange={(event)=>{
-                            setBankAccNumber(event.target.value)
-                            setDataChanged(true)
-                        }}
-                        onBlur={()=>{
-                            setBankAccNumberValid(bankAccNumber.length > 0)
-                        }}
-                        value={bankAccNumber}
-                    />
-                    <label for="bankrtnum" style={{display: "block"}}>Bank Routing Number</label>
-                    <input
-                        id="bankrtnum" 
-                        type="text"
-                        onChange={(event)=>{
-                            setBankRtNumber(event.target.value)
-                            setDataChanged(true)
-                        }}
-                        onBlur={()=>{
-                            setBankRtNumberValid(bankRtNumber.length > 0)
-                        }}
-                        value={bankRtNumber}
-                    />
-                    <a 
-                    href=""
-                    onClick={(event)=>{
-                        event.preventDefault()
-                        setEditBankInfo(false)
-                    }}
-                    style={{color: "blue", ':visited': {color: 'blue'}}}
-                    >
-                        Hide bank information
-                    </a>
-                </div>
+                    Finish onboarding to complete profile
+                </a> //onboard link
+                : <a
+                href=""
+                onClick={(event)=>{
+                    event.preventDefault()
+                    generateUpdateLink()
+                }}
+                >
+                    Update Payment Information
+                </a> //update link
             }
         </div>
         {dataChanged && <Button 
