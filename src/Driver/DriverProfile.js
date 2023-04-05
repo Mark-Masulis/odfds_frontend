@@ -349,15 +349,17 @@ function EditPanel(props){
                         event.preventDefault()
                         generateOnboardLink()
                     }}
+                    style={{color: "blue", ':visited': {color: 'blue'}}}
                 >
                     Finish onboarding to complete profile
                 </a> //onboard link
                 : <a
-                href=""
-                onClick={(event)=>{
-                    event.preventDefault()
-                    generateUpdateLink()
-                }}
+                    href=""
+                    onClick={(event)=>{
+                        event.preventDefault()
+                        generateUpdateLink()
+                    }}
+                    style={{color: "blue", ':visited': {color: 'blue'}}}
                 >
                     Update Payment Information
                 </a> //update link

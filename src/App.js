@@ -11,6 +11,7 @@ import Driver from './Driver/Driver'
 import LandingPage from './LandingPage/LandingPage.jsx'
 import LoginPage from './LandingPage/LoginPage'
 import CreateAcctPage from "./LandingPage/CreateAccountPage"
+import Header from './Components/Header'
 import Footer from './Components/Footer'
 import Layout from './Components/Layout'
 import CssBaseline from '@mui/material/CssBaseline';
@@ -39,7 +40,8 @@ export default function App() {
   return (    
     
     <div>
-      <CssBaseline />      
+      <CssBaseline />
+      <Header/>      
       <Layout>
         <RouterProvider router={router} />
       </Layout>
