@@ -23,7 +23,7 @@ import "../Components/ButtonStyle.css"
 import PaymentMethodItem from '../Components/Payment/PaymentMethodItem'
 
 //props.token = the JWT used to identify the user whose profile is being rendered
-export default function CustomerProfile(props){
+export default function RestaurantProfile(props){
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [data, setData] = useState()
@@ -71,9 +71,9 @@ export default function CustomerProfile(props){
         <Container>
             {
             loading
-                ? <div>Loading Component</div>
+                ? <div>Loading</div>
                 : error
-                    ? <div>Error Component</div>
+                    ? <Alert severity='error'>Error: Unable to access account</Alert>
                     : editting
                             ? <EditPanel 
                                 data={data}
