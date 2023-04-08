@@ -18,7 +18,6 @@ export default function LoginPage(props){
     const [userTab, setUserTab] = useState(userType || "restaurant")
     return (
         <div>
-            <Header />
             <TabBar 
                 tabs={[
                     {label: "Restaurant", onSelect: ()=>{setUserTab("restaurant")}},
