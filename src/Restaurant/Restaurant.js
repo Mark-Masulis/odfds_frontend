@@ -8,8 +8,7 @@ import {
   useLocation 
 } from "react-router-dom";
 import TabBar from "./../Components/TabBar";
-import RestaurantHomePage
- from "./RestaurantHomePage";
+import RestaurantHomePage from "./RestaurantHomePage";
 import RestaurantOrders from './RestaurantOrders'
 import RestaurantProfile from './RestaurantProfile'
 export default function Restaurant(props) {
