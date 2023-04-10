@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import "./../Components/ButtonStyle.css"
 
 import {
   Navigate,
@@ -46,7 +47,7 @@ const Pad = styled.div`
   padding: 5px;
 `;
 
-function RestaurantHomePage(props) {
+export default function RestaurantHomePage(props) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
@@ -55,19 +56,123 @@ function RestaurantHomePage(props) {
   const [zipCode, setZipCode] = useState("");
   const [comments, setComments] = useState("");
   const [loading, setLoading] = useState(false);
+  const [defaultSetup, setDefaultSetup] = useState(true)
+  const [error, setError] = useState(false)
+  
+  const [cost, setCost] = useState(0)
+  const [pickupAddr, setPickUp] = useState("")
+  const [deliveryAddr, setDelivery] = useState("")
+  const [time, setTime] = useState(0)
+  const [payment, setPayment] = useState("")
+  const [distance, setDistance] = useState(0)
+
+
+  const getProfileData = () => {
+    const token = props.token
+    if (!token){
+        //setError(true)
+        return
+    }
+    setLoading(true)
+    fetch(process.env.REACT_APP_API + '/restaurant/profile', {
+        method: "GET",
+        headers: {
+            "content-type": "application/json",
+            access_token: token
+        }
+    }).then(
+        (response) => response.json()
+    ).then(
+        (data) => {
+            switch(data.code){
+                case 200: 
+                    setPickUp(`${data.data.street}, ${data.data.city}, ${data.data.state} ${data.data.zipCode}`)
+                    
+                    //need to look into whether payment can be retrieved from DB, is a static value for now
+                    setPayment("Discover ending in *1234")
+                    break;
+                default: //bad things are happening :(
+                    //setError(true)
+                    break
+            }
+            setLoading(false) 
+        }
+        
+    )
+    
+  }
+
+  const estimateOrder = () =>{
+    const token = props.token
+    if (!token){
+        //setError(true)
+        return
+    } 
+    setLoading(true)
+    fetch(process.env.REACT_APP_API + '/restaurant/order/estimate', {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        access_token: token
+      },
+      body: JSON.stringify({
+        "street": address,
+        "city": city,
+        "state": state,
+        "zipCode": zipCode
+      })
+    }).then(
+      (response) => response.json()
+    ).then(
+      (data) => {
+          switch(data.code){
+              case 200: //good things are happening :)
+                  const distanceMiles = (data.data.estimatedDistanceInMeters / 1609)
+                  var cost = 5;
+                  if(distanceMiles > 1){
+                    cost = (distanceMiles - 1) * 2 + 5;
+                  }
+                  setTime(Math.round(data.data.estimatedDurationInSeconds/60))
+                  setCost(Math.round(cost * 100) / 100)
+                  setDistance(Math.round(distanceMiles * 100) / 100)
+                  break
+              default: //bad things are happening :(
+                  setError(true)
+                  alert(data.message)
+                  break
+          }
+          setLoading(false)
+      }
+  )
+  
+}
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(
-      `Name: ${name}\nPhone Number: ${phoneNumber}\nAddress: ${address}\nCity: ${city}\nState: ${state}\nZip Code: ${zipCode}\nComments: ${comments}`
-    );
+    setDelivery(`${address}, ${city}, ${state} ${zipCode}`)
+    getProfileData()
+    estimateOrder()
+    if(!error){
+      setDefaultSetup(false)
+    }
   };
+
+  const placeOrder = (event) => {
+    alert("Order Placed")
+  }
 
   return (
     <div>
+      {defaultSetup && 
+      <div>
       <FormContainer>
         <Form onSubmit={handleSubmit}>
           <Column>
+            <Row>
+            <Pad>
+            <h2>Start A New Order</h2>
+            </Pad>
+            </Row>
             <Row>
               <Pad>
               <TextField
@@ -161,12 +266,37 @@ function RestaurantHomePage(props) {
                 onChange={(e) => setComments(e.target.value)}
               />
             </Row>
-            <Button type="submit">Calculate Order</Button>
+            <div class="styledBtnContainer">
+              <Button variant="contained" size="medium" type="submit">Calculate Order</Button>
+            </div>
           </Column>
         </Form>
       </FormContainer>
-    </div>
+      </div>
+      }
+      {!defaultSetup && 
+      <div style={{width: "80%", margin: "0 auto"}}>
+          <h2>Order Overview</h2>
+          <ul>
+              <li>Customer Name: {name}</li>
+              <li>Pickup Address: {pickupAddr}</li>
+              <li>Delivery Address: {deliveryAddr}</li>
+              <li>Distance: {distance} miles</li>
+              <li>Estimate Travel Time: {time} min</li>
+              <li>Cost: ${cost}</li>
+              <li>Payment: {payment}</li>
+          </ul>
+      <div class="styledBtnContainer">
+        <Button variant="contained" size="medium" onClick ={(e) => {setDefaultSetup(true)}}>Change Order</Button>
+      </div>
+      <div>
+          Map Placeholder
+      </div>
+      <div class="styledBtnContainer">
+        <Button variant="contained" size="medium" onClick ={placeOrder}>Place Order</Button>
+      </div>
+  </div>}
+  </div>
+    
   );
 }
-
-export default RestaurantHomePage;

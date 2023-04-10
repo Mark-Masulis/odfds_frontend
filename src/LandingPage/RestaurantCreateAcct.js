@@ -1,6 +1,12 @@
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import { validateEmail } from '../Utils/validation'
+import {
+    getDigitsFromPhoneNumber,
+    validatePhoneNumber,
+    validateZipCode,
+    validateEmail
+} from './../Utils/validation'
+import {Alert} from '@mui/material'
 import "./Login.css"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
@@ -19,6 +25,11 @@ export default function RestauranCreateAcct(props){
     const [zipcode, setZipcode] = useState("")
     const [emailCode, setEmailCode] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const [phoneValid, setPhoneValid] = useState(true) 
+    const [nameValid, setNameValid] = useState(true)
+    const [cityValid, setCityValid] = useState(true)
+    const [zipValid, setZipValid] = useState(true) 
 
     const sendEmailCode = () => {
         if(email === ""){
@@ -94,10 +105,21 @@ export default function RestauranCreateAcct(props){
 
     return(
         <div style={{margin: "0 auto",width: "80%",padding: "25px"}}>
+
+            <div style={{margin: '20px'}}>
+                {phoneValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid phone number</Alert>}
+                {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid restaurant name</Alert>}
+                {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
+                {zipValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid zip code</Alert>}
+            </div>
+            
             <h2>Create an Account - Restaurant</h2>
             <TextField id="nameIn" label="Restaurant Name" variant="outlined" fullWidth margin="normal" value={name} disabled={loading}
                 onChange={(event) => {
                     setName(event.target.value)
+                }}
+                onBlur={()=>{
+                    setNameValid(name.trim().length > 0)
                 }}/>
             <TextField id="emailIn" label="Email" variant="outlined" fullWidth margin="normal" value={email} disabled={loading}
                 onChange={(event) => {
@@ -113,8 +135,11 @@ export default function RestauranCreateAcct(props){
             <TextField id="phoneIn" label="Phone Number" type="tel" variant="outlined" fullWidth margin="normal" value={phoneNum} disabled={loading}
                 onChange={(event) => {
                     setPhone(event.target.value)
+                }}
+                onBlur={()=>{
+                    setPhoneValid(validatePhoneNumber(phoneNum))
                 }}/>
-
+                
             <TextField id="passwordIn" label="Password" type="password" variant="outlined" fullWidth margin="normal" value={password} disabled={loading}
                 onChange={(event) => {
                     setPassword(event.target.value)
@@ -131,6 +156,9 @@ export default function RestauranCreateAcct(props){
             <TextField id="cityIn" label="City" variant="outlined" fullWidth margin="normal" value={city} disabled={loading}
                 onChange={(event) => {
                     setCity(event.target.value)
+                }}
+                onBlur={()=>{
+                    setCityValid(city.trim().length > 0)
                 }}/>
             
             <label for="stateSelect" style={{display: "block"}}>State</label>
@@ -139,6 +167,9 @@ export default function RestauranCreateAcct(props){
             <TextField id="zipCodeIn" label="Zipcode" type="number" variant="outlined" fullWidth margin="normal" value={zipcode} disabled={loading}
                 onChange={(event) => {
                     setZipcode(event.target.value)
+                }}
+                onBlur={()=>{
+                    setZipValid(validateZipCode(zipcode))
                 }}/>
             <div class="container">
                 <Button id="createAcctBtn" variant="contained" size="medium" disabled={loading} onClick={restaurantCreateAcctRequest}>Create Account</Button>

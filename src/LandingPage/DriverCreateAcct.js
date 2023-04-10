@@ -1,6 +1,10 @@
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import { validateEmail } from '../Utils/validation'
+import {
+    validatePhoneNumber,
+    validateEmail
+} from './../Utils/validation'
+import {Alert} from '@mui/material'
 import "./Login.css"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
@@ -20,6 +24,10 @@ export default function DriverLogin(props){
     const [image, setImage] = useState("")
     const [loading, setLoading] = useState(false)
     
+    const [phoneValid, setPhoneValid] = useState(true) 
+    const [nameValid, setNameValid] = useState(true)
+    const [cityValid, setCityValid] = useState(true)
+    const [zipValid, setZipValid] = useState(true) 
 
     const validName = (name) =>{
         var nameSplit = name.split(" ")
@@ -137,10 +145,21 @@ export default function DriverLogin(props){
 
     return(
         <div style={{margin: "0 auto",width: "80%",padding: "25px"}}>
+
+            <div style={{margin: '20px'}}>
+                {phoneValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid phone number</Alert>}
+                {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid restaurant name</Alert>}
+                {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
+                {zipValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid zip code</Alert>}
+            </div>
+
             <h2>Create an Account - Driver</h2>
             <TextField id="nameIn" label="Name" variant="outlined" fullWidth margin="normal" value={name} disabled={loading}
                 onChange={(event) => {
                     setName(event.target.value)
+                }}
+                onBlur={()=>{
+                    setNameValid(name.trim().length > 0)
                 }}/>
             <div width="60px">
             <TextField id="emailIn" label="Email" variant="outlined" fullWidth margin="normal" value={email} disabled={loading}
@@ -158,6 +177,9 @@ export default function DriverLogin(props){
             <TextField id="phoneIn" label="Phone Number" type="tel" variant="outlined" fullWidth margin="normal" value={phoneNum} disabled={loading}
                 onChange={(event) => {
                     setPhone(event.target.value)
+                }}
+                onBlur={()=>{
+                    setPhoneValid(validatePhoneNumber(phoneNum))
                 }}/>
 
             <TextField id="passwordIn" label="Password" type="password" variant="outlined" fullWidth margin="normal" value={password} disabled={loading}
@@ -201,8 +223,6 @@ export default function DriverLogin(props){
             <div class="container">
                 <Button id="createAcctBtn" variant="contained" size="medium" disabled={loading} onClick={driverCreateAcctRequest}>Create Account</Button>
             </div>
-            
-            
         </div>
         )
 }
