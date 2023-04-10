@@ -59,9 +59,9 @@ export default function DriverProfile(props){
         <Container>
             {
             loading
-                ? <div>Loading Component</div>
+                ? <div>Loading</div>
                 : error
-                    ? <div>Error Component</div>
+                    ? <Alert severity='error'>Error: Unable to access account</Alert>
                     : editting
                             ? <EditPanel 
                                 data={data}
