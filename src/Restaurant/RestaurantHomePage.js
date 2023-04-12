@@ -11,6 +11,7 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
+import Checkout from "../Components/Payment/Checkout";
 
 const FormContainer = styled.div`
   display: flex;
@@ -271,6 +272,13 @@ export default function RestaurantHomePage(props) {
             </div>
           </Column>
         </Form>
+        <Checkout
+          token={props.token}
+          amountCents={1050}
+          onConfirm={(intentId) => {
+            
+          }}
+      />
       </FormContainer>
       </div>
       }
