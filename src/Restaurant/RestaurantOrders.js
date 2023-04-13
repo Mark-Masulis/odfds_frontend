@@ -7,18 +7,20 @@ import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 
 
 export default function RestrauntOrders(props) {
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
-  const [data, setData] = useState()
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [data, setData] = useState();
   const [rows, setRows] =useState([]);
-  
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
+
   const getOrdersData = () => {
     const token = props.token
     if (!token){
         setError(true)
         return
     }
-    fetch(process.env.REACT_APP_API + '/restaurant/orders?pageSize=10&page=1', {
+    fetch(process.env.REACT_APP_API + '/restaurant/orders?pageSize='+pageSize+'&page=' + page, {
         method: "GET",
         headers: {
             "content-type": "application/json",
@@ -64,6 +66,10 @@ export default function RestrauntOrders(props) {
   const handleClick = (value) => {
     console.log("Hello world");
   };
+  
+  const handlePageSizeChange = (params) => {
+    setPageSize(params.pageSize);
+  };
 
   useEffect(getOrdersData, [])
   return (
@@ -78,6 +84,8 @@ export default function RestrauntOrders(props) {
         <DataGrid
           rows={rows}
           columns= {columns}
+          pageSize={pageSize}
+          onPageSizeChange={handlePageSizeChange}
         />
       </div>
     </div>
