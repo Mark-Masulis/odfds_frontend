@@ -3,6 +3,9 @@ import React, {
     useEffect
 } from 'react'
 import {
+    useSearchParams,
+} from "react-router-dom";
+import {
     Alert
 } from '@mui/material'
 import {
@@ -15,15 +18,17 @@ import {
     validatePhoneNumber,
     validateZipCode
 } from './../Utils/validation'
-
+import PaymentSetup from '../Components/Payment/PaymentSetup'
 import "../Components/ButtonStyle.css"
+import PaymentMethodItem from '../Components/Payment/PaymentMethodItem'
 
 //props.token = the JWT used to identify the user whose profile is being rendered
-export default function CustomerProfile(props){
+export default function RestaurantProfile(props){
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [data, setData] = useState()
     const [editting, setEditting] = useState(false)
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const getProfileData = () => {
         const token = props.token
@@ -55,14 +60,20 @@ export default function CustomerProfile(props){
     }
 
     useEffect(getProfileData, [])
+    
+    useEffect(() => {
+        if (searchParams.has("paymentSet")){
+            var intentId = searchParams.get("paymentSet")
+        }
+    }, [])
 
     return(
         <Container>
             {
             loading
-                ? <div>Loading Component</div>
+                ? <div>Loading</div>
                 : error
-                    ? <div>Error Component</div>
+                    ? <Alert severity='error'>Error: Unable to access account</Alert>
                     : editting
                             ? <EditPanel 
                                 data={data}
@@ -137,6 +148,12 @@ function EditPanel(props){
     const [loading, setLoading] = useState(false)
     const [confirmDisabled, setConfirmDisabled] = useState(false)
 
+    const [viewPayment, setViewPayment] = useState(false) //when true, shows existing payment methods and the add new payment button
+    const [paymentMethods, setPaymentMethods] = useState()
+    const [loadingMethods, setLoadingMethods] = useState(false)
+    const [addPaymentInformation, setAddPaymentInformation] = useState(false)
+    const [loadingDeletion, setLoadingDeletion] = useState(false)
+
     //determine if editted data can be submitted
     useEffect(() => {
         setConfirmDisabled(loading || !phoneValid || !nameValid || !cityValid || !zipValid)
@@ -163,20 +180,74 @@ function EditPanel(props){
         ).then(
             (data) => {
                 switch(data.code){
-                    case 200: //good things are happening :)
+                    case 200:
                         setLoading(false)
                         props.onUpdateSuccess() //return to view page and reload data
-                        break;
-                    default: //bad things are happening :(
+                        break
+                    default:
                         alert(data.data.message)
                         props.onButtonClick()
-                        break; //TODO: make error message appear describing error to user
+                        break
 
                 }
             }
         ).catch(error => {
             alert(error)
         })
+    }
+
+    const getPaymentMethods = () => {
+        setLoadingMethods(true)
+        fetch(process.env.REACT_APP_API + '/payment/methods', {
+            method: 'POST',
+            headers: {
+                access_token: props.token
+            }
+        }).then(
+            (response) => response.json()
+        ).then(
+            (data) => {
+                switch(data.code){
+                    case 200:
+                        setPaymentMethods(data.data.data) //these names are dumb as fuck but i'm not going to do anything about it
+                        break;
+                    default:
+                        break;
+                }
+                setLoadingMethods(false)
+            }
+        ).catch(
+            (error) => {
+                alert(error)
+            }
+        )
+    }
+
+    const deletePaymentMethod = async (paymentMethodId) => {
+        setLoadingDeletion(true)
+        await fetch(`${process.env.REACT_APP_API}/payment/methods?methodId=${paymentMethodId}`, {
+            method: 'DELETE',
+            headers: {
+                access_token: props.token
+            }
+        }).then(
+            (response) => response.json()
+        ).then(
+            (data) => {
+                switch(data.code){
+                    case 200:
+                        break;
+                    default:
+                        alert("Failed to delete payment method. Please try again later.")
+                        break;
+                }
+                setLoadingDeletion(false)
+            }
+        ).catch(
+            (error) => {
+                alert(error)
+            }
+        )
     }
 
     return (
@@ -268,6 +339,70 @@ function EditPanel(props){
                     />
                 </div>
             </div>
+            <div style={{margin: '0 auto'}}>
+                {viewPayment || 
+                    <a 
+                        href=""
+                        onClick={(event)=>{
+                            event.preventDefault()
+                            setViewPayment(true)
+                            if(!paymentMethods){
+                                getPaymentMethods()
+                            }
+                        }}
+                        style={{color: "blue", ':visited': {color: 'blue'}}}
+                    >
+                        Edit Payment Information
+                    </a>
+                }
+            </div>
+            {viewPayment && 
+                <div>
+                    {loadingMethods
+                        ? <p>LOADING</p>
+                        : paymentMethods.map(item => 
+                            <PaymentMethodItem
+                                paymentMethod={item}
+                                hasButton={true}
+                                buttonText="Delete"
+                                disabled={loadingDeletion}
+                                onButtonClick={(paymentMethod) => {
+                                    deletePaymentMethod(paymentMethod.id).then(
+                                        props.onButtonClick()
+                                    )
+                                }}
+                            />)
+                    }
+                    <Button
+                    style={{
+                        margin: '20px auto',
+                        display: 'block',
+                        color: loading ? 'gray' : null
+                    }} 
+                        onClick={() => {
+                            setAddPaymentInformation(true)
+                        }}
+                    >
+                        Add New Payment Method
+                    </Button>
+                    <a 
+                        href=""
+                        onClick={(event)=>{
+                            event.preventDefault()
+                            setViewPayment(false)
+                        }}
+                        style={{color: "blue", ':visited': {color: 'blue'}}}
+                    >
+                        Hide Payment Information
+                    </a>
+                    {addPaymentInformation &&
+                        <PaymentSetup
+                            returnPath={`/restaurant/profile?token=${props.token}`} //refresh same page on completion
+                            token={props.token}
+                        />
+                    }
+                </div>
+            }
         </div>
         {dataChanged && <Button 
             style={{
