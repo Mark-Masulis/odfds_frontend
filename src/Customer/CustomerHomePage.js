@@ -46,7 +46,7 @@ function MyComponent({ deliveryStatus }) {
      
   <div>
     <LoadScript
-      googleMapsApiKey="AIzaSyAYHYRaVOsDDc_EOyBsAI0xG3xflBoxGgg"
+      googleMapsApiKey=""
     >
       <GoogleMap
         mapContainerStyle={containerStyle}
