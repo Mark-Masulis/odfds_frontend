@@ -6,7 +6,7 @@ import {
   Route
 } from "react-router-dom"
 import Restaurant from './Restaurant/Restaurant'
-import Customer from './Customer/Customer'
+import Customer from './Customer/CustomerHomePage'
 import Driver from './Driver/Driver'
 import LandingPage from './LandingPage/LandingPage.jsx'
 import LoginPage from './LandingPage/LoginPage'

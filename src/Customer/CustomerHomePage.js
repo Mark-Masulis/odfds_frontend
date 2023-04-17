@@ -1,101 +1,80 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { GoogleMap, LoadScript, Marker} from "@react-google-maps/api";
+import React, { useState, useEffect } from 'react'
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-const mapStyles = {
-  width: '400px',
+const containerStyle = {
+  width: '100%',
   height: '400px'
 };
 
-export default function CustomerHomePage(props) {
-  const location = useLocation();
-  const token = new URLSearchParams(location.search).get("token");
 
-  const [deliveryStatus, setDeliveryStatus] = useState("Pending");
-  const [restaurantPosition, setRestaurantPosition] = useState(null);
-  const [customerPosition, setCustomerPosition] = useState(null);
+const driverLocation = { lat: 37.7749, lng: -122.4194 };
+const destinationLocation = { lat: 37.7749, lng: -122.4316 };
+const restaurantLocation = { lat: 37.7749, lng: -122.4085 };
+
+
+
+
+function MyComponent({ deliveryStatus }) {
   const [distance, setDistance] = useState(null);
 
   useEffect(() => {
-    // Send a request to the backend to get the current delivery status
-    fetch(`/api/delivery/status?token=${token}`)
-      .then((response) => {
-        // Check if the response was successful
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        setDeliveryStatus(data.status);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    // Send a request to the backend to get the restaurant position and customer position
-    fetch(`/api/delivery/positions?token=${token}`)
-      .then((response) => {
-        // Check if the response was successful
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        setRestaurantPosition(data.restaurantPosition);
-        setCustomerPosition(data.customerPosition);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [token]);
-
-  useEffect(() => {
-    // Calculate the distance between the restaurant and customer positions
-    if (restaurantPosition && customerPosition) {
-      const service = new window.google.maps.DistanceMatrixService();
-      const origins = [restaurantPosition];
-      const destinations = [customerPosition];
-      service.getDistanceMatrix(
-        {
-          origins,
-          destinations,
-          travelMode: window.google.maps.TravelMode.DRIVING,
-        },
-        (response, status) => {
-          if (status === "OK") {
-            const distance = response.rows[0].elements[0].distance.text;
-            setDistance(distance);
-          } else {
-            console.error("Error calculating distance:", status);
+    if (window.google && window.google.maps) {
+    // Calculate the distance between the driver and destination locations
+      if (driverLocation && destinationLocation) {
+        const service = new window.google.maps.DistanceMatrixService();
+        const origins = [driverLocation];
+        const destinations = [destinationLocation];
+        service.getDistanceMatrix(
+          {
+            origins,
+            destinations,
+            travelMode: window.google.maps.TravelMode.DRIVING,
+          },
+          (response, status) => {
+            if (status === "OK") {
+              const distance = response.rows[0].elements[0].distance.text;
+              setDistance(distance);
+            } else {
+              console.error("Error calculating distance:", status);
+            }
           }
-        }
-      );
+        );
+      }
     }
-  }, [restaurantPosition, customerPosition]);
-
+  })
   return (
-    <div style={{ margin: "0 auto", width: "70%", padding: "65px" }}>
-      <h1 style={{ marginTop: "40px" }}>Current Status: {deliveryStatus}</h1>
-      <div style={{ marginTop: "40px" }}>
-        <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-          <GoogleMap mapContainerStyle={mapStyles} center={restaurantPosition}>
-            {restaurantPosition && (
-              <Marker position={restaurantPosition} label="Restaurant" />
-            )}
-            {customerPosition && (
-              <Marker position={customerPosition} label="Customer" />
-            )}
-          </GoogleMap>
-        </LoadScript>
+     
+  <div>
+    <LoadScript
+      googleMapsApiKey="AIzaSyAYHYRaVOsDDc_EOyBsAI0xG3xflBoxGgg"
+    >
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={driverLocation || destinationLocation || restaurantLocation}        
+        zoom={10}
+      >
+        { /* Child components, such as markers, info windows, etc. */ }
+        {restaurantLocation && (
+            <Marker position={restaurantLocation} label="Restaurant" />
+          )}
+          {driverLocation && (
+            <Marker position={driverLocation} label="Driver" />
+          )}
+          {destinationLocation && (
+            <Marker position={destinationLocation} label="Destination" />
+          )}
+      </GoogleMap>
+    </LoadScript>
+
+    <div style={{ margin: '30px', fontSize: '26px' }} >     
+    <p style={{ margin: 0, fontWeight: 'bold' }}>Delivery Status: {deliveryStatus}</p>
         {distance && (
-          <p style={{ marginTop: "20px" }}>Distance to destination: {distance}</p>
+          <p style={{ margin: 0 }}>Distance to destination: {distance}</p>
         )}
-      </div>
-      <p style={{marginTop: "40px", fontSize: "24px"}}>Estimated Time of Arrival: </p>
+     
     </div>
-  );
+   </div>
+  )
 }
+    
+export default React.memo(MyComponent)

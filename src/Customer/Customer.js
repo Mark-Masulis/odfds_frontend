@@ -11,6 +11,7 @@ import {
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Header from '../Components/Header.jsx';
+import CustomerHomePage from "./CustomerHomePage";
 
 export default function Customer(props){
       const [trackingCode, setTrackingCode] = useState('');
@@ -22,8 +23,8 @@ export default function Customer(props){
       const handleTrackingCodeSubmit = (event) => {
         event.preventDefault();
         // Get the tracking code from the form input
-        const trackingCode = event.target.elements.trackingCode.value;
-
+        //const trackingCode = event.target.elements.trackingCode.value;
+        const trackingCode = '123456';
         // Send a request to the backend to process the tracking code
         fetch(`/api/tracking/${trackingCode}`)
           .then((response) => {
@@ -32,13 +33,14 @@ export default function Customer(props){
               throw new Error("Network response was not ok");
             }
 
-            return response.json();
+            //return response.json();
+            return Promise.resolve({ code: 200, token: 'test-token' });
           })
            .then((data) => {          
               switch (data.code) {
                 case 200:
-                  const token = data.token;
-                  navigate(`/restaurant/home?token=${token}`);
+                  const token = data.token;          
+                  navigate(`/CustomerHomePage`, { state: { token } });                 
                   break;
                 case 400:
                   navigate(`/error-page`);
