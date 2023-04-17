@@ -272,13 +272,6 @@ export default function RestaurantHomePage(props) {
             </div>
           </Column>
         </Form>
-        <Checkout
-          token={props.token}
-          amountCents={1050}
-          onConfirm={(intentId) => {
-            
-          }}
-      />
       </FormContainer>
       </div>
       }

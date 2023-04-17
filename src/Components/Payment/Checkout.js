@@ -2,37 +2,30 @@ import React, {
     useEffect,
     useState
 } from 'react'
-import { 
-    loadStripe 
-} from "@stripe/stripe-js";
-import { 
-    Elements
-} from "@stripe/react-stripe-js"
 import PaymentMethodItem from './PaymentMethodItem'
 import {Button} from './../StaticComponents'
 
 //props.token = token of the user doing the checkout
-//props.amountCents = the amount being paid in cents
+//props.order = the order object being paid
 //props.onConfirm = the function called when the checkout is confirmed. Passes the payment intent as a parameter
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY)
 
 export default function Checkout(props){
 
-    const [intentId, setIntentId] = useState()
+    const [intent, setIntent] = useState()
     const [loading, setLoading] = useState(true)
     const [paymentMethods, setPaymentMethods] = useState()
     const [selectedMethod, setSelectedMethod] = useState()
 
     const createPaymentIntent = async () => {
         setLoading(true)
-        return await fetch(process.env.REACT_APP_API + '/payment/create_payment_intent', {
+        return await fetch(process.env.REACT_APP_API + '/payment/payment_intent', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 access_token: props.token
             },
             body: JSON.stringify({
-                amountCents: props.amountCents,
+                orderId: props.order.id,
                 paymentMethodId: selectedMethod.id
             })
         }).then(
@@ -42,7 +35,7 @@ export default function Checkout(props){
                 setLoading(false)
                 switch(data.code){
                     case 200:
-                        setIntentId(data.data.client_secret)
+                        setIntent(data.data)
                         break
                     default:
                         alert(JSON.stringify(data))
@@ -132,7 +125,7 @@ export default function Checkout(props){
                             alert(JSON.stringify(selectedMethod))
                             createPaymentIntent().then(
                                 () => {
-                                    props.onConfirm(intentId)
+                                    props.onConfirm(intent)
                                 }
                             )
                         }}
