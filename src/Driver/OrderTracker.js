@@ -14,6 +14,7 @@ import useWebSocket from 'react-use-websocket'
 //props.onOrderPickup = the function called when an accepted order is picked up
 //props.onNoLocation = the function called when the browser doesn't allow the user to access location
 //props.onError = the function called when an error is returned from the server
+//props.onUnverified = the function called when the account hasn't verified their stripe account
 export default function OrderTracker(props){
     const [timerId, setTimerId] = useState()
 
@@ -52,6 +53,7 @@ export default function OrderTracker(props){
                     break
                 case 207:
                     //stripe account not verified
+                    props.onUnverified(data.data)
                     break
                 default:
                     if(data.code > 400 || JSON.parse(data).code > 400){

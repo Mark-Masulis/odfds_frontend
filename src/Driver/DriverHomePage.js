@@ -42,6 +42,9 @@ export default function DriverHomePage(props){
       onError={(error) => {
         alert(JSON.stringify(error))
       }}
+      onUnverified={(data) => {
+        alert("Your account is unverified.")
+      }}
     />
   </div>)
 }
