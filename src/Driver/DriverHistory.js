@@ -11,14 +11,15 @@ export default function DriverHistory(props) {
   const [error, setError] = useState(false)
   const [data, setData] = useState()
   const [rows, setRows] =useState([]);
-  
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
   const getOrdersData = () => {
     const token = props.token
     if (!token){
         setError(true)
         return
     }
-    fetch(process.env.REACT_APP_API + '/driver/orders?pageSize=10&page=1', {
+    fetch(process.env.REACT_APP_API + '/driver/orders?pageSize='+pageSize+'&page=' + page, {
         method: "GET",
         headers: {
             "content-type": "application/json",
