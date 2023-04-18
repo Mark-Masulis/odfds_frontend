@@ -10,7 +10,7 @@ import useWebSocket from 'react-use-websocket'
 //THE FOLLOWING FUNCTIONS ARE OPTIONAL
 //props.onOrderReceived = the function called when a new order is received
 //props.onOrderRejected = the function called when a received order times out or is manually rejected
-//props.onOrderAccept = the function called when an available order is accepted
+//props.onOrderAccepted = the function called when an available order is accepted
 //props.onOrderPickup = the function called when an accepted order is picked up
 //props.onNoLocation = the function called when the browser doesn't allow the user to access location
 //props.onError = the function called when an error is returned from the server
@@ -41,7 +41,7 @@ export default function OrderTracker(props){
                     break
                 case 204:
                     //pending order was accepted
-                    props.onOrderAccept(data.data)
+                    props.onOrderAccepted(data.data)
                     break
                 case 205:
                     //order was picked up
