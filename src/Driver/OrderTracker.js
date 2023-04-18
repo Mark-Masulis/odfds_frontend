@@ -31,7 +31,8 @@ export default function OrderTracker(props){
                     props.onOrderReceived(data.data)
                     break
                 case 202:
-                    //An order still needs to be accepted
+                    //An order timed out
+                    props.onORderRejected(data.data)
                     break
                 case 203:
                     //pending order was rejected
@@ -48,6 +49,9 @@ export default function OrderTracker(props){
                 case 206:
                     //order was delivered
                     props.onDeliver(data.data)
+                    break
+                case 207:
+                    //stripe account not verified
                     break
                 default:
                     if(data.code > 400 || JSON.parse(data).code > 400){
