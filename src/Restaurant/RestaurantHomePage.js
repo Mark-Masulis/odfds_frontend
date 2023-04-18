@@ -11,6 +11,7 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
+import Checkout from "../Components/Payment/Checkout";
 
 const FormContainer = styled.div`
   display: flex;
