@@ -1,0 +1,29 @@
+.styledBtnContainer button{
+    margin: 10px 0;
+    background-color: #0C695D;
+    font-family: Inter;
+    color: white;
+    font-size: 20px;
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 50px;
+} 
+.styledBtnContainer button:hover {
+    background-color: #37AFA9;
+    cursor: pointer;
+}  
+
+.styledBtn{
+    margin: 10px 0;
+    background-color: #0C695D;
+    font-family: Inter;
+    color: white;
+    font-size: 20px;
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 50px;
+} 
+.styledBtn:hover {
+    background-color: #37AFA9;
+    cursor: pointer;
+}  

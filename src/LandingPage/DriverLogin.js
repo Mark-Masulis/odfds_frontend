@@ -1,26 +1,20 @@
-import React, {
-  useState
-} from 'react'
-import {
-  useNavigate
-} from 'react-router-dom'
+import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import "./Login.css"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import { validateEmail } from '../Utils/validation'
 
 export default function DriverLogin(props){
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false) //used to disable inputs while waiting for fetch request
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const checkEmail = (text) =>{
-      const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-      return emailRegex.test(text)
-  }
-
   const makeLoginRequest = () => {
-      if (!checkEmail(email) || password == ""){
+      if (!validateEmail(email) || password == ""){
           alert("Email or password is invalid.")
-      }else{
+      } else{
           setLoading(true)
           fetch(process.env.REACT_APP_API + '/driver/token', 
           {
@@ -37,13 +31,13 @@ export default function DriverLogin(props){
           ).then(
               (data) => {
                   switch(data.code){
-                      case 200: //good things are happening :)
+                      case 200:
                           const token = data.data
                           navigate(`/driver/home?token=${token}`)
                           break;
-                      default: //bad things are happening :(
+                      default:
                           alert(data.data.message)
-                          break; //TODO: make error message appear describing error to user
+                          break; 
 
                   }
                   setLoading(false)
@@ -53,83 +47,24 @@ export default function DriverLogin(props){
   }
 
   return(
-      <div
-      style={{
-          margin: "0 auto",
-          width: "50%",
-          padding: "25px"
-      }}
-      >
-          <h2>Driver Sign-in</h2>
-          <section
-              style={{
-                  padding: "10px"
-              }}
-          >
-              <label 
-                  for="email"
-                  style={{
-                      display: "block"
-                  }}
-              >
-                  Email
-              </label>
-              <input
-                  id="email" 
-                  type="text"
-                  disabled={loading}
-                  onChange={(event) => {
-                      setEmail(event.target.value)
-                  }}
-                  value={email}
-              />
-          </section>
-          <section
-              style={{
-                  padding: "10px"
-              }}
-          >
-              <label 
-                  for="password"
-                  style={{
-                      display: "block"
-                  }}
-              >
-                  Password
-              </label>
-              <input
-                  id="password" 
-                  type="password"
-                  disabled={loading}
-                  onChange={(event) => {
-                      setPassword(event.target.value)
-                  }}
-                  value={password}
-              />
-          </section>
-          <section
-              style={{
-                  padding: "10px"
-              }}
-          >
-              <a href="/signup">
-                  Create an account
-              </a>
-              <br/>
-              <a href="/login/driver/reset">
-                  Forgot your password?
-              </a>
-          </section>
-          <button
-              style={{
-                  margin: "0 auto",
-                  display: "flex"
-              }}
-              disabled={loading}
-              onClick={makeLoginRequest}
-          >
-              Log In
-          </button>
+      <div style={{margin: "0 auto", width: "50%", padding: "25px"}}>
+        <h2>Driver Sign-in</h2>
+        <TextField id="emailIn" label="Email" variant="outlined" fullWidth margin="normal" value={email} disabled={loading}
+            onChange={(event) => {
+                setEmail(event.target.value)
+            }} />
+        <TextField id="passIn" label="Password" type="password" variant="outlined" fullWidth margin="normal" value={password} disabled={loading}
+            onChange={(event) => {
+                setPassword(event.target.value)
+            }} />
+        <section style={{padding: "10px"}}>
+            <a href="/signup/driver">Create an account</a>
+            <br/>
+            <a href="/login/driver/reset"> Forgot your password?</a>
+        </section>
+        <div class="container">
+            <Button id="loginBtn" variant="contained" size="medium" disabled={loading} onClick={makeLoginRequest}>Login</Button>
+        </div>
       </div>
       )
 }

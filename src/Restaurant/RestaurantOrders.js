@@ -1,11 +1,14 @@
 import * as React from "react";
 import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
-
+import { 
+  useParams, 
+  useSearchParams,
+} from "react-router-dom";
 const rows = [
   { id: 1, col1: "Josh", col2: "20 min", col3: "000001", col4:"123 S Main Street", col5:"3/16/2023", col6:"Peter" },
   { id: 2, col1: "DataGridPro", col2: "is Awesome" },
   { id: 3, col1: "MUI", col2: "is Amazing" },
-];
+];  
 
 const columns = [
   { field: "col1", headerName: "Driver", width: 150 },
@@ -16,7 +19,10 @@ const columns = [
   { field: "col6", headerName: "Customer Name", width: 150 },
 ];
 
-export default function App() {
+export default function RestrauntOrders(props) {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const token = searchParams.get("token")
+  
   return (
     <div style={{ textAlign: 'center' }}>
       <div
@@ -29,14 +35,6 @@ export default function App() {
         <DataGrid
           rows={rows}
           columns={columns}
-          sx={{
-            boxShadow: 2,
-            border: 2,
-            borderColor: "primary.light",
-            "& .MuiDataGrid-cell:hover": {
-              color: "primary.main",
-            },
-          }}
         />
       </div>
     </div>

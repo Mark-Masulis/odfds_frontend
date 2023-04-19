@@ -11,11 +11,15 @@ import TabBar from "./../Components/TabBar"
 import DriverHomePage from "./DriverHomePage"
 import DriverHistory from './DriverHistory'
 import DriverProfile from './DriverProfile'
+import OrderTracker from "./OrderTracker"
+import Notification from "./Notification"
 export default function Restaurant(props) {
   const { userType } = useParams()
   const location = useLocation()
   const pathParts = location.pathname.split('/')
   const [userTab, setUserTab] = useState(userType || "create")
+  const [locationActive, setLocationActive] = useState(false)
+
   const [searchParams, setSearchParams] = useSearchParams()
   const token = searchParams.get("token")
   const navigate = useNavigate()
@@ -50,9 +54,41 @@ export default function Restaurant(props) {
       />
       <Routes>
         <Route path="/home" element={<DriverHomePage token={token}/>}/>
-        <Route path="/profile" element={<DriverProfile token={token}/>}/>
+        <Route path="/profile" element={
+          <DriverProfile 
+            token={token}
+            onActivateStateChange={(state) => {setLocationActive(state)}}
+          />
+        }/>
         <Route path="/history" element={<DriverHistory token={token}/>}/>
       </Routes>
+      <OrderTracker
+        token={token}
+        active={locationActive}
+        frequencySeconds={10}
+        onOrderRecieved={(data) => {
+          //do something when a new order is received
+        }}
+        onOrderRejected={(data) => {
+          //do something when an order is rejected or timed out
+        }}
+        onOrderAccepted={(data) => {
+          //do something when the driver accepts an order
+        }}
+        onUnverified={(data) => {
+          //do something when the driver doesn't have a verified account and can't take orders yet
+        }}
+      />
+      {/*Replace the "open={false}" with some conditional check for when the notification should appear*/}
+      <Notification
+        onDismiss={() => {
+          //do something when the notification is dismissed
+        }}
+        timeSeconds={5}
+        open={false}
+        text="Accept the order to see the delivery destination."
+        title="A new order near you is available!"
+      />
     </div>
   );
 }
