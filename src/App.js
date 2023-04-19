@@ -7,11 +7,11 @@ import {
 } from "react-router-dom"
 import Restaurant from './Restaurant/Restaurant'
 import Customer from './Customer/Customer'
+import CustomerHomePage from './Customer/CustomerHomePage';
 import Driver from './Driver/Driver'
 import LandingPage from './LandingPage/LandingPage.jsx'
 import LoginPage from './LandingPage/LoginPage'
 import CreateAcctPage from "./LandingPage/CreateAccountPage"
-import Header from './Components/Header'
 import Footer from './Components/Footer'
 import Layout from './Components/Layout'
 import CssBaseline from '@mui/material/CssBaseline';
@@ -28,9 +28,10 @@ export default function App() {
         <Route path="/" element={<LandingPage/>}/>
         <Route path="/restaurant/*" element={<Restaurant/>}/>
         <Route path="/customer/*" element={<Customer/>}/>
+        <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/driver/*" element={<Driver/>}/>
         <Route path="/login/:userType/*" element={<LoginPage/>}/>
-        <Route path="/signup/:userType/*" element={<CreateAcctPage/>}/>
+        <Route path="/signup/*" element={<CreateAcctPage/>}/>
       </Route>
       
     )
@@ -40,8 +41,7 @@ export default function App() {
   return (    
     
     <div>
-      <CssBaseline />
-      <Header/>      
+      <CssBaseline />      
       <Layout>
         <RouterProvider router={router} />
       </Layout>
