@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef  } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useLocation } from 'react-router-dom';
 const containerStyle = {
@@ -7,37 +7,34 @@ const containerStyle = {
 };
 
 
-
 function CustomerHomePage() {
   const location = useLocation();
   const { data } = location.state;
   const [isApiLoaded, setIsApiLoaded] = useState(false);
   const [distance, setDistance] = useState(null);
   const [deliveryStatus, setDeliveryStatus] = useState('Preparing');
-  const [driverLocation, setDriverLocation] = useState(null);
+  //const [driverLocation, setDriverLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [restaurantLocation, setRestaurantLocation] = useState(null);
- 
-  // get restaurant order data, customer location, driver location, and destination location 
-  // from the server and set them to state variables
+  const [restaurantLatLng, setRestaurantLatLng] = useState(null);
+  const [destinationLatLng, setDestinationLatLng] = useState(null);
+  const mapRef = useRef(null);
+  const map = mapRef.current;
+
+  // get customer location, driver location, and destination location 
   const getLocationData = () => {
-    console.log(data);
     if (data) {
-      console.log('data:', data);
-     
-      console.log('driver location:', { lat: data.driver.latitude, lng: data.driver.longitude });
-      console.log('destination location:', data.customerStreet + ' ' + data.customerCity + ' ' + data.customerState + ' ' + data.customerZipCode);
-      console.log('restaurant location:', data.restaurant.street + ' ' + data.restaurant.city + ' ' + data.restaurant.state + ' ' + data.restaurant.zipCode);
-  
-   
-    setDriverLocation({ lat: data.driver.latitude, lng: data.driver.longitude });
-    setDestinationLocation(data.customerStreet + ' ' + data.customerCity + ' ' + data.customerState + ' ' + data.customerZipCode);
-    setRestaurantLocation(data.restaurant.street + ' ' + data.restaurant.city + ' ' + data.restaurant.state + ' ' + data.restaurant.zipCode);                     
-  }
+      console.log('data:', data);     
+      //console.log('driver location:', { lat: data.driver.latitude, lng: data.driver.longitude });
+      console.log('destination location:', data.data.customerStreet + ' ' + data.data.customerCity + ' ' + data.data.customerState + ' ' + data.data.customerZipCode);
+      console.log('restaurant location:', data.data.restaurant.street + ' ' + data.data.restaurant.city + ' ' + data.data.restaurant.state + ' ' + data.data.restaurant.zipCode);
+      //setDriverLocation({ lat: data.driver.latitude, lng: data.driver.longitude });
+      setDestinationLocation(data.data.customerStreet + ' ' + data.data.customerCity + ' ' + data.data.customerState + ' ' + data.data.customerZipCode);
+      setRestaurantLocation(data.data.restaurant.street + ' ' + data.data.restaurant.city + ' ' + data.data.restaurant.state + ' ' + data.data.restaurant.zipCode);                     
+      }
   };
       
-      
-  
+       
   useEffect(() => {
     console.log('component mounted');
     getLocationData();
@@ -45,11 +42,52 @@ function CustomerHomePage() {
 
 
   useEffect(() => {
-    if (window.google && window.google.maps) {
-    // Calculate the distance between the driver and destination locations
-      if (driverLocation && destinationLocation) {
-        const service = new window.google.maps.DistanceMatrixService();
-        const origins = [driverLocation];
+    if (window.google && window.google.maps && destinationLocation && restaurantLocation) {     
+      const geocoder = new window.google.maps.Geocoder();
+      const bounds = new window.google.maps.LatLngBounds();
+      const map = mapRef.current;
+      // Geocode the restaurant location
+      geocoder.geocode({ address: restaurantLocation }, (results, status) => {
+        if (status === 'OK') {
+          const restaurantLocationLatLng = results[0].geometry.location;
+          setRestaurantLatLng(restaurantLocationLatLng);
+          const marker = new window.google.maps.Marker({
+            position: restaurantLocationLatLng,
+            map,
+            title: 'Restaurant Location',
+          });
+          bounds.extend(restaurantLocationLatLng);
+        } else {
+          console.error('Error geocoding restaurant location:', status);
+        }
+      });
+      // Geocode the destination location
+      geocoder.geocode({ address: destinationLocation }, (results, status) => {
+        if (status === 'OK') {
+          const destinationLocationLatLng = results[0].geometry.location;
+          setDestinationLatLng(destinationLocationLatLng);
+          const marker = new window.google.maps.Marker({
+            position: destinationLocationLatLng,
+            map,
+            title: 'Destination Location',
+          });
+          bounds.extend(destinationLocationLatLng);
+        } else {
+          console.error('Error geocoding destination location:', status);
+        }
+      });
+    }
+  }, [destinationLocation, restaurantLocation, mapRef]);
+  console.log('mapRef.current:', mapRef.current);
+  console.log('isApiLoaded:', isApiLoaded);
+  console.log('restaurantLatLng:', restaurantLatLng);
+  console.log('destinationLatLng:', destinationLatLng);
+
+    /*// Calculate the distance between the driver and destination locations
+    useEffect(() => {
+      if (map && destinationLocation && restaurantLocation) {
+        const service = new window.google.maps.DistanceMatrixService();      
+        const origins = [restaurantLocation];
         const destinations = [destinationLocation];
         service.getDistanceMatrix(
           {
@@ -66,12 +104,11 @@ function CustomerHomePage() {
             }
           }
         );
-      }
-    }
-  }, [driverLocation, destinationLocation]);
-
-  return (
-   
+        }
+    }, [map, destinationLocation, restaurantLocation]);
+     */
+    
+  return ( 
   <div>
     <LoadScript
       googleMapsApiKey="AIzaSyDs2_jpEfeyLu89MS6szIa6ZKPhfKjd1zA"
@@ -80,20 +117,16 @@ function CustomerHomePage() {
       {isApiLoaded && (
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={driverLocation || destinationLocation || restaurantLocation}  
+        center={destinationLatLng || restaurantLatLng} 
         zoom={15}
-
-        
+        ref={mapRef}       
       >
         { /* Child components, such as markers, info windows, etc. */}
-        {restaurantLocation && (
-            <Marker position={restaurantLocation} label="Restaurant" />
+        {restaurantLatLng && (
+            <Marker position={restaurantLatLng} label="Restaurant" />
           )}
-          {driverLocation && (
-            <Marker position={driverLocation} label="Driver" />
-          )}
-          {destinationLocation && (
-            <Marker position={destinationLocation} label="Destination" />
+          {destinationLatLng && (
+            <Marker position={destinationLatLng} label="Destination" />
           )}
       </GoogleMap>
       )}
@@ -111,7 +144,7 @@ function CustomerHomePage() {
   
         }
 
- 
+
 export default React.memo(CustomerHomePage)
 
 

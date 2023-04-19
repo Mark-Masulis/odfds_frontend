@@ -39,11 +39,7 @@ export default function Customer(){
         })
         .catch(error => {         
           console.error('Error fetching data:', error);
-        });
-        
-                  
-                     
-        
+        });              
     };
   
   return (
