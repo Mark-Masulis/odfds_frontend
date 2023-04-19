@@ -1,56 +1,50 @@
 import React, { useState } from 'react'
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  Route
-} from "react-router-dom"
-import {
-  useNavigate
+  useNavigate, 
 } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Header from '../Components/Header.jsx';
-import CustomerHomePage from "./CustomerHomePage";
 
-export default function Customer(props){
-      const [trackingCode, setTrackingCode] = useState('');
+export default function Customer(){
+      const [token, setToken] = useState('');
       const navigate = useNavigate();
-      const handleTrackingCodeChange = (event) => {
-          setTrackingCode(event.target.value);
+
+      const handletokenChange = (event) => {
+          setToken(event.target.value);
       }
   
-      const handleTrackingCodeSubmit = (event) => {
-        event.preventDefault();
-        // Get the tracking code from the form input
-        //const trackingCode = event.target.elements.trackingCode.value;
-        const trackingCode = '123456';
-        // Send a request to the backend to process the tracking code
-        fetch(`/api/tracking/${trackingCode}`)
-          .then((response) => {
-            // Check if the response was successful
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
 
-            //return response.json();
-            return Promise.resolve({ code: 200, token: 'test-token' });
-          })
-           .then((data) => {          
-              switch (data.code) {
-                case 200:
-                  const token = data.token;          
-                  navigate(`/CustomerHomePage`, { state: { token } });                 
-                  break;
-                case 400:
-                  navigate(`/error-page`);
-                  break;
-                default:
-                  navigate(`/unknown-error`);
-                  break;
-              }
-            });
-} 
+      const handletokenSubmit = (event) => {
+        event.preventDefault(); 
+        fetch(`http://164.92.68.162:3000/customer/order?token=${token}`, {
+        method: 'GET',
+        headers: {          
+          'Content-Type': 'application/json'         
+        }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          //console.log(data);
+          if(data.error){
+            alert(data.error)
+          } else {
+            navigate('/CustomerHomePage',{state: { data }});
+          }
+        })
+        .catch(error => {         
+          console.error('Error fetching data:', error);
+        });
+        
+                  
+                     
+        
+    };
   
   return (
     <>
@@ -58,7 +52,7 @@ export default function Customer(props){
     <div style={{ margin: "0 auto", width: "100%", padding: "85px" }}>
       
       <h1 style={{ marginTop: "40px", marginBottom: "40px" }}>Welcome to the Customer Tracking Page</h1>
-      <form onSubmit={handleTrackingCodeSubmit}>
+      <form onSubmit={handletokenSubmit}>
         <div>
           <label style={{ marginBottom: "10px", fontSize: "20px" }}>
           Enter your tracking code:
@@ -67,8 +61,8 @@ export default function Customer(props){
         <TextField
           fullWidth
           label="#893142"
-          value={trackingCode}
-          onChange={handleTrackingCodeChange}
+          value={token}
+          onChange={handletokenChange}
         />
         <Button sx={{
           marginTop: '30px',

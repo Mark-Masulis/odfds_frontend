@@ -6,7 +6,8 @@ import {
   Route
 } from "react-router-dom"
 import Restaurant from './Restaurant/Restaurant'
-import Customer from './Customer/CustomerHomePage'
+import Customer from './Customer/Customer'
+import CustomerHomePage from './Customer/CustomerHomePage';
 import Driver from './Driver/Driver'
 import LandingPage from './LandingPage/LandingPage.jsx'
 import LoginPage from './LandingPage/LoginPage'
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/" element={<LandingPage/>}/>
         <Route path="/restaurant/*" element={<Restaurant/>}/>
         <Route path="/customer/*" element={<Customer/>}/>
+        <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/driver/*" element={<Driver/>}/>
         <Route path="/login/:userType/*" element={<LoginPage/>}/>
         <Route path="/signup/*" element={<CreateAcctPage/>}/>

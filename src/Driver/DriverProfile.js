@@ -31,7 +31,7 @@ export default function CustomerProfile(props){
             method: "GET",
             headers: {
                 "content-type": "application/json",
-                access_token: token
+                token: token
             }
         }).then(
             (response) => response.json()
