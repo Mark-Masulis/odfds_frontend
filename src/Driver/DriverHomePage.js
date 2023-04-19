@@ -84,9 +84,9 @@ export default function DriverHomePage(props) {
         <input
           type="text"
           placeholder="Current Status:"
-          value={status}
+          value={`Current Status: ${isActivated ? 'Active' : 'Inactive'}`}
           readOnly
-          style={{ marginRight: '10px' }}
+          style={{ marginRight: '10px', border: 0, fontSize: '20px', }}
         />
 
         <button 
