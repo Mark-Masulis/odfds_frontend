@@ -17,7 +17,7 @@ export default function Customer(){
 
       const handletokenSubmit = (event) => {
         event.preventDefault(); 
-        fetch(`http://164.92.68.162:3000/customer/order?token=${token}`, {
+        fetch(`${process.env.REACT_APP_API}/customer/order?token=${token}`, {
         method: 'GET',
         headers: {          
           'Content-Type': 'application/json'         

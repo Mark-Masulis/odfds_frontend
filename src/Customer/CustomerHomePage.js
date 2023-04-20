@@ -111,7 +111,7 @@ function CustomerHomePage() {
   return ( 
   <div>
     <LoadScript
-      googleMapsApiKey="AIzaSyDs2_jpEfeyLu89MS6szIa6ZKPhfKjd1zA"
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       onLoad={() => setIsApiLoaded(true)}
     >
       {isApiLoaded && (
