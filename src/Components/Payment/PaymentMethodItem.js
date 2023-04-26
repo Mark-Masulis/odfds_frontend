@@ -6,6 +6,7 @@ import React, {useState} from 'react'
 //props.onButtonClick is the function that is called when the button (if it exists) is clicked. It passes the paymentMethod object as a parameter
 //props.onClick is the function that is called when the item itself is clicked. It passes the paymentMethod object as a parameter
 //props.disabled determines if both buttons are disabled or not
+//props.selected determines if this button should be highlighted
 export default function PaymentMethodItem(props){
     const [bgColor, setBgColor] = useState('transparent')
     const pm = props.paymentMethod

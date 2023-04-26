@@ -6,36 +6,35 @@ import PaymentMethodItem from './PaymentMethodItem'
 import {Button} from './../StaticComponents'
 
 //props.token = token of the user doing the checkout
-//props.order = the order object being paid
+//props.orderId = the id of the order object being paid
 //props.onConfirm = the function called when the checkout is confirmed. Passes the payment intent as a parameter
 
 export default function Checkout(props){
-
-    const [intent, setIntent] = useState()
-    const [loading, setLoading] = useState(true)
+    const [methodsLoading, setMethodsLoading] = useState(true)
+    const [orderLoading, setOrderLoading] = useState(true)
     const [paymentMethods, setPaymentMethods] = useState()
     const [selectedMethod, setSelectedMethod] = useState()
+    const [order, setOrder] = useState()
 
-    const createPaymentIntent = async () => {
-        setLoading(true)
-        return await fetch(process.env.REACT_APP_API + '/payment/payment_intent', {
+    const payOrder = async () => {
+        return await fetch(process.env.REACT_APP_API + '/restaurant/order/pay', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 access_token: props.token
             },
             body: JSON.stringify({
-                orderId: props.order.id,
+                orderId: props.orderId,
                 paymentMethodId: selectedMethod.id
             })
         }).then(
             (response) => response.json()
         ).then(
             (data) => {
-                setLoading(false)
+                alert(JSON.stringify(data))
                 switch(data.code){
                     case 200:
-                        setIntent(data.data)
+                        props.onConfirm(data.data)
                         break
                     default:
                         alert(JSON.stringify(data))
@@ -49,8 +48,32 @@ export default function Checkout(props){
         )
     }
 
+    const getOrder = () => {
+        fetch(`${process.env.REACT_APP_API}/restaurant/order?orderId=${props.orderId}`, {
+            method: 'GET',
+            headers: {
+                access_token: props.token
+            }
+        }).then(
+            (result) => result.json()
+        ).then(
+            (data) => {
+                switch(data.code){
+                    case 200:
+                        setOrder(data.data)
+                        setOrderLoading(false)
+                    default:
+                        break
+                }
+            }
+        ).catch(
+            (error) => {
+                alert(error)
+            }
+        )
+    }
+
     const getPaymentMethods = () => {
-        setLoading(true)
         fetch(process.env.REACT_APP_API + '/payment/methods', {
             method: 'POST',
             headers: {
@@ -60,9 +83,9 @@ export default function Checkout(props){
             (response) => response.json()
         ).then(
             (data) => {
-                setLoading(false)
                 switch(data.code){
                     case 200:
+                        setMethodsLoading(false)
                         setPaymentMethods(data.data.data) //these names are dumb as fuck but i'm not going to do anything about it
                         break;
                     default:
@@ -76,22 +99,30 @@ export default function Checkout(props){
         )
     }
 
-    useEffect(getPaymentMethods, [])
+    useEffect(() => {
+        getPaymentMethods()
+        getOrder()
+    }, [])
 
     return(
-        <div>
-            <h3>Delivery Cost: ${(props.amountCents/100.0).toFixed(2)}</h3>
-            <p>You will be charged when the delivery request is completed.</p>
-            {loading
+        orderLoading || <div>
+            <h3>Delivery Cost: ${(order.cost * 1.0).toFixed(2)}</h3>
+            <p>You will be charged when the delivery request is accepted.</p>
+            {methodsLoading
                 ? <p>LOADING</p>
-                : paymentMethods.map(item => 
-                    <PaymentMethodItem
-                        paymentMethod={item}
-                        disabled={loading}
-                        onClick={(paymentMethod) => {
-                            setSelectedMethod(paymentMethod)
-                        }}
-                    />)
+                : paymentMethods.length > 0
+                    ? <div>
+                        <p>Select payment method:</p>
+                        {paymentMethods.map(item => 
+                            <PaymentMethodItem
+                                paymentMethod={item}
+                                disabled={methodsLoading}
+                                onClick={(paymentMethod) => {
+                                    setSelectedMethod(paymentMethod)
+                                }}
+                            />)}
+                        </div>
+                    : <p style={{color: 'red'}}>You must add a payment method before making an order.</p>
             }
             {selectedMethod &&
                 <div>
@@ -120,18 +151,13 @@ export default function Checkout(props){
                                 )
                         }
                     })()}
-                    <Button
+                    {selectedMethod && <Button
                         onClick={() => {
-                            alert(JSON.stringify(selectedMethod))
-                            createPaymentIntent().then(
-                                () => {
-                                    props.onConfirm(intent)
-                                }
-                            )
+                            payOrder()
                         }}
                     >
-                        Confirm Order
-                    </Button>
+                        Pay
+                    </Button>}
                 </div>
             }
         </div>

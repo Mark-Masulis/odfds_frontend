@@ -190,7 +190,7 @@ function EditPanel(props){
     }
 
     const generateOnboardLink = () => {
-        fetch(process.env.REACT_APP_API + '/payment/driver/update', {
+        fetch(process.env.REACT_APP_API + '/driver/update', {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",
@@ -217,7 +217,7 @@ function EditPanel(props){
     }
 
     const generateUpdateLink = () => {
-        fetch(process.env.REACT_APP_API + '/payment/driver/onboard', {
+        fetch(process.env.REACT_APP_API + '/driver/onboard', {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",

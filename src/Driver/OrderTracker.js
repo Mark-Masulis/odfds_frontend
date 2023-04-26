@@ -12,7 +12,10 @@ import useWebSocket from 'react-use-websocket'
 //props.onOrderRejected = the function called when a received order times out or is manually rejected
 //props.onOrderAccepted = the function called when an available order is accepted
 //props.onOrderPickup = the function called when an accepted order is picked up
-//props.onNoLocation = the function called when the browser doesn't allow the user to access location
+//props.onNoLocation = the function called when the browser doesn't allow the user to access location\
+//props.onDeliver = the function called when all orders are delivered
+//props.onFirstDeliver = the function called when the first of 2 orders is delivered
+//props.onSecondOrder = the function called when a second order is automatically assigned from the same restaurant
 //props.onError = the function called when an error is returned from the server
 //props.onUnverified = the function called when the account hasn't verified their stripe account
 export default function OrderTracker(props){
@@ -23,48 +26,44 @@ export default function OrderTracker(props){
     const {sendJsonMessage, readyState} = useWebSocket(wsAddress, {
         onMessage: (event) => {
             var data = JSON.parse(event.data)
-            alert(event.data)
-            switch(data.code){
-                case 200:
-                    //success
-                    break
-                case 201:
-                    //A new order has been received
-                    props.onOrderReceived(data.data)
-                    break
-                case 202:
-                    //An order timed out
-                    props.onORderRejected(data.data)
-                    break
-                case 203:
-                    //pending order was rejected
-                    props.onOrderRejected(data.data)
-                    break
-                case 204:
-                    //pending order was accepted
-                    props.onOrderAccepted(data.data)
-                    break
-                case 205:
-                    //order was picked up
-                    props.onOrderPickup(data.data)
-                    break
-                case 206:
-                    //order was delivered
-                    props.onDeliver(data.data)
-                    break
-                case 207:
-                    //stripe account not verified
-                    props.onUnverified(data.data)
-                    break
-                default:
-                    if(data.code > 400){
-                        props.onError(data)
-                    }
-                    //something is wrong
-                    break
+            console.log(data)
+            if(data.code == 200){
+                //success
+            }else if(data.code == 201){
+                //A new order has been received
+                props.onOrderRecieved(data.data)
+            }else if(data.code == 202){
+                //An order timed out
+                props.onOrderRejected(data.data)
+            }else if(data.code == 203){
+                //pending order was rejected
+                props.onOrderRejected(data.data)
+            }else if(data.code == 204){
+                //pending order was accepted
+                props.onOrderAccepted(data.data)
+            }else if(data.code == 205){
+                //order was picked up
+                props.onOrderPickup(data.data)
+            }else if(data.code == 206){
+                //all orders was delivered
+                props.onDeliver(data.data)
+            }else if(data.code == 207){
+                //second order coming from the same restaurant
+                props.onSecondOrder(data.data)
+            }else if(data.code == 208){
+                //one order delivered, one more to be delivered
+                props.onFirstDelivered(data.data)
+            }else if(data.code == 209){
+                //stripe account is not verified
+                props.onUnverified(data.data)
+            }else{
+                //something is wrong
+                if(data.code > 400){
+                    props.onError(data)
+                }
             }
         }
-    })
+    }, props.active)
 
     const deactivate = () => {
         if(timerId){
