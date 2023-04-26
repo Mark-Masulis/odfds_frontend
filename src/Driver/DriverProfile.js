@@ -34,7 +34,7 @@ export default function DriverProfile(props){
             method: "GET",
             headers: {
                 "content-type": "application/json",
-                token: token
+                access_token: token
             }
         }).then(
             (response) => response.json()

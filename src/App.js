@@ -15,6 +15,7 @@ import CreateAcctPage from "./LandingPage/CreateAccountPage"
 import Footer from './Components/Footer'
 import Layout from './Components/Layout'
 import CssBaseline from '@mui/material/CssBaseline';
+import Header from './Components/Header';
 
 
 export default function App() {
@@ -31,7 +32,7 @@ export default function App() {
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/driver/*" element={<Driver/>}/>
         <Route path="/login/:userType/*" element={<LoginPage/>}/>
-        <Route path="/signup/*" element={<CreateAcctPage/>}/>
+        <Route path="/signup/:userType/*" element={<CreateAcctPage/>}/>
       </Route>
       
     )
@@ -41,7 +42,8 @@ export default function App() {
   return (    
     
     <div>
-      <CssBaseline />      
+      <CssBaseline />
+      <Header/>
       <Layout>
         <RouterProvider router={router} />
       </Layout>

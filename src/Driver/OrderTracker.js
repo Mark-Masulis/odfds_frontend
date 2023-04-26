@@ -22,7 +22,8 @@ export default function OrderTracker(props){
 
     const {sendJsonMessage, readyState} = useWebSocket(wsAddress, {
         onMessage: (event) => {
-            var data = event.data
+            var data = JSON.parse(event.data)
+            alert(event.data)
             switch(data.code){
                 case 200:
                     //success
@@ -56,7 +57,7 @@ export default function OrderTracker(props){
                     props.onUnverified(data.data)
                     break
                 default:
-                    if(data.code > 400 || JSON.parse(data).code > 400){
+                    if(data.code > 400){
                         props.onError(data)
                     }
                     //something is wrong
@@ -78,11 +79,11 @@ export default function OrderTracker(props){
     }
 
     useEffect(() => {
-        if(!props.active){
-            deactivate()
-        }else{
+        if(props.active){
             activate()
             getLocation()
+        }else{
+            deactivate()
         }
     }, [props.active])
 
