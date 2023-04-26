@@ -13,7 +13,7 @@ function CustomerHomePage() {
   const [isApiLoaded, setIsApiLoaded] = useState(false);
   const [distance, setDistance] = useState(null);
   const [deliveryStatus, setDeliveryStatus] = useState('Preparing');
-  //const [driverLocation, setDriverLocation] = useState(null);
+  const [driverLocation, setDriverLocation] = useState(null);
   const [destinationLocation, setDestinationLocation] = useState(null);
   const [restaurantLocation, setRestaurantLocation] = useState(null);
   const [restaurantLatLng, setRestaurantLatLng] = useState(null);
@@ -25,10 +25,10 @@ function CustomerHomePage() {
   const getLocationData = () => {
     if (data) {
       console.log('data:', data);     
-      //console.log('driver location:', { lat: data.driver.latitude, lng: data.driver.longitude });
+      console.log('driver location:', { lat: data.data.driver.latitude, lng: data.data.driver.longitude });
       console.log('destination location:', data.data.customerStreet + ' ' + data.data.customerCity + ' ' + data.data.customerState + ' ' + data.data.customerZipCode);
       console.log('restaurant location:', data.data.restaurant.street + ' ' + data.data.restaurant.city + ' ' + data.data.restaurant.state + ' ' + data.data.restaurant.zipCode);
-      //setDriverLocation({ lat: data.driver.latitude, lng: data.driver.longitude });
+      setDriverLocation({ lat: data.data.driver.latitude, lng: data.data.driver.longitude });
       setDestinationLocation(data.data.customerStreet + ' ' + data.data.customerCity + ' ' + data.data.customerState + ' ' + data.data.customerZipCode);
       setRestaurantLocation(data.data.restaurant.street + ' ' + data.data.restaurant.city + ' ' + data.data.restaurant.state + ' ' + data.data.restaurant.zipCode);                     
       }
@@ -45,17 +45,12 @@ function CustomerHomePage() {
     if (window.google && window.google.maps && destinationLocation && restaurantLocation) {     
       const geocoder = new window.google.maps.Geocoder();
       const bounds = new window.google.maps.LatLngBounds();
-      const map = mapRef.current;
+
       // Geocode the restaurant location
       geocoder.geocode({ address: restaurantLocation }, (results, status) => {
         if (status === 'OK') {
           const restaurantLocationLatLng = results[0].geometry.location;
-          setRestaurantLatLng(restaurantLocationLatLng);
-          const marker = new window.google.maps.Marker({
-            position: restaurantLocationLatLng,
-            map,
-            title: 'Restaurant Location',
-          });
+          setRestaurantLatLng(restaurantLocationLatLng);          
           bounds.extend(restaurantLocationLatLng);
         } else {
           console.error('Error geocoding restaurant location:', status);
@@ -65,12 +60,7 @@ function CustomerHomePage() {
       geocoder.geocode({ address: destinationLocation }, (results, status) => {
         if (status === 'OK') {
           const destinationLocationLatLng = results[0].geometry.location;
-          setDestinationLatLng(destinationLocationLatLng);
-          const marker = new window.google.maps.Marker({
-            position: destinationLocationLatLng,
-            map,
-            title: 'Destination Location',
-          });
+          setDestinationLatLng(destinationLocationLatLng);        
           bounds.extend(destinationLocationLatLng);
         } else {
           console.error('Error geocoding destination location:', status);
@@ -82,32 +72,9 @@ function CustomerHomePage() {
   console.log('isApiLoaded:', isApiLoaded);
   console.log('restaurantLatLng:', restaurantLatLng);
   console.log('destinationLatLng:', destinationLatLng);
+  console.log('driverLocation:', driverLocation);
 
-    /*// Calculate the distance between the driver and destination locations
-    useEffect(() => {
-      if (map && destinationLocation && restaurantLocation) {
-        const service = new window.google.maps.DistanceMatrixService();      
-        const origins = [restaurantLocation];
-        const destinations = [destinationLocation];
-        service.getDistanceMatrix(
-          {
-            origins,
-            destinations,
-            travelMode: window.google.maps.TravelMode.DRIVING,
-          },
-          (response, status) => {
-            if (status === "OK") {
-              const distance = response.rows[0].elements[0].distance.text;
-              setDistance(distance);
-            } else {
-              console.error("Error calculating distance:", status);
-            }
-          }
-        );
-        }
-    }, [map, destinationLocation, restaurantLocation]);
-     */
-    
+ 
   return ( 
   <div>
     <LoadScript
@@ -117,17 +84,20 @@ function CustomerHomePage() {
       {isApiLoaded && (
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={destinationLatLng || restaurantLatLng} 
+        center={destinationLatLng || restaurantLatLng } 
         zoom={15}
         ref={mapRef}       
       >
-        { /* Child components, such as markers, info windows, etc. */}
-        {restaurantLatLng && (
+         {restaurantLatLng && (
             <Marker position={restaurantLatLng} label="Restaurant" />
+          )}
+          {driverLocation && (
+            
+            <Marker position={driverLocation} label="Driver" />
           )}
           {destinationLatLng && (
             <Marker position={destinationLatLng} label="Destination" />
-          )}
+          )} 
       </GoogleMap>
       )}
     </LoadScript>
@@ -146,6 +116,7 @@ function CustomerHomePage() {
 
 
 export default React.memo(CustomerHomePage)
+
 
 
 
