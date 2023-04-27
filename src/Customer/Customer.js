@@ -4,7 +4,6 @@ import {
 } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Header from '../Components/Header.jsx';
 
 export default function Customer(){
       const [token, setToken] = useState('');
@@ -43,8 +42,7 @@ export default function Customer(){
     };
   
   return (
-    <>
-    <Header />
+    <>   
     <div style={{ margin: "0 auto", width: "100%", padding: "85px" }}>
       
       <h1 style={{ marginTop: "40px", marginBottom: "40px" }}>Welcome to the Customer Tracking Page</h1>
