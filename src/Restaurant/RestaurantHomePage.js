@@ -4,15 +4,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { restaurantOrderSchema } from "../Utils/validation";
 import "./../Components/ButtonStyle.css"
-
-import {
-  Navigate,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  Route,
-} from "react-router-dom";
 import Checkout from "../Components/Payment/Checkout";
+import { useNavigate } from "react-router-dom";
 
 const FormContainer = styled.div`
   display: flex;
@@ -58,6 +51,7 @@ const ValidationError = styled.p`
 
 export default function RestaurantHomePage(props) {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -78,6 +72,9 @@ export default function RestaurantHomePage(props) {
   // form validation
   const [validationResult, setValidationResult] = useState({});
 
+  const [orderId, setOrderId] = useState()
+
+  const navigate = useNavigate()
 
   const getProfileData = () => {
     const token = props.token
@@ -155,9 +152,46 @@ export default function RestaurantHomePage(props) {
           }
           setLoading(false)
       }
-  )
-  
-}
+    )
+  }
+
+  const createOrder = () => {
+    fetch(process.env.REACT_APP_API + '/restaurant/order', {
+      method: 'POST',
+      headers: {
+        "content-type": "application/json",
+        access_token: props.token
+      },
+      body: JSON.stringify({
+        customerStreet: deliveryAddr,
+        customerCity: city,
+        customerState: state,
+        customerZipCode: zipCode,
+        customerEmail: email,
+        customerPhone: phoneNumber,
+        customerName: name,
+        comment: comments
+      })
+    }).then(
+      (response) => response.json()
+    ).then(
+      (data) => {
+        switch(data.code){
+          case 200:
+            setOrderId(data.data.orderId)
+            break
+          default:
+            setError(true)
+            alert(data.data.message)
+            break
+        }
+      }
+    ).catch(
+      (error) => {
+        alert(error)
+      }
+    )
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -220,32 +254,42 @@ export default function RestaurantHomePage(props) {
             </Row>
             <Row>
               <Pad>
-              <TextField
-                id="name"
-                label="Name"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={name}
-                disabled={loading}
-                onChange={(name) => {
-                  setName(name.target.value);
-                }}
-              />
-              {printErrors('name')}
+                <TextField
+                  id="name"
+                  label="Customer Name"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={name}
+                  disabled={loading}
+                  onChange={(name) => {
+                    setName(name.target.value);
+                  }}
+                />
               </Pad>
               <Pad>
-              <TextField
-                id="phoneNum"
-                label="Phone Number"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={phoneNumber}
-                disabled={loading}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-              {printErrors('phoneNumber')}
+                <TextField
+                  id="phoneNum"
+                  label="Customer Phone Number"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={phoneNumber}
+                  disabled={loading}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </Pad>
+              <Pad>
+                <TextField
+                  id="email"
+                  label="Customer Email Address"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={email}
+                  disabled={loading}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Pad>
             </Row>
             
@@ -339,14 +383,32 @@ export default function RestaurantHomePage(props) {
               <li>Payment: {payment}</li>
           </ul>
       <div class="styledBtnContainer">
-        <Button variant="contained" size="medium" onClick ={(e) => {setDefaultSetup(true)}}>Change Order</Button>
+        <Button 
+          variant="contained" 
+          size="medium" 
+          onClick ={(e) => {
+            setDefaultSetup(true)
+            setOrderId(null)
+          }}
+        >
+          Change Order
+        </Button>
       </div>
       <div>
           Map Placeholder
       </div>
-      <div class="styledBtnContainer">
-        <Button variant="contained" size="medium" onClick ={placeOrder}>Place Order</Button>
-      </div>
+      {orderId && 
+        <Checkout
+          token={props.token}
+          orderId={orderId}
+          onConfirm={() => {
+            navigate('/restaurant/history?token=' + props.token)
+          }}
+        />
+      }
+      {orderId != null || <div class="styledBtnContainer">
+        <Button variant="contained" size="medium" onClick ={createOrder}>Place Order</Button>
+      </div>}
   </div>}
   </div>
     
