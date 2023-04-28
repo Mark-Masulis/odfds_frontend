@@ -199,6 +199,7 @@ export default function RestaurantHomePage(props) {
     restaurantOrderSchema.validate({
       name: name,
       phoneNumber: phoneNumber,
+      email: email,
       address:address,
       city: city,
       state: state,
@@ -266,6 +267,7 @@ export default function RestaurantHomePage(props) {
                     setName(name.target.value);
                   }}
                 />
+                {printErrors('name')}
               </Pad>
               <Pad>
                 <TextField
@@ -278,6 +280,7 @@ export default function RestaurantHomePage(props) {
                   disabled={loading}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                 />
+                {printErrors('phoneNumber')}
               </Pad>
               <Pad>
                 <TextField
@@ -290,6 +293,7 @@ export default function RestaurantHomePage(props) {
                   disabled={loading}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                {printErrors('email')}
               </Pad>
             </Row>
             

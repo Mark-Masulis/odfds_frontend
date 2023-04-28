@@ -28,6 +28,9 @@ export const restaurantOrderSchema = Yup.object().shape({
     phoneNumber: Yup.string()
         .matches(/^\d{10}$/, 'Phone number must be 10 digits')
         .required('Phone number is required'),
+    email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
     address: Yup.string()
         .min(5, 'Address must be at least 5 characters')
         .max(100, 'Address must be less than 100 characters')
