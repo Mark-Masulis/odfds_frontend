@@ -6,8 +6,8 @@ export default function RestrauntOrders(props) {
   const [error, setError] = useState(false);
   const [data, setData] = useState();
   const [rows, setRows] = useState([]);
-  const [pageSize, setPageSize] = useState(11);
-  const [page, setPage] = useState(1);
+
+  const [paginationModel, setPaginationModel] = useState({pageSize: 25, page: 1});
 
   const getOrdersData = () => {
     const token = props.token;
@@ -15,7 +15,11 @@ export default function RestrauntOrders(props) {
       setError(true);
       return;
     }
+
+    const { pageSize, page } = paginationModel;
+
     fetch(
+      
       process.env.REACT_APP_API +
         "/restaurant/orders?pageSize=" +
         pageSize +
@@ -46,20 +50,26 @@ export default function RestrauntOrders(props) {
   };
   const columns =
     rows.length > 0
-      ? Object.keys(rows[0]).map((key) => {
-          return {
-            field: key,
-            headerName: key.charAt(0).toUpperCase() + key.slice(1),
-            width: 200,
-          };
-        })
+      ? Object.keys(rows[0])
+          .slice(0, -4) // remove the last four keys
+          .map((key) => {
+            return {
+              field: key,
+              headerName: key.charAt(0).toUpperCase() + key.slice(1),
+              width: 200,
+            };
+          })
       : [];
 
-  const handlePageSizeChange = (params) => {
-    setPageSize(params.pageSize);
+  const handlePaginationModelChange = (newPaginationModel) => {
+    setPaginationModel({
+      pageSize: newPaginationModel.pageSize,
+      page: newPaginationModel.page + 1,
+    });
   };
 
-  useEffect(getOrdersData, []);
+  useEffect(getOrdersData, [props.token, paginationModel]);
+
   return (
     <div>
       <div style={{ textAlign: "center" }}>
@@ -73,8 +83,7 @@ export default function RestrauntOrders(props) {
           <DataGrid
             rows={rows}
             columns={columns}
-            pageSize={pageSize}
-            onPageSizeChange={handlePageSizeChange}
+            onPaginationModelChange={handlePaginationModelChange}
           />
         </div>
       </div>

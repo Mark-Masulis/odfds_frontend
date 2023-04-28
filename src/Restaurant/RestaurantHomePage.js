@@ -2,6 +2,7 @@ import React, { useState} from "react";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { restaurantOrderSchema } from "../Utils/validation";
 import "./../Components/ButtonStyle.css"
 
 import {
@@ -43,10 +44,17 @@ const Column = styled.div`
   width: 100%;
   margin-bottom: 10px;
 `;
+
 const Pad = styled.div`
   width: 100%;
   padding: 5px;
 `;
+
+const ValidationError = styled.p`
+  font-size: 12px;
+  color: red;
+`;
+
 
 export default function RestaurantHomePage(props) {
   const [name, setName] = useState("");
@@ -66,6 +74,9 @@ export default function RestaurantHomePage(props) {
   const [time, setTime] = useState(0)
   const [payment, setPayment] = useState("")
   const [distance, setDistance] = useState(0)
+
+  // form validation
+  const [validationResult, setValidationResult] = useState({});
 
 
   const getProfileData = () => {
@@ -150,17 +161,50 @@ export default function RestaurantHomePage(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setDelivery(`${address}, ${city}, ${state} ${zipCode}`)
-    getProfileData()
-    estimateOrder()
-    if(!error){
-      setDefaultSetup(false)
-    }
+
+    restaurantOrderSchema.validate({
+      name: name,
+      phoneNumber: phoneNumber,
+      address:address,
+      city: city,
+      state: state,
+      zip: zipCode,
+      comments: comments
+    }, {
+      abortEarly: false, 
+    }) .then(valid => {
+      console.log({ valid });
+
+      setDelivery(`${address}, ${city}, ${state} ${zipCode}`)
+      getProfileData()
+      estimateOrder()
+      if(!error){
+        setDefaultSetup(false)
+      }
+    })
+    .catch(result => {
+      const errObject = result.inner.reduce(
+        (obj, err) => {
+          if (!obj[err.path]) {
+            obj[err.path] = [];
+          }
+          obj[err.path].push(err.message);
+          return obj;
+        },
+        {}
+      );
+      setValidationResult(errObject);
+    });
   };
 
   const placeOrder = (event) => {
     alert("Order Placed")
   }
+
+  const printErrors = (key) => <>{
+    validationResult[key] && validationResult[key]
+      .map((err) => <ValidationError className="error">{err}</ValidationError>)
+  }</>;
 
   return (
     <div>
@@ -188,6 +232,7 @@ export default function RestaurantHomePage(props) {
                   setName(name.target.value);
                 }}
               />
+              {printErrors('name')}
               </Pad>
               <Pad>
               <TextField
@@ -200,6 +245,7 @@ export default function RestaurantHomePage(props) {
                 disabled={loading}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
+              {printErrors('phoneNumber')}
               </Pad>
             </Row>
             
@@ -215,6 +261,7 @@ export default function RestaurantHomePage(props) {
                 disabled={loading}
                 onChange={(e) => setAddress(e.target.value)}
               />
+              {printErrors('address')}
               </Pad>
               <Pad>
               <TextField
@@ -227,6 +274,7 @@ export default function RestaurantHomePage(props) {
                 disabled={loading}
                 onChange={(e) => setCity(e.target.value)}
               />
+              {printErrors('city')}
               </Pad>
               <Pad>
               <TextField
@@ -239,6 +287,7 @@ export default function RestaurantHomePage(props) {
                 disabled={loading}
                 onChange={(e) => setState(e.target.value)}
               />
+              {printErrors('state')}
               </Pad>
               <Pad>
               <TextField
@@ -251,6 +300,7 @@ export default function RestaurantHomePage(props) {
                 disabled={loading}
                 onChange={(e) => setZipCode(e.target.value)}
               />
+              {printErrors('zip')}
               </Pad>
             </Row>
             <Row>
@@ -266,6 +316,7 @@ export default function RestaurantHomePage(props) {
                 disabled={loading}
                 onChange={(e) => setComments(e.target.value)}
               />
+              {printErrors('comments')}
             </Row>
             <div class="styledBtnContainer">
               <Button variant="contained" size="medium" type="submit">Calculate Order</Button>
