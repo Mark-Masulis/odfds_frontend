@@ -6,7 +6,7 @@ import {
     useNavigate
 } from 'react-router-dom'
 import {
-    Alert
+    Alert, TextField
 } from '@mui/material'
 import {
     Container,
@@ -16,6 +16,8 @@ import {
     validatePhoneNumber,
     getDigitsFromPhoneNumber
 } from './../Utils/validation'
+import './../Components/ButtonStyle.css'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 //props.token = the JWT used to identify the user whose profile is being rendered
 export default function DriverProfile(props){
@@ -110,15 +112,9 @@ function ViewPanel(props){
             <label for="status"><h3>Account Status</h3></label>
             <p id="status">{data.verification}</p>
         </section>
-    <Button 
-            style={{
-                margin: '20px auto',
-                display: 'block'
-            }} 
-            onClick={()=>{
-                props.onButtonClick()
-            }}
-        >Edit Profile</Button>
+        <div class="styledBtnContainer">
+            <Button variant="contained" size="medium" onClick={()=>{props.onButtonClick()}}>Edit Profile</Button>
+        </div>
     </div>
     )
 }
@@ -297,12 +293,7 @@ function EditPanel(props){
         {phoneValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid phone number</Alert>}
         {dlNumValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a Driver's License Number</Alert>}
         <div>
-            <label for="phone">Phone Number</label>
-            <input
-                id="phone" 
-                type="tel"
-                pattern="[0-9]{3} [0-9]{3} [0-9]{4}" 
-                maxlength="12"
+            <TextField label='PhoneNumber' variant="outlined" fullWidth margin="normal" id="phone" type="tel" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" maxlength="12"
                 onChange={(event)=>{
                     setPhone(event.target.value)
                     setDataChanged(true)
@@ -311,28 +302,26 @@ function EditPanel(props){
                     setPhoneValid(validatePhoneNumber(phone))
                 }}
                 value={phone}
-            />
+            ></TextField>
             <label for="licensepic" style={{display: "block"}} >
                 Update Driver's License
             </label>
-            <input 
-                type="file" 
-                id="licensepic" 
-                name="img" 
-                accept="image/*"
-                style={{border: "none", background: "none"}}
-                onChange={(event) =>{
-                    setImage(event.target.value)
-                    setDataChanged(true)
-                }}
-                Upload Image
-            />
-            <label for="licensenum" style={{display: "block"}} >
-                License Number
-            </label>
-            <input
-                id="licensenum" 
-                type="text"
+            <div>
+                <label htmlFor='upload-image'>
+                    <input 
+                        type="file" 
+                        id="upload-image" 
+                        accept="image/*"
+                        style={{width: '100%'}}
+                        onChange={(event) =>{
+                            setImage(event.target.value)
+                            setDataChanged(true)
+                        }}
+                    />
+                </label>
+            </div>
+            
+            <TextField label="License Number" variant="outlined" fullWidth margin="normal" id="licensenum" type="text" 
                 onChange={(event)=>{
                     setDlNumber(event.target.value)
                     setDataChanged(true)
@@ -341,7 +330,7 @@ function EditPanel(props){
                     setDlNumValid(dlNumber.length > 0)
                 }}
                 value={dlNumber}
-            />
+            ></TextField>
             {stripeAccount && stripeAccount.requirements.currently_due.length > 0 && stripeAccount.requirements.eventually_due.length > 0
                 ? <a
                     href=""
@@ -365,35 +354,22 @@ function EditPanel(props){
                 </a> //update link
             }
         </div>
-        {dataChanged && <Button 
-            style={{
-                margin: '20px auto',
-                display: 'block',
-                backgroundColor: confirmDisabled ? 'gray' : null
-            }} 
+        {dataChanged && <div class="styledBtnContainer">
+        <Button  
             onClick={()=>{
                 if(dataChanged){
                     //make API call to update DB
                     updateDriverProfile()
                 }
             }}
-            disabled={confirmDisabled}
-        >
+            disabled={confirmDisabled}>
             Confirm
-        </Button>}
-        <Button 
-            style={{
-                margin: '20px auto',
-                display: 'block',
-                color: loading ? 'gray' : null
-            }} 
-            onClick={()=>{
-                props.onButtonClick()
-            }}
-            disabled={loading}
-        >
-            Cancel
-        </Button>
+        </Button></div>}
+        <div class="styledBtnContainer">
+            <Button variant="contained" size="medium" onClick={()=>{props.onButtonClick()}}disabled={loading}>
+                Cancel
+            </Button>
+        </div>
     </div>
     )
 }

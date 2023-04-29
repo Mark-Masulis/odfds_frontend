@@ -6,6 +6,7 @@ import { restaurantOrderSchema } from "../Utils/validation";
 import "./../Components/ButtonStyle.css"
 import Checkout from "../Components/Payment/Checkout";
 import { useNavigate } from "react-router-dom";
+import { fontFamily } from "@mui/system";
 
 const FormContainer = styled.div`
   display: flex;
@@ -244,7 +245,7 @@ export default function RestaurantHomePage(props) {
   return (
     <div>
       {defaultSetup && 
-      <div>
+      <div style={{fontFamily:'Inter'}}>
       <FormContainer>
         <Form onSubmit={handleSubmit}>
           <Column>
