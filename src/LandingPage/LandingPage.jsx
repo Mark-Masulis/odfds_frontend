@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-
+import './../Components/ButtonStyle.css'
 
 const Root = styled('div')({
   display: 'flex',
@@ -56,7 +56,7 @@ function LandingPage() {
   return (
     <Root className="root">
       <WelcomeContainer  className="welcomeContainer">
-        <Typography variant="h2" style={{ textAlign: 'left', marginLeft: '-100px', padding: '180px', letterSpacing:'2px', color: 'white', textShadow: '0 0 5px rgba(0,0,0,0.5), 0 0 10px rgba(0,0,0,0.5), 0 0 15px rgba(0,0,0,0.5)',}} >
+        <Typography variant="h2" style={{ fontFamily: 'Inter',  textAlign: 'left', marginLeft: '-100px', padding: '180px', letterSpacing:'2px', color: 'white', textShadow: '0 0 5px rgba(0,0,0,0.5), 0 0 10px rgba(0,0,0,0.5), 0 0 15px rgba(0,0,0,0.5)',}} >
           Welcome to ODFDS!
         </Typography>
       </WelcomeContainer>
@@ -66,33 +66,33 @@ function LandingPage() {
             <ResponsiveBox className="responsiveBox" >
               <img src="R1.png" alt="image" style={{ width: '40%', height: 'auto'}} />
               <Link to="/login/restaurant">
-              <Button variant="contained" color="primary" style={{ marginTop: '10px', backgroundColor: '#0C695D' }} >
-                Restaurant
-              </Button>
+              <div class="styledBtnContainer">
+                <Button variant="contained" color="primary" >Restaurant</Button>
+              </div>
               </Link>
-              <Typography variant="h5" style={{ marginTop: '16px'}}>Are you a restaurant that needs food delivery service?</Typography>              
+              <Typography variant="h5" style={{ fontFamily: 'Inter', marginTop: '16px'}}>Are you a restaurant that needs food delivery service?</Typography>              
             </ResponsiveBox>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <ResponsiveBox className="responsiveBox">
               <img src="D1.png" alt="image" style={{ width: '40%', height: 'auto'}} />
               <Link to="/login/driver">
-              <Button variant="contained" color="primary" style={{ marginTop: '10px', backgroundColor: '#0C695D' }} >
-                Driver
-              </Button>
+              <div class="styledBtnContainer">
+              <Button variant="contained" color="primary">Driver</Button>
+              </div>
               </Link>
-              <Typography variant="h5" style={{ marginTop: '16px'}}>Do you want a side gig delivering food to customers?</Typography>           
+              <Typography variant="h5" style={{ fontFamily: 'Inter', marginTop: '16px'}}>Do you want a side gig delivering food to customers?</Typography>           
             </ResponsiveBox>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <ResponsiveBox className="responsiveBox">
               <img src="C1.png" alt="image" style={{ width: '40%', height: 'auto'}} />
               <Link to="/Customer">
-              <Button variant="contained" color="primary" style={{ marginTop: '10px' , backgroundColor: '#0C695D'}}>
-                Customer
-              </Button>
+              <div class="styledBtnContainer">
+                <Button variant="contained" color="primary">Customer</Button>
+              </div>
               </Link>
-              <Typography variant="h5" style={{ marginTop: '16px'}}>Food Order Customers </Typography>              
+              <Typography variant="h5" style={{ fontFamily: 'Inter', marginTop: '16px'}}>Food Order Customers </Typography>              
             </ResponsiveBox>
           </Grid>
         </Grid>
