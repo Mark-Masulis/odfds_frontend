@@ -16,6 +16,7 @@ import Footer from './Components/Footer'
 import Layout from './Components/Layout'
 import CssBaseline from '@mui/material/CssBaseline';
 import Header from './Components/Header';
+import About from './LandingPage/About';
 
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/driver/*" element={<Driver/>}/>
         <Route path="/login/:userType/*" element={<LoginPage/>}/>
         <Route path="/signup/:userType/*" element={<CreateAcctPage/>}/>
+        <Route path='/about' element={<About/>}/>
       </Route>
       
     )
