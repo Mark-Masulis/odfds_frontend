@@ -148,7 +148,7 @@ export default function DriverLogin(props){
 
             <div style={{margin: '20px'}}>
                 {phoneValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid phone number</Alert>}
-                {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid restaurant name</Alert>}
+                {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a name</Alert>}
                 {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
                 {zipValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid zip code</Alert>}
             </div>
