@@ -21,6 +21,7 @@ import {
 import PaymentSetup from '../Components/Payment/PaymentSetup'
 import "../Components/ButtonStyle.css"
 import PaymentMethodItem from '../Components/Payment/PaymentMethodItem'
+import TextField from '@mui/material/TextField';
 
 //props.token = the JWT used to identify the user whose profile is being rendered
 export default function RestaurantProfile(props){
@@ -96,7 +97,7 @@ export default function RestaurantProfile(props){
 function ViewPanel(props){
     const data = props.data
     return (
-    <div>
+    <div style={{fontFamily:'Inter'}}>
         <section style={{margin: "10px"}}>
             <label for="email"><h3>Email</h3></label>
             <p id="email">{data.email}</p>
@@ -119,15 +120,9 @@ function ViewPanel(props){
                 <p>{data.zipCode}</p>
             </div>
         </section>
-    <Button 
-            style={{
-                margin: '20px auto',
-                display: 'block'
-            }} 
-            onClick={()=>{
-                props.onButtonClick()
-            }}
-        >Edit Profile</Button>
+        <div class='styledBtnContainer'> 
+            <Button  variant="contained" size="medium" onClick={()=>{props.onButtonClick()}}>Edit Profile</Button>
+        </div>
     </div>
     )
 }
@@ -256,13 +251,8 @@ function EditPanel(props){
         {nameValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid restaurant name</Alert>}
         {cityValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid city name</Alert>}
         {zipValid || <Alert severity="error" style={{margin: "10px"}}>Please enter a valid zip code</Alert>}
-        <div>
-            <label for="phone">Phone Number</label>
-            <input
-                id="phone" 
-                type="tel"
-                pattern="[0-9]{3} [0-9]{3} [0-9]{4}" 
-                maxlength="12"
+        <div style={{fontFamily:'Inter'}}>
+            <TextField label="Phone Number" variant="outlined" fullWidth margin="normal" id="phone" type="tel" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" maxlength="12"
                 onChange={(event)=>{
                     setPhone(event.target.value)
                     setDataChanged(true)
@@ -271,11 +261,8 @@ function EditPanel(props){
                     setPhoneValid(validatePhoneNumber(phone))
                 }}
                 value={phone}
-            />
-            <label for="name">Restaurant Name</label>
-            <input
-                id="name" 
-                type="text"
+                ></TextField>
+            <TextField label="Restaurant Name" variant="outlined" fullWidth margin="normal" id="name" type="text" value={name}
                 onChange={(event)=>{
                     setName(event.target.value)
                     setDataChanged(true)
@@ -283,18 +270,14 @@ function EditPanel(props){
                 onBlur={()=>{
                     setNameValid(name.trim().length > 0)
                 }}
-                value={name}
-            />
-            <label for="street">Street Address</label>
-            <input
-                id="street" 
-                type="text"
+                
+            ></TextField>
+            <TextField label="Street Address" variant="outlined" fullWidth margin="normal" id="street" type="text" value={street}
                 onChange={(event)=>{
                     setStreet(event.target.value)
                     setDataChanged(true)
                 }}
-                value={street}
-            />
+            ></TextField>
             <div style={{display: "table"}}>
                 <div style={{display: "table-cell", paddingLeft: '10px'}}>
                     <label for="state">State</label>
@@ -309,10 +292,7 @@ function EditPanel(props){
                     />
                 </div>
                 <div style={{display: "table-cell", paddingLeft: '10px'}}>
-                    <label for="city">City</label>
-                    <input
-                        id="city" 
-                        type="text"
+                    <TextField label="City" variant="outlined" fullWidth margin="normal" id="city" type="text" value={city}
                         onChange={(event)=>{
                             setCity(event.target.value)
                             setDataChanged(true)
@@ -320,14 +300,10 @@ function EditPanel(props){
                         onBlur={()=>{
                             setCityValid(city.trim().length > 0)
                         }}
-                        value={city}
-                />
+                    ></TextField>
                 </div>
                 <div style={{display: "table-cell", paddingLeft: '10px'}}>
-                    <label for="zip">Zip Code</label>
-                    <input
-                        id="zip" 
-                        type="text"
+                    <TextField label="Zipcode" variant="outlined" fullWidth margin="normal" id="zip" type="text" value={zip}
                         onChange={(event)=>{
                             setZip(event.target.value)
                             setDataChanged(true)
@@ -335,8 +311,8 @@ function EditPanel(props){
                         onBlur={()=>{
                             setZipValid(validateZipCode(zip))
                         }}
-                        value={zip}
-                    />
+                        
+                    ></TextField>
                 </div>
             </div>
             <div style={{margin: '0 auto'}}>
@@ -373,18 +349,11 @@ function EditPanel(props){
                                 }}
                             />)
                     }
-                    <Button
-                    style={{
-                        margin: '20px auto',
-                        display: 'block',
-                        color: loading ? 'gray' : null
-                    }} 
-                        onClick={() => {
-                            setAddPaymentInformation(true)
-                        }}
-                    >
-                        Add New Payment Method
-                    </Button>
+                    <div class='styledBtnContainer'>
+                        <Button style={{margin:'20px auto'}} variant="contained" size="medium" onClick={() => {setAddPaymentInformation(true)}}>
+                            Add New Payment Method
+                        </Button>
+                    </div>
                     <a 
                         href=""
                         onClick={(event)=>{
@@ -404,28 +373,19 @@ function EditPanel(props){
                 </div>
             }
         </div>
-        {dataChanged && <Button 
-            style={{
-                margin: '20px auto',
-                display: 'block',
-                backgroundColor: confirmDisabled ? 'gray' : null
-            }} 
+        {dataChanged && <div class="styledBtnContainer">
+        <Button variant="contained" size="medium"          
             onClick={()=>{
                 if(dataChanged){
                     //make API call to update DB
                     updateRestaurantProfile()
                 }
             }}
-            disabled={confirmDisabled}
-        >
+            disabled={confirmDisabled}>
             Confirm
-        </Button>}
-        <Button 
-            style={{
-                margin: '20px auto',
-                display: 'block',
-                color: loading ? 'gray' : null
-            }} 
+        </Button></div>}
+        <div class='styledBtnContainer'>
+        <Button variant="contained" size="medium" 
             onClick={()=>{
                 props.onButtonClick()
             }}
@@ -433,6 +393,7 @@ function EditPanel(props){
         >
             Cancel
         </Button>
+        </div>
     </div>
     )
 }

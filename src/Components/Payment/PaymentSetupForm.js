@@ -7,6 +7,7 @@ import {
 import {
     Button
 } from './../StaticComponents'
+import '../ButtonStyle.css'
 
 //props.returnUrl = the URL that will be navigated to after form submission
 //props.onError = a function that passes the error as a parameter
@@ -34,7 +35,9 @@ export default function PaymentSetupForm(props){
             }}
         >
             <PaymentElement/>
-            <Button>Submit</Button>
+            <div class="styledBtnContainer">
+                <Button variant="contained" size="medium">Submit</Button>
+            </div>
         </form>
     )
 }

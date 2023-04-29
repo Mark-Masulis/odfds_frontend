@@ -15,6 +15,7 @@ export default function RestaurantForgotPassword(props){
     const [confirmPass, setConfirmPass] = useState("")
     const [loading, setLoading] = useState(false)
     const [hidden, setHidden] = useState(true)
+    const [codeSent, emailCodeSent] = useState(false)
     const navigate = useNavigate
 
     const sendEmailCode = () => {
@@ -30,6 +31,7 @@ export default function RestaurantForgotPassword(props){
                     switch(data.code){
                         case 200:
                             alert(data.data)
+                            emailCodeSent(true)
                             break;
                         default:
                             alert(data.data.message)
@@ -91,7 +93,7 @@ export default function RestaurantForgotPassword(props){
             <div class="container">
                 <Button id="codeBtn" variant="contained" size="medium" onClick={sendEmailCode} disabled={loading}>Send Code</Button>
             </div>
-
+            {codeSent && <div>
             <TextField id="codeIn" label="Email Code" variant="outlined" fullWidth margin="normal" value={code} disabled={loading} hidden={hidden} color="success"
             onChange={(event) => {
                 setCode(event.target.value)
@@ -111,6 +113,8 @@ export default function RestaurantForgotPassword(props){
             <div class="container">
                 <Button id="updateBtn" variant="containe" onClick={updateRequest} disabled={loading}>Update</Button>
             </div>
+            </div>
+            }
         </div>
     )
 }

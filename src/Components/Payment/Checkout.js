@@ -4,6 +4,7 @@ import React, {
 } from 'react'
 import PaymentMethodItem from './PaymentMethodItem'
 import {Button} from './../StaticComponents'
+import '../ButtonStyle.css'
 
 //props.token = token of the user doing the checkout
 //props.orderId = the id of the order object being paid
@@ -151,13 +152,9 @@ export default function Checkout(props){
                                 )
                         }
                     })()}
-                    {selectedMethod && <Button
-                        onClick={() => {
-                            payOrder()
-                        }}
-                    >
-                        Pay
-                    </Button>}
+                    {selectedMethod && <div class="styledBtnContainer">
+                    <Button variant="contained" size="medium" onClick={() => {payOrder()}}>Pay</Button>
+                    </div>}
                 </div>
             }
         </div>

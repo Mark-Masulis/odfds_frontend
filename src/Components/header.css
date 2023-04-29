@@ -20,6 +20,9 @@ align-items: center;
 margin-left: 400px; 
 }
 
+.flexSB{
+  font-family: Inter;
+}
 
 /* header style*/
 header {
