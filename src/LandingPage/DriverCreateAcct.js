@@ -34,6 +34,20 @@ export default function DriverLogin(props){
         return nameSplit.length == 3 || nameSplit.length == 2
     }
 
+    function Alert() {
+        const handleClick = () => {
+          // Navigate to the new page here
+          window.location.href = '/new-page';
+        };
+      
+        return (
+          <div>
+            <p>Click OK to continue to the new page.</p>
+            <button onClick={handleClick}>OK</button>
+          </div>
+        );
+      }
+
     const sendEmailCode = () => {
         if(!validateEmail(email)){
             alert("Invalid email ")
@@ -69,6 +83,7 @@ export default function DriverLogin(props){
         var data = new FormData()
         data.append("image", file)
         var url = ""
+        
         await fetch(process.env.REACT_APP_API + "/common/upload/image",{
             method: "POST",
             body:data
@@ -130,7 +145,7 @@ export default function DriverLogin(props){
                         case 200:
                             alert(data.data)
                             //route to sign in page
-                            //navigate(`/login/driver`)
+                            navigate(`/login/driver`)
                             break;
                         default: 
                             alert(data.data.message)
@@ -140,7 +155,6 @@ export default function DriverLogin(props){
                 }
             )
         }
-        
     }
 
     return(

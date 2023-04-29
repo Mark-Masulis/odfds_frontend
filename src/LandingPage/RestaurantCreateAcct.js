@@ -91,7 +91,7 @@ export default function RestauranCreateAcct(props){
                         case 200:
                             alert(data.data)
                             //route to login page
-                            //navigate(`/login/restaurant`)
+                            navigate(`/login/restaurant`)
                             break;
                         default:
                             alert(data.data.message)
