@@ -45,10 +45,9 @@ export default function App() {
     
     <div>
       <CssBaseline />
-      <Header/>
-      <Layout>
+      <Header/>     
         <RouterProvider router={router} />
-      </Layout>
+      
       <Footer />
     </div>
     
