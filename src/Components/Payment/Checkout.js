@@ -17,7 +17,10 @@ export default function Checkout(props){
     const [selectedMethod, setSelectedMethod] = useState()
     const [order, setOrder] = useState()
 
+    const [disablePayButton, setDisablePayButton] = useState(false);
+
     const payOrder = async () => {
+        setDisablePayButton(true);
         return await fetch(process.env.REACT_APP_API + '/restaurant/order/pay', {
             method: 'POST',
             headers: {
@@ -46,7 +49,7 @@ export default function Checkout(props){
             (error) => {
                 alert(error)
             }
-        )
+        ).finally(() => setDisablePayButton(false));
     }
 
     const getOrder = () => {
@@ -95,7 +98,7 @@ export default function Checkout(props){
             }
         ).catch(
             (error) => {
-                alert(error)
+                alert(error);
             }
         )
     }
@@ -153,7 +156,7 @@ export default function Checkout(props){
                         }
                     })()}
                     {selectedMethod && <div class="styledBtnContainer">
-                    <Button variant="contained" size="medium" onClick={() => {payOrder()}}>Pay</Button>
+                    <Button variant="contained" size="medium" disabled={disablePayButton} onClick={() => {payOrder()}}>Pay</Button>
                     </div>}
                 </div>
             }

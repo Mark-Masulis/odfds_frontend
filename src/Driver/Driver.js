@@ -1,11 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { 
   Routes, 
   Route, 
   useNavigate, 
   useParams, 
   useSearchParams,
-  useLocation 
+  useLocation
 } from "react-router-dom"
 import TabBar from "./../Components/TabBar"
 import DriverHomePage from "./DriverHomePage"
@@ -13,10 +13,14 @@ import DriverHistory from './DriverHistory'
 import DriverProfile from './DriverProfile'
 import OrderTracker from "./OrderTracker"
 import Notification from "./Notification"
+
 export default function Restaurant(props) {
   const { userType } = useParams()
-  const location = useLocation()
-  const pathParts = location.pathname.split('/')
+  const [rawLocation, setRawLocation] = useState(null);
+  const [location, setLocation] = useState(null)
+  const [locationTimer, setLocationTimer] = useState(null)
+  const urlLocation = useLocation();
+  const pathParts = urlLocation.pathname.split('/')
   const [locationActive, setLocationActive] = useState(false)
   const [newOrder, setNewOrder] = useState(false)
   const [needsOnboarding, setNeedsOnboarding] = useState(false)
@@ -36,6 +40,41 @@ export default function Restaurant(props) {
   const [searchParams, setSearchParams] = useSearchParams()
   const token = searchParams.get("token")
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (locationActive && rawLocation == null && locationTimer == null) {
+      const updateLocation  = () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+          setRawLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        });
+      }
+      const myInterval = setInterval(() => updateLocation(), 2000);
+      setLocationTimer(myInterval);
+      updateLocation();
+      return () => clearInterval(myInterval);
+    } else {
+      if (locationActive == false && locationTimer != null) {
+        clearInterval(locationTimer);
+        setRawLocation(null);
+        setLocation(null);
+      }
+    }
+  }, [locationActive])
+
+  useEffect(() => {
+    if (location == null || rawLocation == null) {
+      setLocation(rawLocation);
+    } else {
+      const latDiff = Math.abs(rawLocation.lat - location.lat);
+      const lngDiff = Math.abs(rawLocation.lng - location.lng);
+      if (latDiff > 0.0001 || lngDiff > 0.0001) {
+        setLocation(rawLocation);
+      }
+    }
+  }, [rawLocation])
 
   return (
     <div>
@@ -67,13 +106,15 @@ export default function Restaurant(props) {
           <DriverHomePage 
             token={token}
             onActivationStateChange={(state) => {setLocationActive(state)}}
-            activeState={locationActive}
+            locationActive={locationActive}
+            location={location}
             deliveryState={deliveryState}
             availableOrder={availableOrder}
-            currentOrder={acceptedOrders.length > 0 && acceptedOrders[0]}
+            currentOrder={acceptedOrders}
             onComplete={()=>{
               setDeliveryState(DeliveryStates.NOORDER)
             }}
+            
           />
         }/>
         <Route path="/profile" element={<DriverProfile token={token}/>
@@ -83,7 +124,7 @@ export default function Restaurant(props) {
       <OrderTracker
         token={token}
         active={locationActive}
-        frequencySeconds={10}
+        frequencySeconds={2}
         onOrderRecieved={(data) => {
           //do something when a new order is received
           setNewOrder(true)
@@ -107,7 +148,7 @@ export default function Restaurant(props) {
         onSecondOrder={(data) => {
           //do something when a second order is assigned
           if(acceptedOrders.length <= 2){ //make sure there isn't already a second order
-            setAcceptedOrders([acceptedOrders, data])
+            setAcceptedOrders(acceptedOrders.concat(data))
           }
         }}
         onOrderPickup={(data) => {

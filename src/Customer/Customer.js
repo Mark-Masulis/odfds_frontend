@@ -12,7 +12,6 @@ export default function Customer(){
       const handletokenChange = (event) => {
           setToken(event.target.value);
       }
-  
 
       const handletokenSubmit = (event) => {
         event.preventDefault(); 
@@ -23,17 +22,17 @@ export default function Customer(){
         }
         })
         .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
           return response.json();
         })
         .then(data => {
-          //console.log(data);
-          if(data.error){
-            alert(data.error)
+          if(data.code != 200){
+            if (data.data.message) {
+              alert(data.data.message);
+            } else {
+              alert(data.data);
+            }
           } else {
-            navigate('/CustomerHomePage',{state: { data }});
+            navigate('/CustomerHomePage',{state: { data, token }});
           }
         })
         .catch(error => {         

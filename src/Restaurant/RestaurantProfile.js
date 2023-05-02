@@ -22,6 +22,7 @@ import PaymentSetup from '../Components/Payment/PaymentSetup'
 import "../Components/ButtonStyle.css"
 import PaymentMethodItem from '../Components/Payment/PaymentMethodItem'
 import TextField from '@mui/material/TextField';
+import GoogleMaps from "../Components/map";
 
 //props.token = the JWT used to identify the user whose profile is being rendered
 export default function RestaurantProfile(props){
@@ -111,13 +112,17 @@ function ViewPanel(props){
             <p id="name">{data.name}</p>
         </section>
         <section style={{margin: "10px"}}>
+            <label for="name"><h3>Restaurant Address</h3></label>
+            <p id="name">{data.street + ", " + data.city + " " + data.state + " " + data.zipCode}</p>
+        </section>
+        <section style={{margin: "10px"}}>
             <label for="map"><h3>Restaurant Location</h3></label>
-            <div id="map" style={{width: "400px", height:"400px", border: "5px solid black" /*remove this border when map is added*/}}>
-                <h2>PLACEHOLDER FOR MAP</h2>
-                <p>{data.street}</p>
-                <p>{data.city}</p>
-                <p>{data.state}</p>
-                <p>{data.zipCode}</p>
+            <div id="map">
+                <GoogleMaps 
+                    containerStyle={{width: "400px", height:"400px"}}
+                    destinationLocation={data.street + ", " + data.city + ", " + data.state + " " + data.zipCode}
+                    destinationLabel={data.name}
+                />
             </div>
         </section>
         <div class='styledBtnContainer'> 

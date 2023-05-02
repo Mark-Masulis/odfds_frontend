@@ -49,6 +49,8 @@ export default function OrderTracker(props){
                 props.onDeliver(data.data)
             }else if(data.code == 207){
                 //second order coming from the same restaurant
+                console.log(data.data);
+                alert("You got another order from the same restaurant, order #" + data.data.id);
                 props.onSecondOrder(data.data)
             }else if(data.code == 208){
                 //one order delivered, one more to be delivered
@@ -80,7 +82,7 @@ export default function OrderTracker(props){
     useEffect(() => {
         if(props.active){
             activate()
-            getLocation()
+            setTimeout(() => getLocation(), 1000);
         }else{
             deactivate()
         }

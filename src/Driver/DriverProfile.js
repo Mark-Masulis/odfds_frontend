@@ -108,10 +108,6 @@ function ViewPanel(props){
             <label for="dlnum"><h3>License Number</h3></label>
             <p id="dlnum">{data.driverLicenseNumber}</p>
         </section>
-        <section style={{margin: "10px"}}>
-            <label for="status"><h3>Account Status</h3></label>
-            <p id="status">{data.verification}</p>
-        </section>
         <div class="styledBtnContainer">
             <Button variant="contained" size="medium" onClick={()=>{props.onButtonClick()}}>Edit Profile</Button>
         </div>
@@ -137,7 +133,7 @@ function EditPanel(props){
     const navigate = useNavigate()
 
     const uploadImage = async () => {
-        var file = document.getElementById('licensepic').files[0]
+        var file = document.getElementById('upload-image').files[0]
         if (!file) {
             return
         }
@@ -186,7 +182,7 @@ function EditPanel(props){
     }
 
     const generateOnboardLink = () => {
-        fetch(process.env.REACT_APP_API + '/driver/update', {
+        fetch(process.env.REACT_APP_API + '/payment/driver/update', {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",
@@ -213,7 +209,7 @@ function EditPanel(props){
     }
 
     const generateUpdateLink = () => {
-        fetch(process.env.REACT_APP_API + '/driver/onboard', {
+        fetch(process.env.REACT_APP_API + '/payment/driver/onboard', {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",

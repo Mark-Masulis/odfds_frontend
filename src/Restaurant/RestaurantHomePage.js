@@ -7,6 +7,7 @@ import "./../Components/ButtonStyle.css"
 import Checkout from "../Components/Payment/Checkout";
 import { useNavigate } from "react-router-dom";
 import { fontFamily } from "@mui/system";
+import GoogleMaps from "../Components/map";
 
 const FormContainer = styled.div`
   display: flex;
@@ -70,6 +71,8 @@ export default function RestaurantHomePage(props) {
   const [payment, setPayment] = useState("")
   const [distance, setDistance] = useState(0)
 
+  const [changeOrderDisabled, setChangeOrderDisabled] = useState(false);
+
   // form validation
   const [validationResult, setValidationResult] = useState({});
 
@@ -116,7 +119,7 @@ export default function RestaurantHomePage(props) {
     const token = props.token
     if (!token){
         //setError(true)
-        return
+        return;
     } 
     setLoading(true)
     fetch(process.env.REACT_APP_API + '/restaurant/order/estimate', {
@@ -179,11 +182,16 @@ export default function RestaurantHomePage(props) {
       (data) => {
         switch(data.code){
           case 200:
-            setOrderId(data.data.orderId)
+            setOrderId(data.data.orderId);
+            setChangeOrderDisabled(true)
             break
           default:
             setError(true)
-            alert(data.data.message)
+            if (data.data.message) {
+              alert(data.data.message)
+            } else {
+              alert(data.data);
+            }
             break
         }
       }
@@ -232,10 +240,6 @@ export default function RestaurantHomePage(props) {
       setValidationResult(errObject);
     });
   };
-
-  const placeOrder = (event) => {
-    alert("Order Placed")
-  }
 
   const printErrors = (key) => <>{
     validationResult[key] && validationResult[key]
@@ -380,8 +384,8 @@ export default function RestaurantHomePage(props) {
           <h2>Order Overview</h2>
           <ul>
               <li>Customer Name: {name}</li>
-              <li>Pickup Address: {pickupAddr}</li>
-              <li>Delivery Address: {deliveryAddr}</li>
+              <li>Restaurant (pick up) Address: {pickupAddr}</li>
+              <li>Customer (delivery) Address: {deliveryAddr}</li>
               <li>Distance: {distance} miles</li>
               <li>Estimate Travel Time: {time} min</li>
               <li>Cost: ${cost}</li>
@@ -395,19 +399,25 @@ export default function RestaurantHomePage(props) {
             setDefaultSetup(true)
             setOrderId(null)
           }}
+          disabled={changeOrderDisabled}
         >
           Change Order
         </Button>
       </div>
       <div>
-          Map Placeholder
+        <GoogleMaps
+          containerStyle={{width: "100%", height: "400px"}}
+          originLocation={pickupAddr}
+          destinationLocation={deliveryAddr}
+        />
       </div>
       {orderId && 
         <Checkout
           token={props.token}
           orderId={orderId}
           onConfirm={() => {
-            navigate('/restaurant/history?token=' + props.token)
+            navigate('/restaurant/history?token=' + props.token);
+            navigate(0); // force reload
           }}
         />
       }
