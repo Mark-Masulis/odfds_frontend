@@ -59,13 +59,14 @@ export default function Restaurant(props) {
       if (locationActive == false && locationTimer != null) {
         clearInterval(locationTimer);
         setRawLocation(null);
+        setLocationTimer(null);
         setLocation(null);
       }
     }
   }, [locationActive])
 
   useEffect(() => {
-    if (location == null || rawLocation == null) {
+    if (location == null) {
       setLocation(rawLocation);
     } else {
       const latDiff = Math.abs(rawLocation.lat - location.lat);
@@ -111,8 +112,9 @@ export default function Restaurant(props) {
             deliveryState={deliveryState}
             availableOrder={availableOrder}
             currentOrder={acceptedOrders}
-            onComplete={()=>{
-              setDeliveryState(DeliveryStates.NOORDER)
+            onComplete={() => {
+              navigate("/driver/home?token=" + token);
+              navigate(0);  // force to reload
             }}
             
           />

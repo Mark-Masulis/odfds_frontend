@@ -1,6 +1,7 @@
 import React, {
     useEffect,
-    useState
+    useState,
+    useRef
 } from 'react'
 import PaymentMethodItem from './PaymentMethodItem'
 import {Button} from './../StaticComponents'
@@ -17,11 +18,8 @@ export default function Checkout(props){
     const [selectedMethod, setSelectedMethod] = useState()
     const [order, setOrder] = useState()
 
-    const [disablePayButton, setDisablePayButton] = useState(false);
-
     const payOrder = async () => {
-        setDisablePayButton(true);
-        return await fetch(process.env.REACT_APP_API + '/restaurant/order/pay', {
+        fetch(process.env.REACT_APP_API + '/restaurant/order/pay', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -35,13 +33,19 @@ export default function Checkout(props){
             (response) => response.json()
         ).then(
             (data) => {
-                alert(JSON.stringify(data))
                 switch(data.code){
                     case 200:
+                        alert("Order #"+ data.data.orderId + " paid")
                         props.onConfirm(data.data)
                         break
+                    case 429:
+                        alert(data.data);
+                        break;
+                    case 400:
+                        alert(data.data.message);
+                        break;
                     default:
-                        alert(JSON.stringify(data))
+                        alert(data.data);
                         break
                 }
             }
@@ -49,7 +53,7 @@ export default function Checkout(props){
             (error) => {
                 alert(error)
             }
-        ).finally(() => setDisablePayButton(false));
+        );
     }
 
     const getOrder = () => {
@@ -156,7 +160,7 @@ export default function Checkout(props){
                         }
                     })()}
                     {selectedMethod && <div class="styledBtnContainer">
-                    <Button variant="contained" size="medium" disabled={disablePayButton} onClick={() => {payOrder()}}>Pay</Button>
+                    <Button variant="contained" size="medium" onClick={() => {payOrder()}}>Pay</Button>
                     </div>}
                 </div>
             }

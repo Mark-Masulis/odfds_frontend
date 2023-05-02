@@ -61,8 +61,10 @@ export default function DriverHomePage(props) {
                 />
               )
             case DeliveryStates.FINISHED:
+
               return(
                 <Finished
+                  onActivationStateChange={props.onActivationStateChange}
                   onComplete={props.onComplete}
                 />
               )
@@ -74,7 +76,6 @@ export default function DriverHomePage(props) {
 }
 
 function ActivationButton(props){
-  const token = props.token
   const [isActivated, setIsActivated] = useState(props.locationActive)
   const [location, setLocation] = useState(props.location);
 
@@ -187,6 +188,7 @@ function AcceptRejectButton(props){
       (data) => {
         switch(data.code){
           case 200:
+            alert("order rejected")
             break
           default:
             alert("Something went wrong. Please try again.")
@@ -254,12 +256,14 @@ function MapToRestaurant(props){
     ).then(
       (data) => {
         setLoading(false)
-        switch(data){
+        switch(data.code){
           case 200:
             alert("Order has been picked up.")
-            break
+            break;
+          case 402:
+            alert(data.data);
           default:
-            break
+            break;
         }
       }
     ).catch(
@@ -281,6 +285,7 @@ function MapToRestaurant(props){
         <p>Restaurant Name: {props.order[0].restaurant.name}</p>
         <p>Restaurant Phone: {props.order[0].restaurant.phone}</p>
         <p>Restaurant Email: {props.order[0].restaurant.email}</p>
+        <p>Comment: {props.order[0].comment}</p>
         {location && <GoogleMaps
           containerStyle={{display: "flex", width: "100%", height: "400px"}}
           destinationLocation={props.order[0].restaurant.street + ", " + props.order[0].restaurant.city + ", " + props.order[0].restaurant.state + " " + props.order[0].restaurant.zipCode}
@@ -349,6 +354,9 @@ function MapToCustomer(props){
           case 200:
             alert("Order has been delivered.")
             break
+          case 402:
+            alert(data.data)
+            break
           default:
             break
         }
@@ -389,6 +397,12 @@ function MapToCustomer(props){
 
 //props.onComplete = function called when driver clicks complete button
 function Finished(props){
+
+  // need to deactivate location reporting on this page
+  useEffect(() => {
+    props.onActivationStateChange(false);
+  }, [])
+
     return(
       <div
         style={{
