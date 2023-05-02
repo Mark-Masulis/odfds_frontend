@@ -1,92 +1,89 @@
-import React, { useState, useEffect } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 
-export default function RestrauntOrders(props) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [data, setData] = useState();
-  const [rows, setRows] = useState([]);
+const columns = [
+  {
+    field: 'id', headerName: 'Order ID', width: 70, sortable: false
+  },
+  {
+    field: 'createdAt', headerName: 'Create Time', width: 180, sortable: false, valueFormatter: params => params.value ? new Date(params.value).toLocaleString() : ""
+  },
+  {
+    field: 'estimatedDeliveryTime', headerName: 'Estimated Delivery Time', width: 180, sortable: false, valueFormatter: params => params.value ? new Date(params.value).toLocaleString() : ""
+  },
+  {
+    field: 'actualDeliveryTime', headerName: 'Actual Deliver Time', width: 180, sortable: false, valueFormatter: params => params.value ? new Date(params.value).toLocaleString() : ""
+  },
+  {
+    field: 'cost', headerName: 'Order Cost', width: 100, sortable: false, valueFormatter: params => "$" + params.value
+  },
+  {
+    field: 'status', headerName: 'Order Status', width: 120, sortable: false
+  },
+  {
+    field: 'customerAddress', headerName: 'Customer Address', width: 450, sortable: false, valueGetter: (params) => params.row.customerStreet + ", " + params.row.customerCity + ", " + params.row.customerState + " " + params.row.customerZipCode  
+  },
+  {
+    field: 'customerName', headerName: 'Customer Name', width: 120, sortable: false
+  },
+  {
+    field: 'customerEmail', headerName: 'Customer Email', width: 200, sortable: false
+  },
+  {
+    field: 'customerPhone', headerName: 'Customer Phone', width: 150, sortable: false
+  },
+  {
+    field: 'driverName', headerName: 'Driver Name', width: 120, sortable: false, valueGetter: (params) => params.row.driver ? params.row.driver.firstName + " " + params.row.driver.lastName : ""
+  },
+  {
+    field: 'driverPhone', headerName: 'Driver Phone', width: 150, sortable: false, valueGetter: (params) => params.row.driver ? params.row.driver.phone : ""
+  },
+  {
+    field: 'comment', headerName: 'Order Comment', width: 200, sortable: false
+  }
+]
 
-  const [paginationModel, setPaginationModel] = useState({pageSize: 25, page: 1});
+export default function RestaurantOrders(props) {
+  const [pageState, setPageState] = React.useState({
+    isLoading: false,
+    data: [],
+    total: 0
+  });
 
-  const getOrdersData = () => {
-    const token = props.token;
-    if (!token) {
-      setError(true);
-      return;
-    }
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 25,
+  });
 
-    const { pageSize, page } = paginationModel;
-
-    fetch(
-      
-      process.env.REACT_APP_API +
-        "/restaurant/orders?pageSize=" +
-        pageSize +
-        "&page=" +
-        page,
-      {
+  React.useEffect(() => {
+    const fetchData = async () => {
+      console.log("ON");
+      setPageState(old => ({ ...old, isLoading: true }));
+      const response = await fetch(process.env.REACT_APP_API + "/restaurant/orders?pageSize=" + paginationModel.pageSize + "&page=" + (paginationModel.page + 1), {
         method: "GET",
         headers: {
           "content-type": "application/json",
-          access_token: token,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setLoading(false);
-
-        setData(data.data);
-        setRows(data.data.data);
-        switch (data.code) {
-          case 200: //good things are happening :)
-            break;
-          default: //bad things are happening :(
-            setError(true);
-            break;
+          access_token: props.token,
         }
       });
-  };
-  const columns =
-    rows.length > 0
-      ? Object.keys(rows[0])
-          .slice(0, -4) // remove the last four keys
-          .map((key) => {
-            return {
-              field: key,
-              headerName: key.charAt(0).toUpperCase() + key.slice(1),
-              width: 200,
-            };
-          })
-      : [];
-
-  const handlePaginationModelChange = (newPaginationModel) => {
-    setPaginationModel({
-      pageSize: newPaginationModel.pageSize,
-      page: newPaginationModel.page + 1,
-    });
-  };
-
-  useEffect(getOrdersData, [props.token, paginationModel]);
+      const jsonData = await response.json();
+      setPageState(old => ({ ...old, isLoading: false, data: jsonData.data.data, total: jsonData.data.allCount }));
+    }
+    fetchData();
+  }, [paginationModel.page, paginationModel.pageSize]);
 
   return (
-    <div>
-      <div style={{ textAlign: "center" }}>
-        <div
-          style={{
-            height: 600,
-            width: "90%",
-            display: "inline-block",
-          }}
-        >
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            onPaginationModelChange={handlePaginationModelChange}
-          />
-        </div>
-      </div>
+    <div style={{ height: 500, width: '100%' }}>
+      <DataGrid
+        rows={pageState.data}
+        columns={columns}
+        rowCount={pageState.total}
+        loading={pageState.isLoading}
+        pageSizeOptions={[25, 50, 100]}
+        paginationModel={paginationModel}
+        paginationMode="server"
+        onPaginationModelChange={setPaginationModel}
+      />
     </div>
   );
 }
