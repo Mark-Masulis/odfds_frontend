@@ -40,7 +40,7 @@ const CustomerHomePage = () => {
         <GoogleMaps
           containerStyle={containerStyle}
           destinationLocation={destinationLocation}
-          restaurantLocation={restaurantLocation}
+          originLocation={restaurantLocation}
         />
       )}
    
