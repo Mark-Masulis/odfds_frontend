@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '../Components/StaticComponents'
+import GoogleMaps from '../Components/map'
 
 //props.onActivationStateChange = funciton called when activate state is toggled. Gives the NEW state as a param
 //props.locationActive = current state of the location tracking feature
@@ -190,8 +191,10 @@ function AcceptRejectButton(props){
 }
 
 //props.token
+//props.order
 function MapToRestaurant(props){
   const [loading, setLoading] = useState(false)
+  const [driverLoc, setDriverLoc] = useState(null)
   const pickupOrder = () => {
     setLoading(true)
     fetch(process.env.REACT_APP_API + '/driver/order/pickup', {
@@ -219,6 +222,10 @@ function MapToRestaurant(props){
     )
   }
 
+  useEffect(() => {
+    getCurrentLocation(setDriverLoc)
+  }, [])
+
   return(
     <div
       style={{
@@ -230,16 +237,29 @@ function MapToRestaurant(props){
         alignItems: 'space-around'
       }}
     >
-      <Button
-      disabled={loading}
-      style={{marginLeft: '0', color: loading? 'gray':null}}
-        onClick={pickupOrder}
-      >
-        Pick Up Order
-      </Button>
       <div>
-        <p>{JSON.stringify(props.order.restaurant)}</p>
-        <p>Placeholder for map to restaurant</p>
+        <Button
+        disabled={loading}
+        style={{marginLeft: '0', color: loading? 'gray':null}}
+          onClick={pickupOrder}
+        >
+          Pick Up Order
+        </Button>
+      </div>
+      <div style={{border: 'solid black 3px', width: '100%', height: '100%'}}>
+        {Array.isArray(driverLoc) 
+        ? <GoogleMaps
+          originLocation={driverLoc}
+          destinationLocation={`${props.order.restaurant.street} ${props.order.restaurant.city}, ${props.order.restaurant.state}, ${props.order.restaurant.zipCode}`}
+          originLabel="Your Location"
+          destinationLabel="Restaurant"
+          containerStyle={{
+            width: '100%',
+            height: '400px',
+          }}
+        />
+        : <p>Unable to access your location.</p>
+    }
       </div>
     </div>
   )
@@ -327,4 +347,19 @@ function Finished(props){
         </div>
       </div>
     )
+}
+
+//NOT A REACT COMPONENT
+function getCurrentLocation(callback){
+  if(navigator.geolocation){
+    return navigator.geolocation.getCurrentPosition((position) => {
+        //success
+        callback([position.coords.latitude, position.coords.longitude])
+    }, (error) => {
+        //failure
+        callback(null)
+    })
+  }else{
+    callback(null)
+  }
 }

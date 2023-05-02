@@ -73,6 +73,7 @@ export default function Restaurant(props) {
             currentOrder={acceptedOrders.length > 0 && acceptedOrders[0]}
             onComplete={()=>{
               setDeliveryState(DeliveryStates.NOORDER)
+              setLocationActive(false)
             }}
           />
         }/>

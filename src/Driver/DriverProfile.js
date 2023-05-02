@@ -137,6 +137,9 @@ function EditPanel(props){
     const navigate = useNavigate()
 
     const uploadImage = async () => {
+        if(!document.getElementById('licensepic').files){
+            return
+        }
         var file = document.getElementById('licensepic').files[0]
         if (!file) {
             return
@@ -186,7 +189,7 @@ function EditPanel(props){
     }
 
     const generateOnboardLink = () => {
-        fetch(process.env.REACT_APP_API + '/driver/update', {
+        fetch(process.env.REACT_APP_API + 'payment/driver/update', {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",
@@ -213,7 +216,7 @@ function EditPanel(props){
     }
 
     const generateUpdateLink = () => {
-        fetch(process.env.REACT_APP_API + '/driver/onboard', {
+        fetch(process.env.REACT_APP_API + 'payment/driver/onboard', {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",
@@ -310,7 +313,7 @@ function EditPanel(props){
                 <label htmlFor='upload-image'>
                     <input 
                         type="file" 
-                        id="upload-image" 
+                        id="licensepic" 
                         accept="image/*"
                         style={{width: '100%'}}
                         onChange={(event) =>{
