@@ -263,7 +263,8 @@ function MapToRestaurant(props){
           case 402:
             alert(data.data);
           default:
-            break;
+            alert(data.data)
+            break
         }
       }
     ).catch(
@@ -354,10 +355,11 @@ function MapToCustomer(props){
           case 200:
             alert("Order has been delivered.")
             break
-          case 402:
-            alert(data.data)
+          case 400:
+            alert(data.data.message)
             break
           default:
+            alert(data.data)
             break
         }
       }
@@ -411,12 +413,14 @@ function Finished(props){
           marginLeft: '200px',
           marginRight: '200px',
           display: 'flex',
-          alignItems: 'space-around'
+          alignItems: 'space-around',
+          justifyContent: 'center'
         }}
       >
         <div>
           <h1>Order Complete!</h1>
           <Button
+            style={{margin: '20px'}}
             onClick={props.onComplete}
           >
             Continue
