@@ -32,7 +32,7 @@ export default function DriverLogin(props){
         return nameSplit.length == 3 || nameSplit.length == 2
     }
 
-    function Alert() {
+    /*function Alert() {
         const handleClick = () => {
           // Navigate to the new page here
           window.location.href = '/new-page';
@@ -44,7 +44,7 @@ export default function DriverLogin(props){
             <button onClick={handleClick}>OK</button>
           </div>
         );
-      }
+      }*/
 
     const sendEmailCode = () => {
         if(!validateEmail(email)){
