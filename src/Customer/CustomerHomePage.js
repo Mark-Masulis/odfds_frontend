@@ -103,7 +103,7 @@ const CustomerHomePage = () => {
       Order Status: <span>{data.data.status == "PICKEDUP" ? "driver picked up, delivering" : ""}</span>
       <span>{data.data.status == "ACCEPTED" ? "driver accepted, picking up" : ""}</span>
       <span>{data.data.status == "CANCELLED" ? "cancelled" : "" }</span>
-      <span>{data.data.status == "DELIVERED" ? "cancelled" : "" }</span>
+      <span>{data.data.status == "DELIVERED" ? "delivered" : "" }</span>
       <span>{data.data.status != "PICKEDUP" && data.data.status != "ACCEPTED" && data.data.status != "CANCELLED" && data.data.status != "DELIVERED" && data.data.status ? data.data.status : ""}</span>
     </p>
     <p>Order #{ data.data.id }</p>
