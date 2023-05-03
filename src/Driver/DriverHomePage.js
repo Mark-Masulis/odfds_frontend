@@ -86,7 +86,14 @@ function ActivationButton(props){
 
   useEffect(() => {
     setLocation(props.location)
+    if(props.location == null){
+      setIsActivated(false)
+    }
   }, [props.location]);
+
+  useEffect(() => {
+    setIsActivated(props.locationActive)
+  }, [])
 
   return(
     <div>
