@@ -116,8 +116,8 @@ export default function Restaurant(props) {
               setDeliveryState(DeliveryStates.NOORDER);
             }}
             onComplete={() => {
-              navigate("/driver/home?token=" + token);
-              navigate(0);  // force to reload
+              setLocationActive(true);
+              setDeliveryState(DeliveryStates.NOORDER);
             }}
             
           />
