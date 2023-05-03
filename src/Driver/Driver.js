@@ -119,7 +119,6 @@ export default function Restaurant(props) {
               setLocationActive(true);
               setDeliveryState(DeliveryStates.NOORDER);
             }}
-            
           />
         }/>
         <Route path="/profile" element={<DriverProfile token={token}/>
@@ -170,6 +169,7 @@ export default function Restaurant(props) {
         onUnverified={(data) => {
           //do something when the driver doesn't have a verified account and can't take orders yet
           setNeedsOnboarding(true)
+          setLocationActive(false)
         }}
       />
       <Notification
@@ -188,7 +188,7 @@ export default function Restaurant(props) {
         }}
         timeSeconds={5}
         open={needsOnboarding}
-        text='Go to the "Profile" tab and click "Edit Profile" for onboarding.'
+        text='Go to the "Profile" tab and click "Edit Profile" for onboarding. Onboarding must be completed before you can accept orders.'
         title="You must complete onboarding!"
       />
       <Notification

@@ -18,8 +18,6 @@ export default function DriverLogin(props){
     const [name, setName] = useState("")
     const [phoneNum, setPhone] = useState("")
     const [licenseNum, setLiscenseNum] = useState("")
-    const [acctNum, setAcctNum] = useState("")
-    const [routingNum, setRoutingNum] = useState("")
     const [emailCode, setEmailCode] = useState("")
     const [image, setImage] = useState("")
     const [loading, setLoading] = useState(false)
@@ -101,7 +99,7 @@ export default function DriverLogin(props){
         });
         setLoading(false)
 
-        if (email === "" || password === "" || confirmPass === "" || name === "" || phoneNum === "" || licenseNum === "" || acctNum === "" || routingNum === ""){
+        if (email === "" || password === "" || confirmPass === "" || name === "" || phoneNum === "" || licenseNum === ""){
             alert("Missing field")
         } else if(!validateEmail(email)){
             alert("Invalid Email") }
@@ -117,7 +115,6 @@ export default function DriverLogin(props){
                 lastName = nameSplit[2]
             }
             setLoading(true)
-            console.log(routingNum)
             fetch(process.env.REACT_APP_API + '/driver/', 
             {
                 method: "POST",
@@ -133,9 +130,7 @@ export default function DriverLogin(props){
                     driverLicenseImage: url,
                     firstName: firstName,
                     lastName: lastName,
-                    middleName: middleName,
-                    bankAccountNumber: acctNum,
-                    bankRoutingNumber: routingNum
+                    middleName: middleName
                 })
             }).then(
                 (response) => response.json()
@@ -225,15 +220,6 @@ export default function DriverLogin(props){
                 <Button id="uploadBtn" size="medium" variant="contained" component="span" disabled={loading}>Upload Image<CloudUploadIcon/></Button>
                 </label>
             </div>
-
-            <TextField id="bankAcctIn" label="Bank Account Number" type="number" variant="outlined" fullWidth margin="normal" value={acctNum} disabled={loading}
-                onChange={(event) => {
-                    setAcctNum(event.target.value)
-                }}/>
-            <TextField id="routingNumIn" label="Bank Account Routing Number" type="number" variant="outlined" fullWidth margin="normal" value={routingNum} disabled={loading}
-                onChange={(event) => {
-                    setRoutingNum(event.target.value)
-                }}/>
             <div class="container">
                 <Button id="createAcctBtn" variant="contained" size="medium" disabled={loading} onClick={driverCreateAcctRequest}>Create Account</Button>
             </div>
