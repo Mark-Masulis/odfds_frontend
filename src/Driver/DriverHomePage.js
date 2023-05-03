@@ -20,11 +20,17 @@ export default function DriverHomePage(props) {
     FINISHED: 6
   }
 
+  const [deliveryState, setDeliveryState] = useState(props.deliveryState);
+
+  useEffect(() => {
+    setDeliveryState(props.deliveryState);
+  }, [props.deliveryState])
+
   return (
     <div>
       {
         (() => {
-          switch(props.deliveryState){
+          switch(deliveryState){
             case DeliveryStates.NOORDER:
               return(
                 <ActivationButton
@@ -37,6 +43,7 @@ export default function DriverHomePage(props) {
             case DeliveryStates.AVAILABLE:
               return(
                 <AcceptRejectButton
+                  onPaymentFailed={() => props.onPaymentFailed()}
                   token={props.token}
                   order={props.availableOrder}
                   location={props.location}
@@ -161,6 +168,13 @@ function AcceptRejectButton(props){
         switch(data.code){
           case 200:
             break
+          case 400:
+            alert(data.data.message ? data.data.message : 'Error happened');
+            break;
+          case 402:
+            alert("Restaurant pays the order failed, order got cancelled");
+            props.onPaymentFailed();
+            break;
           default:
             alert("Something went wrong. Please try again.")
             setLoading(false)
@@ -192,6 +206,7 @@ function AcceptRejectButton(props){
             break
           default:
             alert("Something went wrong. Please try again.")
+            props.onPaymentFailed();
             setLoading(false)
             break
         }

@@ -112,6 +112,9 @@ export default function Restaurant(props) {
             deliveryState={deliveryState}
             availableOrder={availableOrder}
             currentOrder={acceptedOrders}
+            onPaymentFailed={() => {
+              setDeliveryState(DeliveryStates.NOORDER);
+            }}
             onComplete={() => {
               navigate("/driver/home?token=" + token);
               navigate(0);  // force to reload
