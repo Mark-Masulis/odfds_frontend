@@ -104,7 +104,7 @@ export default function DriverLogin(props){
         } else if(!validateEmail(email)){
             alert("Invalid Email") }
         else if(!validName(name)){
-            alert("Invalid Name")
+            alert("Invalid Name, please make sure you inputed a firstname and a lastname and they are splitted by a blank space.")
         } else {
             const nameSplit = name.split(" ")
             const firstName = nameSplit[0]
