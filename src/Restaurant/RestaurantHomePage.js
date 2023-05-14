@@ -100,9 +100,6 @@ export default function RestaurantHomePage(props) {
             switch(data.code){
                 case 200: 
                     setPickUp(`${data.data.street}, ${data.data.city}, ${data.data.state} ${data.data.zipCode}`)
-                    
-                    //need to look into whether payment can be retrieved from DB, is a static value for now
-                    setPayment("Discover ending in *1234")
                     break;
                 default: //bad things are happening :(
                     //setError(true)
@@ -389,7 +386,6 @@ export default function RestaurantHomePage(props) {
               <li>Distance: {distance} miles</li>
               <li>Estimate Travel Time: {time} min</li>
               <li>Cost: ${cost}</li>
-              <li>Payment: {payment}</li>
           </ul>
       <div class="styledBtnContainer">
         <Button 
