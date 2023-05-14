@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -72,6 +72,8 @@ export default function RestaurantHomePage(props) {
   const [distance, setDistance] = useState(0)
 
   const [changeOrderDisabled, setChangeOrderDisabled] = useState(false);
+  const [nearestDrivers, setnearestDrivers] = useState([]);
+  const [avaliableDriversCount, setavaliableDriversCount] = useState(0);
 
   // form validation
   const [validationResult, setValidationResult] = useState({});
@@ -79,6 +81,32 @@ export default function RestaurantHomePage(props) {
   const [orderId, setOrderId] = useState()
 
   const navigate = useNavigate()
+
+  const getAvaliableDriversData = () => {
+    const token = props.token;
+    if (!token) {
+      return;
+    }
+    setLoading(true);
+    fetch(process.env.REACT_APP_API + "/restaurant/avaliableDrivers", {
+      method: "GET",
+      headers: {
+          "content-type": "application/json",
+          access_token: token
+      }
+    }).then((response) => response.json()
+    ).then((data) => {
+        if (data.code == 200) {
+          setavaliableDriversCount(data.data.avaliableDriversCount);
+          setnearestDrivers(data.data.drivers);
+        }
+        setLoading(false);
+      })
+  };
+
+  useEffect(() => {
+    getAvaliableDriversData();
+  }, []);
 
   const getProfileData = () => {
     const token = props.token
@@ -243,6 +271,16 @@ export default function RestaurantHomePage(props) {
       .map((err) => <ValidationError className="error">{err}</ValidationError>)
   }</>;
 
+  const renderNearestDrivers = () => {
+    return nearestDrivers.map(item => 
+      <Row>
+        <Pad>{item.driverId}</Pad>
+        <Pad>{item.name}</Pad>
+        <Pad>{(item.distance * 0.00062137119223856).toFixed(2)} miles</Pad>
+      </Row>
+    );
+  }
+
   return (
     <div>
       {defaultSetup && 
@@ -252,7 +290,7 @@ export default function RestaurantHomePage(props) {
           <Column>
             <Row>
             <Pad>
-            <h2>Start A New Order</h2>
+              <h2>Start A New Order</h2>
             </Pad>
             </Row>
             <Row>
@@ -368,6 +406,17 @@ export default function RestaurantHomePage(props) {
               />
               {printErrors('comments')}
             </Row>
+
+            <Row>
+              <Pad><p>Avaliable drivers in the system: {avaliableDriversCount}</p></Pad>
+            </Row>
+            {nearestDrivers.length > 0 && <Row>Top-five Nearest Drivers</Row>}
+            {nearestDrivers.length > 0 && <Row>
+                <Pad>Driver ID</Pad>
+                <Pad>Driver Name</Pad>
+                <Pad>Distance to Restaurant</Pad>
+              </Row>}
+            {renderNearestDrivers()}
             <div class="styledBtnContainer">
               <Button variant="contained" size="medium" type="submit">Calculate Order</Button>
             </div>
@@ -422,6 +471,5 @@ export default function RestaurantHomePage(props) {
       </div>}
   </div>}
   </div>
-    
   );
 }
